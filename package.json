@@ -1,0 +1,49 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "npm run development",
+    "development": "mix",
+    "watch": "mix watch",
+    "watch-poll": "mix watch -- --watch-options-poll=1000",
+    "hot": "mix watch --hot",
+    "prod": "npm run production",
+    "production": "mix --production",
+    "ci:format": "npm run ci:pint && npm run ci:prettier-format",
+    "ci:pint": "./vendor/bin/pint",
+    "ci:prettier": "prettier ./resources --check",
+    "ci:prettier-format": "prettier ./resources --write"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.3.1",
+    "@tailwindcss/typography": "^0.4.0",
+    "alpinejs": "^2.7.3",
+    "axios": "^0.21",
+    "laravel-mix": "^6.0.6",
+    "lodash": "^4.17.19",
+    "postcss": "^8.1.14",
+    "postcss-import": "^14.0.1",
+    "prettier": "^3.3.3",
+    "prettier-plugin-blade": "^2.1.19",
+    "tailwindcss": "^2.0.1"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "tabWidth": 4,
+    "singleQuote": true,
+    "semi": true,
+    "trailingComma": "all",
+    "plugins": [
+      "prettier-plugin-blade"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "*.blade.php"
+        ],
+        "options": {
+          "parser": "blade"
+        }
+      }
+    ]
+  }
+}
