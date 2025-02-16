@@ -46,20 +46,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'phone',
         'password',
-        'google_id',
-        'facebook_id',
-        'address',
-        'city',
-        'state',
-        'bank_name',
-        'account_no',
-        'account_holder',
-        'id_info',
-        'id_proof',
-        'kyc_status',
-        'kyc_remarks',
-        'kyc_submitted_at',
-        'kyc_processed_at',
     ];
 
     protected $hidden = [
@@ -67,8 +53,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'remember_token',
         'two_factor_recovery_codes',
         'two_factor_secret',
-        'google_id',
-        'facebook_id',
     ];
 
     protected $casts = [

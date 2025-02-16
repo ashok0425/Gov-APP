@@ -9151,8 +9151,8 @@
             "authors": [
                 {
                     "name": "The phpMyAdmin Team",
-                    "email": "developers@phpmyadmin.net",
-                    "homepage": "https://www.phpmyadmin.net/team/"
+                    "email": "developers@phpmynet",
+                    "homepage": "https://www.phpmynet/team/"
                 }
             ],
             "description": "A validating SQL lexer and parser with a focus on MySQL dialect.",
@@ -9175,7 +9175,7 @@
             },
             "funding": [
                 {
-                    "url": "https://www.phpmyadmin.net/donate/",
+                    "url": "https://www.phpmynet/donate/",
                     "type": "other"
                 }
             ],

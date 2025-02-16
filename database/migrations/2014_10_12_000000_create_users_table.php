@@ -21,22 +21,6 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('profile_photo_path')->nullable();
             $table->string('password');
-            $table->string('google_id')->nullable();
-            $table->string('facebook_id')->nullable();
-            $table->string('address')->nullable();
-            $table->string('city')->nullable();
-            $table->string('state')->nullable();
-            $table->string('bank_name')->nullable();
-            $table->string('account_no')->nullable();
-            $table->string('account_holder')->nullable();
-            $table->string('id_info')->nullable();
-            $table->string('id_proof')->nullable();
-
-            $table->string('kyc_status')->default('not_started');
-            $table->text('kyc_remarks')->nullable();
-            $table->timestamp('kyc_submitted_at')->nullable();
-            $table->timestamp('kyc_processed_at')->nullable();
-
             $table->rememberToken();
             $table->timestamps();
         });

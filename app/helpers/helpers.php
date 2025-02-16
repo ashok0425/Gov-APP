@@ -3,6 +3,7 @@
 use App\Models\Category;
 use App\Models\Cms;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 if (! function_exists('getCategory')) {
     function getCategory()
@@ -34,8 +35,8 @@ function getImage($image_file, $static = false)
     }
 
     if ($image_file) {
-        return config('services.s3.url').$image_file;
+        return Storage::disk('local')->url($image_file);
     }
 
-    return "https://via.placeholder.com/300x300?text=DREBBA";
+    return "https://via.placeholder.com/300x300";
 }
