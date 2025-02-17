@@ -32,10 +32,45 @@
                     </div>
 
                     <div class="mb-3 col-md-6">
+                        <label class="form-label">Select Category</label>
+                        <select name="category" id="" class="form-control form-select" required>
+                           <option value="">select category</option>
+                           @foreach (App\Models\Category::all() as $category)
+                           <option value="{{$category->id}}">{{$category->name}}</option>
+                           @endforeach
+                        </select>
+                    </div>
+
+                    @can('do:anything')
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label">Select Ward</label>
+                        <select name="business_id" id="" class="form-control form-select" required>
+                           <option value="">select Ward</option>
+                           @foreach (App\Models\Business::all() as $business)
+                           <option value="{{$business->id}}">{{$business->name}}</option>
+                           @endforeach
+                        </select>
+                    </div>
+                    @endif
+
+                    <div class="mb-3 col-md-6">
                         <label class="form-label">Thumbnail</label>
                         <div class="file-upload-wrapper" data-text="Select your file!">
                             <input
                                 name="thumbnail"
+                                type="file"
+                                class="file-upload-field"
+                                value=""
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label">Cover Photo (optional)</label>
+                        <div class="file-upload-wrapper" data-text="Select your file!">
+                            <input
+                                name="cover"
                                 type="file"
                                 class="file-upload-field"
                                 value=""
@@ -51,6 +86,7 @@
                             class="form-control"
                             placeholder="Blog Detail"
                             required
+                            rows="2"
                         >
                           {{ old('short_description') }}
                       </textarea

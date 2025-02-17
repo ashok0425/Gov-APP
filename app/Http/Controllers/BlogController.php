@@ -5,12 +5,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Blog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 class BlogController extends Controller
 {
     public function index()
     {
-        $blogs = Blog::orderBy('id', 'desc')->get();
+        $blogs = Blog::when(
+            !Auth::user()->can('do:anything'),function($query){
+               $query->where('business_id',Auth::user()->business_id);
+            }
+
+        )->orderBy('id', 'desc')->get();
 
         return view('blog.index', compact('blogs'));
     }
@@ -30,13 +36,16 @@ class BlogController extends Controller
 
         $blog = new Blog;
 
-        $thumbnail = $request->file('thumbnail')?->store('drebba/uploads/category', ['disk' => 's3']) ?? null;
+        $thumbnail = $request->file('thumbnail')?->store('uploads', 'public') ?? null;
+        $cover = $request->file('cover')?->store('uploads', 'public') ?? null;
         $blog->title = $request->title;
         $blog->slug = Str::slug($request->title);
         $blog->short_description = $request->short_description;
         $blog->long_description = $request->long_description;
+        $blog->category_id = $request->category;
         $blog->thumbnail = $thumbnail;
-
+        $blog->business_id = $request->business_id??Auth::user()->business_id;
+        $blog->cover = $cover;
         $blog->save();
 
         $notification = [
@@ -50,6 +59,15 @@ class BlogController extends Controller
 
     public function edit(Blog $blog)
     {
+        if($blog->business_id!=Auth::user()->business_id){
+            $notification = [
+                'alert-type' => 'error',
+                'message' => 'Unotherized Request',
+
+            ];
+
+            return redirect()->route('blogs.index')->with($notification);
+        }
         return view('blog.edit', compact('blog'));
     }
 
@@ -60,13 +78,21 @@ class BlogController extends Controller
             'long_description' => 'required',
 
         ]);
-        $thumbnail = $request->file('thumbnail')?->store('drebba/uploads/category', ['disk' => 's3']) ?? $blog->thumbnail;
+        if($blog->business_id!=Auth::user()->id){
+            return redirect()->back()->with('error','You are not allowed to edit this blog');
+        }
+        $thumbnail = $request->file('thumbnail')?->store('uploads', 'public') ?? $blog->thumbnail;
+        $cover = $request->file('cover')?->store('uploads', 'public') ?? $blog->thumbnail;
 
         $blog->title = $request->title;
         $blog->slug = Str::slug($request->title);
         $blog->short_description = $request->short_description;
         $blog->long_description = $request->long_description;
         $blog->thumbnail = $thumbnail;
+        $blog->business_id = $request->business_id??Auth::user()->business_id;
+        $blog->category_id = $request->category;
+        $blog->cover = $cover;
+
         $blog->save();
         $notification = [
             'alert-type' => 'success',

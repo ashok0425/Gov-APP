@@ -21,7 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('pages', \App\Http\Controllers\PageController::class)->middleware('can:do anything');
     Route::resource('cms', \App\Http\Controllers\CmsController::class)->middleware('can:do anything');
 
-    Route::group(['prefix' => 'manage-access','middleware'=>'can:do anything'], function () {
+    Route::group(['prefix' => 'manage-access'], function () {
         Route::get('/', [App\Http\Controllers\ManageAccessController::class, 'index'])->name('access.index');
         Route::get('/create', [App\Http\Controllers\ManageAccessController::class, 'create'])->name('access.create');
         Route::post('/store', [App\Http\Controllers\ManageAccessController::class, 'store'])->name('access.store');

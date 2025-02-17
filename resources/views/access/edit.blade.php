@@ -44,6 +44,21 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label class="col-form-label">Enter Phone <span class="text-danger">*</span></label>
+                                    <div class="">
+                                        <input type="number" value="{{ old('phone',$user->phone) }}" class="form-control"
+                                            name="phone">
+
+                                        @error('phone')
+                                            <span class="error-msg">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                            @can('do:anything')
+
                                     <div class="form-group col-md-4 mb-3">
                                         <label class="form-label">Ward</label>
                                         <select name="ward" id="" class="form-control form-select" required>
@@ -53,7 +68,13 @@
                                             @endforeach
                                         </select>
                                     </div>
+
+                    <div class="form-group col-md-4 mb-3 mb-3">
+                        <label><input name="is_owner" type="checkbox" style="transform: scale(2)" {{$user->is_owner?'checked':''}}> &nbsp; Is Admin For ward</label>
+                    </div>
                             </div>
+                            @endcan
+
 
                                 <div class="form-group">
                                     <label class="col-form-label"><h3>Permissions <span class="text-danger">*</span></h3></label>

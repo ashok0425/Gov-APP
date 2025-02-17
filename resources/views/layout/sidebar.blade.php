@@ -13,36 +13,47 @@
                 <span class="align-middle">Dashboard</span>
             </a>
         </li>
-        @can('cms:view')
+        @can('do:anything')
         <li class="sidebar-item">
             <a class="sidebar-link" href="{{ route('business.index') }}">
                 <i class="fas fa-home"></i>
                 <span class="align-middle">Wards</span>
             </a>
         </li>
-        <li class="sidebar-item">
-            <a class="sidebar-link" href="{{ route('access.index') }}">
-                <i class="fas fa-users"></i>
-                <span class="align-middle">Users</span>
-            </a>
-        </li>
+       @endcan
+       @can('user:view')
+       <li class="sidebar-item">
+           <a class="sidebar-link" href="{{ route('access.index') }}">
+               <i class="fas fa-users"></i>
+               <span class="align-middle">Users</span>
+           </a>
+       </li>
+       @endcan
 
-        @endcan
         <ul class="sidebar-nav">
             <li class="sidebar-header">Manage Post</li>
 
-          @can(['category:view','category:create','category:edit','category:delete'])
+          @can('do:anything')
           <li class="sidebar-item">
             <a class="sidebar-link" href="{{ route('categories.index') }}">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="align-middle">Category</span>
             </a>
         </li>
+        @endcan
+
+
+        @can(['blog:view','blog:create','blog:edit','blog:delete'])
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{{ route('blogs.index') }}">
+                <i class="fas fa-photo-video"></i>
+                <span class="align-middle">Post</span>
+            </a>
+        </li>
           @endcan
 
-
-
-            @can('page:view')
+          <li class="sidebar-header">General</li>
+            @can('do:anything')
             <li class="sidebar-item">
                 <a class="sidebar-link" href="{{ route('pages.index') }}">
                     <i class="far fa-calendar-minus"></i>
@@ -51,23 +62,15 @@
             </li>
             @endcan
 
-            @can('cms:view')
+            @can('do:anything')
             <li class="sidebar-item">
                 <a class="sidebar-link" href="{{ route('cms.edit', 1) }}">
-                    <i class="far fa-copy"></i>
+                    <i class="fas fa-images"></i>
                     <span class="align-middle">Cms</span>
                 </a>
             </li>
             @endcan
 
-            {{-- @can('testimonial:view')
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="{{ route('testimonials.index') }}">
-                    <i class="fas fa-users"></i>
-                    <span class="align-middle">Testimonial</span>
-                </a>
-            </li>
-            @endcan --}}
 
         </ul>
     </div>

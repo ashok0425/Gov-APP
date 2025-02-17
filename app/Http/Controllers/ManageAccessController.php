@@ -7,6 +7,7 @@ use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -15,7 +16,7 @@ class ManageAccessController extends Controller
 {
     public function index()
     {
-        if (! auth()->user()->can('others:manage_users')) {
+        if (! auth()->user()->can('user:view')) {
             $notification = [
                 'alert-type' => 'error',
                 'message' => 'You do not have sufficient permissions.',
@@ -24,14 +25,19 @@ class ManageAccessController extends Controller
             return redirect()->back()->with($notification);
         }
 
-        $users = User::whereNotIn('email', ['ashok@drebba.com','kartavya@drebba.com'])->get();
+        $users = User::whereNotIn('email', ['ashok@drebba.com','kartavya@drebba.com'])
+        ->when(
+            !Auth::user()->can('do:anything'),function($query){
+               $query->where('business_id',Auth::user()->business_id);
+            }
+        )->get();
 
         return view('access.index', compact('users'));
     }
 
     public function create()
     {
-        if (! auth()->user()->can('others:manage_users')) {
+        if (! auth()->user()->can('user:create')) {
             $notification = [
                 'alert-type' => 'error',
                 'message' => 'You do not have sufficient permissions.',
@@ -62,13 +68,14 @@ class ManageAccessController extends Controller
 
     public function store(Request $request)
     {
-        if (! auth()->user()->can('others:manage_users')) {
+        if (! auth()->user()->can('user:create')) {
             abort(403);
         }
 
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
+            'phone' => 'required|integer|unique:users,phone',
             'password' => 'required',
             'permissions' => 'required|array',
         ]);
@@ -77,8 +84,15 @@ class ManageAccessController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'phone' => $request->phone,
+            'business_id'=>$request->business_id
+            ]);
 
-        ]);
+            if ($request->is_owner==1) {
+             $user->business()->update([
+                'owner_id' => $user->id,
+             ]);
+            }
 
         $user->syncPermissions($request->permissions);
 
@@ -88,11 +102,11 @@ class ManageAccessController extends Controller
 
     public function edit($id)
     {
-        if (! auth()->user()->can('others:manage_users')) {
+        if (! auth()->user()->can('user:edit')) {
             abort(403);
         }
 
-        $user = User::findOrFail($id);
+        $user = User::where('business_id',Auth::user()->business_id)->where('id',$id)->firstOrFail();
         $roles = Role::orderBy('name')->get();
 
         $permissions = Permission::orderBy('name')->get();
@@ -121,13 +135,14 @@ class ManageAccessController extends Controller
     public function update(Request $request, $id)
     {
 
-        if (! auth()->user()->can('others:manage_users')) {
+        if (! auth()->user()->can('user:edit')) {
            abort(403);
         }
 
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email,'.$id,
+            'phone' => 'required|integer|unique:users,phone'.$id,
             'permissions' => 'nullable|array',
 
         ]);
@@ -147,11 +162,11 @@ class ManageAccessController extends Controller
 
     public function destroy($id)
     {
-        if (! auth()->user()->can('others:manage_users')) {
+        if (! auth()->user()->can('user:delete')) {
             abort(403);
         }
 
-        $user = Admin::findOrFail($id);
+        $user = User::where('business_id',Auth::user()->business_id)->where('id',$id)->firstOrFail();
         $user->delete();
 
         return redirect()->route('access.index');

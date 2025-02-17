@@ -14,6 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->integer('is_owner')->default(0);
             $table->foreignId('business_id')->nullable()->constrained()->nullOnDelete();
         });
     }
@@ -26,7 +27,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('business_id');
+            $table->dropColumn(['business_id','is_owner']);
         });
     }
 };

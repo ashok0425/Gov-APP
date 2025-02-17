@@ -15,40 +15,28 @@ return new class extends Migration
     public function up()
     {
         $permissions=[
-            'product:view',
-            'product:create',
-            'product:edit',
-            'product:delete',
-            'products:pricing',
-            'product:sales',
-            'product:purchase',
-            'orders:view',
-            'orders:create',
-            'orders:edit',
-            'orders:delete',
-            'orders:label',
-            'customer:view',
-            'customer:create',
-            'customer:edit',
-            'customer:delete',
-            'kyc:view',
-            'kyc:create',
-            'kyc:edit',
-            'kyc:delete',
+            'user:view',
+            'user:create',
+            'user:edit',
+            'user:delete',
+            'business:view',
+            'business:create',
+            'business:edit',
+            'business:delete',
             'category:view',
             'category:create',
             'category:edit',
             'category:delete',
-            'subcategory:view',
-            'subcategory:create',
-            'subcategory:edit',
-            'subcategory:delete',
+            'blog:view',
+            'blog:create',
+            'blog:edit',
+            'blog:delete',
              ];
 
              foreach ($permissions as $key => $permission) {
                 Permission::create([
                     'name'=>$permission,
-                    'guard_name'=>'admin'
+                    'guard_name'=>'web'
                 ]);
              }
     }

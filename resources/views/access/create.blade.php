@@ -14,8 +14,8 @@
                     <form action="{{ route('access.store') }}" method="POST" id="form" data-parsley-validate="">
                         @csrf
 
-                        <div class="row">
-                            <div class="col-md-6">
+                        <div class="row align-items-center">
+                            <div class="col-md-4 mb-3">
                                 <div class="form-group">
                                     <label class="col-form-label">Enter name <span class="text-danger">*</span></label>
                                     <div class="">
@@ -29,7 +29,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4 mb-3">
                                 <div class="form-group">
                                     <label class="col-form-label">Enter email <span class="text-danger">*</span></label>
                                     <div class="">
@@ -42,8 +42,21 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label class="col-form-label">Enter Phone <span class="text-danger">*</span></label>
+                                    <div class="">
+                                        <input type="number" value="{{ old('phone') }}" class="form-control"
+                                            name="phone">
 
-                        <div class="form-group col-md-6">
+                                        @error('phone')
+                                            <span class="error-msg">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                        <div class="form-group col-md-4 mb-3">
                             <label class="col-form-label">Enter password <span class="text-danger">*</span></label>
                             <div class="">
                                 <input type="text" value="{{ old('password') }}" class="form-control" name="password">
@@ -54,8 +67,8 @@
                             </div>
                         </div>
 
-
-                    <div class="form-group col-md-6 mb-3">
+                        @can('do:anything')
+                    <div class="form-group col-md-4 mb-3 mb-3">
                         <label class="form-label">Ward</label>
                         <select name="business_id" id="" class="form-control form-select" required>
                             <option value="">Select Ward</option>
@@ -64,6 +77,12 @@
                             @endforeach
                         </select>
                     </div>
+
+                    <div class="form-group col-md-4 mb-3 mb-3">
+                        <label><input name="is_owner" type="checkbox" style="transform: scale(2)"> &nbsp; Is Admin For ward</label>
+                    </div>
+                    @endcan
+
                 </div>
 
                         <div class="form-group">
@@ -75,7 +94,7 @@
 
                                 <div class="row">
                                     @foreach ($permission as $item)
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 mb-3">
                                         <label class="d-flex align-items-center">
                                             <input type="checkbox" name="permissions[]"
                                           value="{{$item}}"  >
