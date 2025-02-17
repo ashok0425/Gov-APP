@@ -89,6 +89,7 @@ class BlogController extends Controller
         $blog->short_description = $request->short_description;
         $blog->long_description = $request->long_description;
         $blog->thumbnail = $thumbnail;
+        $blog->status = $request->status??0;
         $blog->business_id = $request->business_id??Auth::user()->business_id;
         $blog->category_id = $request->category;
         $blog->cover = $cover;
