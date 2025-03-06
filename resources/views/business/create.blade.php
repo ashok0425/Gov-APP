@@ -37,7 +37,7 @@
                             required
                         />
                     </div>
-                    <div class="mb-3 col-md-6">
+                    <div class="mb-3 col-md-4">
                         <label class="form-label">Address</label>
                         <input
                             type="text"
@@ -48,8 +48,18 @@
                             required
                         />
                     </div>
-
-                    <div class="mb-3 col-md-6">
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label">Order</label>
+                        <input
+                            type="number"
+                            name="order"
+                            class="form-control"
+                            placeholder="Enter Ward Order"
+                            value="{{ old('order') }}"
+                            required
+                        />
+                    </div>
+                    <div class="mb-3 col-md-4">
                         <label class="form-label">Thumbnail</label>
                         <div class="file-upload-wrapper" data-text="Select your file!">
                             <input

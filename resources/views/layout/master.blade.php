@@ -221,5 +221,34 @@
     });
 
   </script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const fileInput = document.querySelector('.file-upload-field');
+
+    fileInput.addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                let previewImage = document.querySelector('.file-preview');
+
+                // If preview image does not exist, create it
+                if (!previewImage) {
+                    previewImage = document.createElement('img');
+                    previewImage.classList.add('file-preview', 'img-fluid', 'mt-2');
+                    previewImage.style.width = "100px";
+                    fileInput.parentNode.insertAdjacentElement("afterend", previewImage);
+                }
+
+                previewImage.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+});
+
+</script>
     </body>
 </html>

@@ -19,7 +19,8 @@
                     <th>Name</th>
                     <th>Phone</th>
                     <th>Address</th>
-                    <th>Register on</th>
+                    <th>Order</th>
+                    <th>Thumbnail</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -30,6 +31,9 @@
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->phone }}</td>
                         <td>{{ $user->address }}</td>
+                        <td>{{ $user->business_order }}</td>
+                        <td><img src="{{getImage($user->thumbnail )}}" alt="" width="100"></td>
+
 
                         <td>{{ Carbon\Carbon::parse($user->created_at)->format('d/m/Y') }}</td>
 

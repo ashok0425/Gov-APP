@@ -35,6 +35,8 @@ class BusinessController extends Controller
         $business->name = $request->name;
         $business->phone = $request->phone;
         $business->address = $request->address;
+        $business->business_order = $request->order;
+
         if ($request->hasFile('thumbnail')) {
             $path = $request->file('thumbnail')->store('uploads', 'public');
             $business->thumbnail = $path;
@@ -67,6 +69,7 @@ class BusinessController extends Controller
         $business->name = $request->name;
         $business->phone = $request->phone;
         $business->address = $request->address;
+        $business->business_order = $request->order;
         if ($request->hasFile('thumbnail')) {
             $path = $request->file('thumbnail')->store('uploads', 'public');
             $business->thumbnail = $path;
