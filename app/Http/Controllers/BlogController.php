@@ -108,6 +108,10 @@ class BlogController extends Controller
 
     public function destroy(Blog $blog)
     {
+        if($blog->business_id!=Auth::user()->business_id&& auth()->user()->business_id!=null){
+            return redirect()->back()->with('error','You are not allowed to delete this blog');
+            }
+
         $blog->delete();
         $notification = [
             'alert-type' => 'success',

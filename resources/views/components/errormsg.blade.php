@@ -9,4 +9,10 @@
 
         </div>
     @endif
+
+    @if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show p-3" role="alert">
+        {{ session('error') }}
+    </div>
+@endif
 </div>

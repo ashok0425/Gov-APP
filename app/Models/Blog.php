@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Auth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Blog extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'thumbnail',
@@ -16,4 +19,15 @@ class Blog extends Model
         'long_description',
         'status',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($blog) {
+            $blog->deleted_by = Auth::user()->id;
+            $blog->save();
+        });
+    }
+
 }

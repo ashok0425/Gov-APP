@@ -13,35 +13,28 @@ class BannerController extends Controller
     {
         $banners = Banner::latest()->paginate();
 
-        return view('backend.banner.index', compact('banners'));
+        return view('banner.index', compact('banners'));
     }
 
     public function create()
     {
-        return view('backend.banner.create');
+        return view('banner.create');
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'status' => 'required|boolean',
-            'type' => 'required|string|max:255',
         ]);
 
         $banner = new Banner;
 
-        if ($request->hasFile('thumbnail')) {
-            $path = $request->file('thumbnail')->store('banners', 'public');
-            $banner->thumbnail = Storage::url($path);
-        }
-
+        $thumbnail = $request->file('thumbnail')?->store('uploads', 'public') ?? null;
+        $banner->thumbnail=$thumbnail;
         $banner->title = $request->title;
         $banner->description = $request->description;
-        $banner->status = $request->status;
-        $banner->type = $request->type;
+        $banner->status = $request->status??1;
+        $banner->type = $request->type??1;
 
         $banner->save();
 
@@ -52,7 +45,7 @@ class BannerController extends Controller
     {
         $banner = Banner::findOrFail($id);
 
-        return view('backend.banner.edit', compact('banner'));
+        return view('banner.edit', compact('banner'));
     }
 
     public function update(Request $request, $id)
@@ -92,7 +85,7 @@ class BannerController extends Controller
     {
         $banner = Banner::findOrFail($id);
 
-        return view('backend.banner.show', compact('banner'));
+        return view('banner.show', compact('banner'));
     }
 
     public function destroy($id)

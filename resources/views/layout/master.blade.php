@@ -208,19 +208,20 @@
         </script>
 
 <script>
-    let delete_rows=document.querySelectorAll('.delete_btn');
-    let from=document.querySelector('#delete_form');
+    let delete_rows = document.querySelectorAll('.delete_btn');
+    let form = document.querySelector('#delete_form');
+    let deleteModal = new bootstrap.Modal(document.getElementById('deleteModal')); // Initialize Bootstrap modal
 
     delete_rows.forEach(function (ele) {
-       ele.addEventListener('click',function(e){
-        e.preventDefault();
-        let url=ele.href;
-        from.setAttribute('action',url)
-       })
-
+       ele.addEventListener('click', function (e) {
+            e.preventDefault();
+            let url = ele.href;
+            form.setAttribute('action', url);
+            deleteModal.show(); // Show modal
+       });
     });
+</script>
 
-  </script>
 
 
 <script>

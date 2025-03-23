@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('admin.layout.master')
 @php
     define('PAGE', 'setting');
 @endphp

@@ -5,14 +5,18 @@
     @endphp
 
     <div class="container">
-        <div class="card py-3 px-4">
-            <div class="d-flex justify-content-between">
-                <h3>Banner Data</h3>
-                <a href="{{ route('banner.create') }}" class="btn btn-info btn-lg">
-                    Add Banner
-                </a>
+        <div class="card">
+            <div class="card-header d-flex justify-content-between bg-dark">
+                <div>
+                    <h5 class="card-title text-white">Banner List</h5>
+                </div>
+                <div>
+                    <a href="{{ route('banners.create') }}" class="btn btn-info btn-sm">
+                        <o class="fas fa-plus"></o>
+                        Add Banner
+                    </a>
+                </div>
             </div>
-            <br />
 
             <table id="myTable" class="table table-responsive-sm">
                 <thead>
@@ -28,12 +32,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($banner as $item)
+                    @foreach ($banners as $item)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td><img src="{{ getImage($item->image) }}" alt="" width="70" /></td>
+                            <td><img src="{{ getImage($item->thumbnail) }}" alt="" width="70" /></td>
                             <td>{{ $item->title }}</td>
-                            {{-- <td>{!!$item->text!!}</td> --}}
 
                             <td>
                                 @if ($item->status == 1)
@@ -43,42 +46,35 @@
                                 @endif
                             </td>
                             <td>
-                                <a
-                                    href="{{ route('banner.show', ['id' => $item->id]) }}"
-                                    class="btn btn-info"
-                                >
-                                    <i class="far fa-eye"></i>
-                                </a>
 
                                 <a
-                                    href="{{ route('banner.edit', ['id' => $item->id]) }}"
+                                    href="{{ route('banners.edit', $item) }}"
                                     class="btn btn-primary"
                                 >
                                     <i class="far fa-edit"></i>
                                 </a>
                                 <a
-                                    id="delete"
-                                    href="{{ route('banner.delete', ['id' => $item->id, 'table' => 'banners']) }}"
-                                    class="btn btn-danger"
+                                    href="{{ route('banners.destroy',$item) }}"
+                                    class="btn btn-danger delete_btn"
                                 >
-                                    <i class="fas fa-times"></i>
+                                    <i class="fas fa-trash"></i>
                                 </a>
 
-                                @if ($item->status == 1)
+                                {{-- @if ($item->status == 1)
                                     <a
-                                        href="{{ route('banner.deactive', ['id' => $item->id, 'table' => 'banners']) }}"
+                                        href="{{ route('banners.deactive', ['id' => $item->id, 'table' => 'banners']) }}"
                                         class="btn btn-primary"
                                     >
                                         <i class="fas fa-thumbs-down"></i>
                                     </a>
                                 @else
                                     <a
-                                        href="{{ route('banner.active', ['id' => $item->id, 'table' => 'banners']) }}"
+                                        href="{{ route('banners.active', ['id' => $item->id, 'table' => 'banners']) }}"
                                         class="btn btn-primary"
                                     >
                                         <i class="fas fa-thumbs-up"></i>
                                     </a>
-                                @endif
+                                @endif --}}
                             </td>
                         </tr>
                     @endforeach

@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('businesses', function (Blueprint $table) {
-            $table->integer('business_order');
+        Schema::table('blogs', function (Blueprint $table) {
+            $table->integer('deleted_by')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('businesses', function (Blueprint $table) {
-            $table->dropColumn('business_order');
+        Schema::table('blogs', function (Blueprint $table) {
+            //
         });
     }
 };

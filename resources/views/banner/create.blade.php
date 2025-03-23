@@ -9,32 +9,29 @@
 
         <div class="card-body">
             <form
-                action="{{ route('banner.store') }}"
+                action="{{ route('banners.store') }}"
                 method="POST"
                 enctype="multipart/form-data"
             >
                 @csrf
                 <div class="mb-3">
                     <label class="form-label">Banner Title</label>
-                    <textarea name="title" id="summernote1" class="form-control">
-                 {{ old('title') }}
-             </textarea
-                    >
+                    <input name="title" class="form-control" value="{{ old('title') }}">
                 </div>
 
-                <div class="mb-3">
+                {{-- <div class="mb-3">
                     <label class="form-label">Type</label>
                     <select name="type" id="" class="form-control">
                         <option value="0">Large banner</option>
                         <option value="1">Shop banner</option>
                     </select>
-                </div>
+                </div> --}}
 
                 <div class="mb-3">
                     <label class="form-label">Banner image</label>
                     <div class="file-upload-wrapper" data-text="Select your file!">
                         <input
-                            name="file"
+                            name="thumbnail"
                             type="file"
                             class="file-upload-field"
                             value=""

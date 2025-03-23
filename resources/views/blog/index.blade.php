@@ -45,6 +45,12 @@
                                     >
                                         <i class="far fa-edit"></i>
                                     </a>
+                                    <a
+                                    href="{{ route('blogs.destroy',$blog) }}"
+                                    class="btn btn-danger delete_btn"
+                                >
+                                    <i class="fas fa-trash"></i>
+                                </a>
                                 </td>
                             </tr>
                         @endforeach
