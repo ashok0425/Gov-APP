@@ -70,7 +70,7 @@ class HomeController extends Controller
 
     public function banner()
     {
-        $banners = Banner::select('id','thumbnail','title')->paginate(25);
+        $banners = Banner::where('business_id',null)->select('id','thumbnail','title')->paginate(25);
        return response()->json([
         'success'=>true,
         'data'=>$banners
