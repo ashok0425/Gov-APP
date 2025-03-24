@@ -25,6 +25,7 @@ Route::middleware('verifyToken')->group(function(){
     Route::get('/blogs', [HomeController::class,'blogs']);
     Route::get('/blog/{id}', [HomeController::class,'blogDetail']);
     Route::get('/banners', [HomeController::class,'banner']);
+    Route::get('/banner-by-ward/{id}', [HomeController::class,'bannerbyWard']);
     Route::get('/blogs-by-category/{id}', [HomeController::class,'blogByCategory']);
     Route::get('/blogs-by-ward/{id}', [HomeController::class,'blogByWard']);
 

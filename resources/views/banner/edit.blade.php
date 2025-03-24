@@ -9,20 +9,17 @@
 
         <div class="card-body">
             <form
-                action="{{ route("banner.update") }}"
+                action="{{ route("banners.update",$banner) }}"
                 method="POST"
                 enctype="multipart/form-data"
             >
+            @method('PATCH')
                 @csrf
-                <input name="id" value="{{ $banner->id }}" type="hidden" />
                 <div class="mb-3">
                     <label class="form-label">Banner Title</label>
-                    <textarea name="title" cols="30" rows="10" id="summernote1">
-         {!! $banner->title !!}
-     </textarea
-                    >
+                    <input name="title" class="form-control" cols="30" rows="10" value="{!! $banner->title !!}"/>
                 </div>
-                <div class="mb-3">
+                {{-- <div class="mb-3">
                     <label class="form-label">Type</label>
                     <select name="type" id="" class="form-control">
                         <option
@@ -42,15 +39,15 @@
                             Shop banner
                         </option>
                     </select>
-                </div>
+                </div> --}}
 
                 <div class="mb-3">
                     <label class="form-label">Banner image</label>
                     <div class="file-upload-wrapper" data-text="Select your file!">
-                        <input name="file" type="file" class="file-upload-field" value="" />
+                        <input name="thumbnail" type="file" class="file-upload-field" value="" />
                     </div>
                     <br />
-                    <img src="{{ getImage($banner->image) }}" alt="" width="100" />
+                    <img src="{{ getImage($banner->thumbnail) }}" alt="" width="100" />
                 </div>
 
                 <button type="submit" class="btn btn-primary">Update</button>

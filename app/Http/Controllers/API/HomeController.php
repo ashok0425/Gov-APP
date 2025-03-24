@@ -68,9 +68,18 @@ class HomeController extends Controller
        ],200);
     }
 
-    public function Banner()
+    public function banner()
     {
         $banners = Banner::select('id','thumbnail','title')->paginate(25);
+       return response()->json([
+        'success'=>true,
+        'data'=>$banners
+       ],200);
+    }
+
+    public function bannerbyWard($id)
+    {
+        $banners = Banner::where('business_id',$id)->select('id','thumbnail','title')->paginate(25);
        return response()->json([
         'success'=>true,
         'data'=>$banners

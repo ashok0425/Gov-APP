@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Banner;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,7 +12,12 @@ class BannerController extends Controller
 {
     public function index()
     {
-        $banners = Banner::latest()->paginate();
+        $banners = Banner::when(
+            !Auth::user()->can('do:anything'),function($query){
+               $query->where('business_id',Auth::user()->business_id);
+            }
+
+        )->latest()->paginate();
 
         return view('banner.index', compact('banners'));
     }
@@ -34,6 +40,7 @@ class BannerController extends Controller
         $banner->title = $request->title;
         $banner->description = $request->description;
         $banner->status = $request->status??1;
+        $banner->business_id = Auth::user()->business_id;
         $banner->type = $request->type??1;
 
         $banner->save();
@@ -52,29 +59,17 @@ class BannerController extends Controller
     {
         $request->validate([
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'status' => 'required|boolean',
-            'type' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
         ]);
 
         $banner = Banner::findOrFail($id);
 
-        if ($request->hasFile('thumbnail')) {
-            // Delete old thumbnail
-            if ($banner->thumbnail) {
-                Storage::delete(str_replace('/storage', 'public', $banner->thumbnail));
-            }
-
-            // Store new thumbnail
-            $path = $request->file('thumbnail')->store('banners', 'public');
-            $banner->thumbnail = Storage::url($path);
-        }
-
+        $thumbnail = $request->file('thumbnail')?->store('uploads', 'public') ?? $banner->thumbnail;
+        $banner->thumbnail=$thumbnail;
         $banner->title = $request->title;
         $banner->description = $request->description;
-        $banner->status = $request->status;
-        $banner->type = $request->type;
+        $banner->status = $request->status??1;
+        $banner->type = $request->type??1;
 
         $banner->save();
 
