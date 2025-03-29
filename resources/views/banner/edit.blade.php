@@ -23,16 +23,16 @@
                     <label class="form-label">Type</label>
                     <select name="type" id="" class="form-control">
                         <option
-                            value="0"
-                            @if ($banner->type == 0)
+                            value="2"
+                            @if ($banner->type == 1)
                                 selected
                             @endif
                         >
                             Slider 1
                         </option>
                         <option
-                            value="1"
-                            @if ($banner->type == 1)
+                            value="2"
+                            @if ($banner->type == 2)
                                 selected
                             @endif
                         > Slider 2
