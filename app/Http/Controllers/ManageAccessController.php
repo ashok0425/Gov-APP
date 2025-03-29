@@ -106,7 +106,12 @@ class ManageAccessController extends Controller
             abort(403);
         }
 
-        $user = User::where('business_id',Auth::user()->business_id)->where('id',$id)->firstOrFail();
+        $user = User::when(
+            !Auth::user()->can('do:anything'),function($query){
+               $query->where('business_id',Auth::user()->business_id);
+            }
+
+        )->where('id',$id)->firstOrFail();
         $roles = Role::orderBy('name')->get();
 
         $permissions = Permission::orderBy('name')->get();
@@ -142,17 +147,22 @@ class ManageAccessController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email,'.$id,
-            'phone' => 'required|integer|unique:users,phone'.$id,
+            'phone' => 'required|integer|unique:users,phone,'.$id,
             'permissions' => 'nullable|array',
 
         ]);
 
-        $user = User::findOrFail($id);
+        $user = User::when(
+            !Auth::user()->can('do:anything'),function($query){
+               $query->where('business_id',Auth::user()->business_id);
+            }
+
+        )->where('id',$id)->firstOrFail();
 
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            // 'phone' => $request->phone,
+            'phone' => $request->phone,
         ]);
 
         $user->syncPermissions($request->permissions);
@@ -166,7 +176,12 @@ class ManageAccessController extends Controller
             abort(403);
         }
 
-        $user = User::where('business_id',Auth::user()->business_id)->where('id',$id)->firstOrFail();
+        $user = User::when(
+            !Auth::user()->can('do:anything'),function($query){
+               $query->where('business_id',Auth::user()->business_id);
+            }
+
+        )->where('id',$id)->firstOrFail();
         $user->delete();
 
         return redirect()->route('access.index');

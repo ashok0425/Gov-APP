@@ -12,23 +12,30 @@ class BannerController extends Controller
 {
     public function index()
     {
-        $banners = Banner::when(
-            !Auth::user()->can('do:anything'),function($query){
-               $query->where('business_id',Auth::user()->business_id);
-            }
+        if (! auth()->user()->can('banners:view')) {
+            abort(403);
+         }
 
-        )->latest()->paginate();
+        $banners = Banner::when(!Auth::user()->can('do:anything'),function($query){
+               $query->where('business_id',Auth::user()->business_id);
+            })->latest()->paginate();
 
         return view('banner.index', compact('banners'));
     }
 
     public function create()
     {
+        if (! auth()->user()->can('banners:create')) {
+            abort(403);
+         }
         return view('banner.create');
     }
 
     public function store(Request $request)
     {
+        if (! auth()->user()->can('banners:create')) {
+            abort(403);
+         }
         $request->validate([
             'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -50,19 +57,35 @@ class BannerController extends Controller
 
     public function edit($id)
     {
-        $banner = Banner::findOrFail($id);
+        if (! auth()->user()->can('banners:edit')) {
+            abort(403);
+         }
+        $banner = Banner::when(
+            !Auth::user()->can('do:anything'),function($query){
+               $query->where('business_id',Auth::user()->business_id);
+            }
+
+        )->where('id',$id)->firstOrFail();
 
         return view('banner.edit', compact('banner'));
     }
 
     public function update(Request $request, $id)
     {
+        if (! auth()->user()->can('banners:edit')) {
+            abort(403);
+         }
         $request->validate([
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'title' => 'nullable|string|max:255',
         ]);
 
-        $banner = Banner::findOrFail($id);
+        $banner = Banner::when(
+            !Auth::user()->can('do:anything'),function($query){
+               $query->where('business_id',Auth::user()->business_id);
+            }
+
+        )->where('id',$id)->firstOrFail();
 
         $thumbnail = $request->file('thumbnail')?->store('uploads', 'public') ?? $banner->thumbnail;
         $banner->thumbnail=$thumbnail;
@@ -85,7 +108,15 @@ class BannerController extends Controller
 
     public function destroy($id)
     {
-        $banner = Banner::findOrFail($id);
+        if (! auth()->user()->can('banners:delete')) {
+            abort(403);
+         }
+        $banner = Banner::when(
+            !Auth::user()->can('do:anything'),function($query){
+               $query->where('business_id',Auth::user()->business_id);
+            }
+
+        )->where('id',$id)->firstOrFail();
 
         // Delete thumbnail
         if ($banner->thumbnail) {

@@ -19,7 +19,7 @@
                     <label class="form-label">Banner Title</label>
                     <input name="title" class="form-control" cols="30" rows="10" value="{!! $banner->title !!}"/>
                 </div>
-                {{-- <div class="mb-3">
+                <div class="mb-3">
                     <label class="form-label">Type</label>
                     <select name="type" id="" class="form-control">
                         <option
@@ -28,18 +28,17 @@
                                 selected
                             @endif
                         >
-                            Large banner
+                            Slider 1
                         </option>
                         <option
                             value="1"
                             @if ($banner->type == 1)
                                 selected
                             @endif
-                        >
-                            Shop banner
+                        > Slider 2
                         </option>
                     </select>
-                </div> --}}
+                </div>
 
                 <div class="mb-3">
                     <label class="form-label">Banner image</label>

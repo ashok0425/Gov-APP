@@ -20,13 +20,17 @@
                 <span class="align-middle">Wards</span>
             </a>
         </li>
-        <li class="sidebar-item">
-            <a class="sidebar-link" href="{{ route('banners.index') }}">
-                <i class="fas fa-images"></i>
-                <span class="align-middle">Banner</span>
-            </a>
-        </li>
+
        @endcan
+
+       @can('banners:view')
+       <li class="sidebar-item">
+           <a class="sidebar-link" href="{{ route('banners.index') }}">
+               <i class="fas fa-images"></i>
+               <span class="align-middle">Banner</span>
+           </a>
+       </li>
+      @endcan
        @can('user:view')
        <li class="sidebar-item">
            <a class="sidebar-link" href="{{ route('access.index') }}">

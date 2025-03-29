@@ -19,13 +19,13 @@
                     <input name="title" class="form-control" value="{{ old('title') }}">
                 </div>
 
-                {{-- <div class="mb-3">
+                <div class="mb-3">
                     <label class="form-label">Type</label>
                     <select name="type" id="" class="form-control">
-                        <option value="0">Large banner</option>
-                        <option value="1">Shop banner</option>
+                        <option value="0">Slider 1</option>
+                        <option value="1">Slider 2</option>
                     </select>
-                </div> --}}
+                </div>
 
                 <div class="mb-3">
                     <label class="form-label">Banner image</label>

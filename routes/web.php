@@ -16,7 +16,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', \App\Http\Controllers\CategoryController::class);
 
     Route::resource('blogs', \App\Http\Controllers\BlogController::class);
-    Route::resource('banners', \App\Http\Controllers\BannerController::class)->middleware('can:do anything');
+    Route::resource('banners', \App\Http\Controllers\BannerController::class);
     Route::resource('business', \App\Http\Controllers\BusinessController::class);
     Route::resource('pages', \App\Http\Controllers\PageController::class)->middleware('can:do anything');
     Route::resource('cms', \App\Http\Controllers\CmsController::class)->middleware('can:do anything');

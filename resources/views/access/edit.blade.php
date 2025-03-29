@@ -61,17 +61,17 @@
 
                                     <div class="form-group col-md-4 mb-3">
                                         <label class="form-label">Ward</label>
-                                        <select name="ward" id="" class="form-control form-select" required>
+                                        <select name="ward" id="" class="form-control form-select">
                                             <option value="">Select Ward</option>
                                             @foreach(App\Models\Business::all() as $location)
-                                            <option value="{{$location->id}}" {{$location->id==$user->location_id?'selected':''}}>{{$location->name}}</option>
+                                            <option value="{{$location->id}}" {{$location->id==$user->business_id?'selected':''}}>{{$location->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>
 
-                    <div class="form-group col-md-4 mb-3 mb-3">
+                    {{-- <div class="form-group col-md-4 mb-3 mb-3">
                         <label><input name="is_owner" type="checkbox" style="transform: scale(2)" {{$user->is_owner?'checked':''}}> &nbsp; Is Admin For ward</label>
-                    </div>
+                    </div> --}}
                             </div>
                             @endcan
 
@@ -79,9 +79,9 @@
                                 <div class="form-group">
                                     <label class="col-form-label"><h3>Permissions <span class="text-danger">*</span></h3></label>
                                         @foreach ($permissionMap as $key => $permission)
-                                        <h5 class="my-3">{{Str::headline(Str::replace('_',' ',$key)) }}</h5>
+                                        <h5 class="mt-3">{{Str::headline(Str::replace('_',' ',$key)) }}</h5>
 
-                                        <div class="row mt-5">
+                                        <div class="row">
                                             @foreach ($permission as $item)
                                             <div class="col-md-4">
                                                 <label class="d-flex align-items-center">

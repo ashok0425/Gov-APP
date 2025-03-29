@@ -70,7 +70,7 @@
                         @can('do:anything')
                     <div class="form-group col-md-4 mb-3 mb-3">
                         <label class="form-label">Ward</label>
-                        <select name="business_id" id="" class="form-control form-select" required>
+                        <select name="business_id" id="" class="form-control form-select" >
                             <option value="">Select Ward</option>
                             @foreach(App\Models\Business::all() as $business)
                             <option value="{{$business->id}}">{{$business->name}}</option>
@@ -78,9 +78,9 @@
                         </select>
                     </div>
 
-                    <div class="form-group col-md-4 mb-3 mb-3">
+                    {{-- <div class="form-group col-md-4 mb-3 mb-3">
                         <label><input name="is_owner" type="checkbox" style="transform: scale(2)"> &nbsp; Is Admin For ward</label>
-                    </div>
+                    </div> --}}
                     @endcan
 
                 </div>
@@ -94,7 +94,7 @@
 
                                 <div class="row">
                                     @foreach ($permission as $item)
-                                    <div class="col-md-4 mb-3">
+                                    <div class="col-md-4">
                                         <label class="d-flex align-items-center">
                                             <input type="checkbox" name="permissions[]"
                                           value="{{$item}}"  >
