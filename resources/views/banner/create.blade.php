@@ -24,6 +24,7 @@
                     <select name="type" id="" class="form-control">
                         <option value="1">Slider 1</option>
                         <option value="2">Slider 2</option>
+                        <option value="3">Slider 3</option>
                     </select>
                 </div>
 

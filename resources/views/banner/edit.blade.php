@@ -37,6 +37,13 @@
                             @endif
                         > Slider 2
                         </option>
+                        <option
+                        value="3"
+                        @if ($banner->type == 3)
+                            selected
+                        @endif
+                    > Slider 3
+                    </option>
                     </select>
                 </div>
 
