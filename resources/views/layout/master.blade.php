@@ -226,9 +226,10 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-    const fileInput = document.querySelector('.file-upload-field');
+    const fileInputs = document.querySelectorAll('.file-upload-field');
 
-    fileInput.addEventListener('change', function (event) {
+    fileInputs.forEach((fileInput,index) => {
+        fileInput.addEventListener('change', function (event) {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
@@ -238,7 +239,7 @@
                 // If preview image does not exist, create it
                 if (!previewImage) {
                     previewImage = document.createElement('img');
-                    previewImage.classList.add('file-preview', 'img-fluid', 'mt-2');
+                    previewImage.classList.add('file-preview'+index, 'img-fluid', 'mt-2');
                     previewImage.style.width = "100px";
                     fileInput.parentNode.insertAdjacentElement("afterend", previewImage);
                 }
@@ -248,6 +249,8 @@
             reader.readAsDataURL(file);
         }
     });
+    });
+
 });
 
 </script>

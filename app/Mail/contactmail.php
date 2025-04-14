@@ -15,7 +15,7 @@ class contactmail extends Mailable
      *
      * @return void
      */
-    public function __construct(public readonly array $data) {}
+    public function __construct(public readonly  $data) {}
 
     /**
      * Build the message.

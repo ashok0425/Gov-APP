@@ -42,6 +42,11 @@ class BusinessController extends Controller
             $business->thumbnail = $path;
         }
 
+        if ($request->hasFile('cover_image')) {
+            $cover_image = $request->file('cover_image')->store('uploads', 'public');
+            $business->cover_image = $cover_image;
+        }
+
         $business->save();
 
 
@@ -73,6 +78,10 @@ class BusinessController extends Controller
         if ($request->hasFile('thumbnail')) {
             $path = $request->file('thumbnail')->store('uploads', 'public');
             $business->thumbnail = $path;
+        }
+        if ($request->hasFile('cover_image')) {
+            $cover_image = $request->file('cover_image')->store('uploads', 'public');
+            $business->cover_image = $cover_image;
         }
         $business->save();
         $notification = [

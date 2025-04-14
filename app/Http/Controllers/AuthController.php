@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use App\Models\Order;
+use App\Models\User;
 use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -59,12 +60,11 @@ class AuthController extends Controller
             'name' => 'required',
         ]);
 
-        $admin = Admin::find(Auth::user()->id);
-
-        $path = $request->file->store('drebba/upload/admin/', 's3') ?? $admin->profile_phot_path;
-
+        $admin = User::find(Auth::user()->id);
+        $path = $request->file?->store('upload/admin/', 's3') ?? $admin->profile_phot_path;
         $admin->email = $request->email;
         $admin->name = $request->name;
+        $admin->profile_photo_path=$path;
         $admin->save();
         $notification = [
             'alert-type' => 'success',
@@ -86,7 +86,7 @@ class AuthController extends Controller
 
         if (Hash::check($request->currentpassword, Auth::user()->password)) {
             if ($request->newpassword === $request->confirmpassword) {
-                $admin = Admin::find(Auth::user()->id);
+                $admin = User::find(Auth::user()->id);
                 $admin->password = Hash::make($request->newpassword);
                 $admin->save();
                 session()->flush();

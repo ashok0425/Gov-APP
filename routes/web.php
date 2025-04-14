@@ -11,7 +11,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [\App\Http\Controllers\AuthController::class, 'profile'])->name('profile');
     Route::post('/profile/update', [\App\Http\Controllers\AuthController::class, 'update'])->name('profile.update');
     Route::post('/password/update', [\App\Http\Controllers\AuthController::class, 'changePassword'])->name('password');
-    Route::get('/logout/admin', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
+    Route::get('/logout/admin', [\App\Http\Controllers\AuthController::class, 'logout'])->name('admin.logout');
 
     Route::resource('categories', \App\Http\Controllers\CategoryController::class);
 

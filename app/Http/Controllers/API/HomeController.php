@@ -16,7 +16,7 @@ class HomeController extends Controller
 {
     public function wards()
     {
-        $business = Business::latest()->paginate(25);
+        $business = Business::latest()->orderBy('business_order')->paginate(25);
        return response()->json([
         'success'=>true,
         'data'=>$business
@@ -32,9 +32,12 @@ class HomeController extends Controller
        ],200);
     }
 
-    public function blogs()
+    public function blogs($isMain=null)
     {
-        $blog = Blog::latest()->where('status',1)->select('id','title','thumbnail','slug','short_description')->paginate(25);
+        $blog = Blog::latest()
+        ->when($isMain,function($query) use ($isMain){
+            $query->where('business_id',null);
+          })->where('status',1)->select('id','title','thumbnail','slug','short_description')->paginate(25);
        return response()->json([
         'success'=>true,
         'data'=>$blog
@@ -68,10 +71,12 @@ class HomeController extends Controller
        ],200);
     }
 
-    public function banner($type)
+    public function banner($type,$is_homepage_banner=null)
     {
         $banners = Banner::where('business_id',null)->select('id','thumbnail','title')->when($type,function($query) use ($type){
             $query->where('type',$type);
+          })->when($is_homepage_banner,function($query) use ($is_homepage_banner){
+            $query->where('is_homepage_banner',$is_homepage_banner);
           })->paginate(25);
        return response()->json([
         'success'=>true,

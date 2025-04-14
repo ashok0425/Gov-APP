@@ -48,6 +48,7 @@ class BannerController extends Controller
         $banner->description = $request->description;
         $banner->status = $request->status??1;
         $banner->business_id = Auth::user()->business_id;
+        $banner->is_homepage_banner = $request->is_homepage_banner;
         $banner->type = $request->type??1;
 
         $banner->save();
@@ -91,9 +92,9 @@ class BannerController extends Controller
         $banner->thumbnail=$thumbnail;
         $banner->title = $request->title;
         $banner->description = $request->description;
+        $banner->is_homepage_banner = $request->is_homepage_banner;
         $banner->status = $request->status??1;
         $banner->type = $request->type??1;
-
         $banner->save();
 
         return redirect()->route('banners.index')->with('success', 'Banner updated successfully');

@@ -37,7 +37,7 @@
                             required
                         />
                     </div>
-                    <div class="mb-3 col-md-4">
+                    <div class="mb-3 col-md-6">
                         <label class="form-label">Address</label>
                         <input
                             type="text"
@@ -48,7 +48,7 @@
                             required
                         />
                     </div>
-                    <div class="mb-3 col-md-4">
+                    <div class="mb-3 col-md-6">
                         <label class="form-label">Order</label>
                         <input
                             type="number"
@@ -59,11 +59,23 @@
                             required
                         />
                     </div>
-                    <div class="mb-3 col-md-4">
+                    <div class="mb-3 col-md-6">
                         <label class="form-label">Thumbnail</label>
                         <div class="file-upload-wrapper" data-text="Select your file!">
                             <input
                                 name="thumbnail"
+                                type="file"
+                                class="file-upload-field"
+                                value=""
+                            />
+                        </div>
+                    </div>
+
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label">Cover Image</label>
+                        <div class="file-upload-wrapper" data-text="Select your file!">
+                            <input
+                                name="cover_image"
                                 type="file"
                                 class="file-upload-field"
                                 value=""

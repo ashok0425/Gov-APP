@@ -59,10 +59,10 @@ class BlogController extends Controller
 
     public function edit(Blog $blog)
     {
-        if($blog->business_id!=Auth::user()->business_id){
+        if(!Auth::user()->can('can:do-anything') && $blog->business_id!=Auth::user()->business_id){
             $notification = [
                 'alert-type' => 'error',
-                'message' => 'Unotherized Request',
+                'message' => 'unauthorized Request',
 
             ];
 

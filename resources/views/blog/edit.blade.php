@@ -78,7 +78,7 @@
                     </div>
 
                     <div class="form-group col-md-4 mb-3 mb-3">
-                        <label><input name="status" type="checkbox" style="transform: scale(2)" {{$user->status?'checked':''}} >  Hide Post</label>
+                        <label><input name="status" type="checkbox" style="transform: scale(2)" {{$blog->status?'checked':''}} >&nbsp;  Hide Post</label>
                     </div>
 
                     <div class="mb-3 col-md-12">

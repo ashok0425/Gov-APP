@@ -59,22 +59,6 @@
                                 >
                                     <i class="fas fa-trash"></i>
                                 </a>
-
-                                {{-- @if ($item->status == 1)
-                                    <a
-                                        href="{{ route('banners.deactive', ['id' => $item->id, 'table' => 'banners']) }}"
-                                        class="btn btn-primary"
-                                    >
-                                        <i class="fas fa-thumbs-down"></i>
-                                    </a>
-                                @else
-                                    <a
-                                        href="{{ route('banners.active', ['id' => $item->id, 'table' => 'banners']) }}"
-                                        class="btn btn-primary"
-                                    >
-                                        <i class="fas fa-thumbs-up"></i>
-                                    </a>
-                                @endif --}}
                             </td>
                         </tr>
                     @endforeach

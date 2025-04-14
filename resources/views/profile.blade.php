@@ -10,8 +10,8 @@
         <div class="row">
             <div class="col-md-4 col-xl-3">
                 <div class="card mb-3">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Profile Details</h5>
+                    <div class="card-header bg-dark text-light">
+                        <h5 class="card-title mb-0 text-light">Profile Details</h5>
                     </div>
                     <div class="card-body text-center">
                         <img
@@ -23,7 +23,7 @@
                         />
                         <h5 class="card-title mb-0">{{ Auth::user()->name }}</h5>
                         <div class="text-muted mb-2">Auper Admin</div>
-                        <form action="{{ route('logout') }}" method="POST">
+                        <form action="{{ route('admin.logout') }}" method="POST">
                             @csrf
                             <input
                                 type="submit"
@@ -48,8 +48,8 @@
                         </div>
                     @endif
 
-                    <div class="card-header">
-                        <h3 class="mb-0">Update profile</h3>
+                    <div class="card-header bg-dark text-light">
+                        <h3 class="mb-0 card-title text-light">Edit profile</h3>
                     </div>
                     <div class="card-body">
                         <form
@@ -106,8 +106,8 @@
                     </div>
                     <hr />
 
-                    <div class="card-header">
-                        <h3 class="mb-0">Change Password</h3>
+                    <div class="card-header bg-dark text-light">
+                        <h3 class="card-title text-light">Change Password</h3>
                     </div>
                     <div class="card-body">
                         <form action="{{ route('password') }}" method="POST">
