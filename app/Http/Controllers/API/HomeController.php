@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use App\Models\Blog;
+use App\Models\Cms;
+use App\Models\Page;
+use App\Models\Website;
 
 class HomeController extends Controller
 {
@@ -23,9 +26,13 @@ class HomeController extends Controller
        ],200);
     }
 
-    public function category()
+    public function category(Request $request)
     {
-        $category = Category::latest()->paginate(25);
+        $category = Category::whereHas('blogs',function($query) use ($request){
+            if ($request->ward_id)
+          $query->business_id=$request->ward_id;
+        })
+        ->latest()->paginate(25);
        return response()->json([
         'success'=>true,
         'data'=>$category
@@ -62,9 +69,16 @@ class HomeController extends Controller
        ],200);
     }
 
-    public function blogByCategory($id)
+    public function blogByCategory(Request $request,$id)
     {
-        $blog = Blog::latest()->where('status',1)->where('category_id',$id)->select('id','title','thumbnail','slug','short_description')->paginate(25);
+        $blog = Blog::latest()->where('status',1)
+        ->when($request->ward_id,function($query) use ($request){
+           $query->where('business_id',$request->ward_id);
+        })
+        ->when($request->palika_id,function($query) use ($request){
+            $query->where('business_id',null);
+         })
+        ->where('category_id',$id)->select('id','title','thumbnail','slug','short_description')->paginate(25);
        return response()->json([
         'success'=>true,
         'data'=>$blog
@@ -95,4 +109,22 @@ class HomeController extends Controller
        ],200);
     }
 
+
+    public function contact()
+    {
+        $data = Cms::first();
+       return response()->json([
+        'success'=>true,
+        'data'=>$data
+       ],200);
+    }
+
+    public function page(Request $request)
+    {
+        $data = Page::where('slug',$request)->first();
+       return response()->json([
+        'success'=>true,
+        'data'=>$data
+       ],200);
+    }
 }

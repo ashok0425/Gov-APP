@@ -15,4 +15,7 @@ class Category extends Model
         'status',
     ];
 
+    public function blogs(){
+        return $this->hasMany(Blog::class);
+    }
 }

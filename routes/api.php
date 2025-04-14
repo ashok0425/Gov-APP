@@ -15,12 +15,16 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 Route::post('/sign-up', [LoginController::class,'register']);
 Route::post('/sign-in', [LoginController::class,'login']);
+Route::middleware('auth:sanctum')->group(function () {
+   Route::get('/account/delete',[LoginController::class,'delete']);
+   Route::get('/contact',[HomeController::class,'contact']);
+   Route::get('/page',[HomeController::class,'page']);
+
+
+});
+
 
 
 Route::middleware('verifyToken')->group(function(){

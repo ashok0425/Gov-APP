@@ -80,4 +80,12 @@ class LoginController extends Controller
             'token'   => $token,
         ]);
     }
+
+    public function delete(){
+        //    User::find(auth()->user()->id)->delete();
+        return response()->json([
+            'status'  => true,
+            'message' => 'User Deleted successful',
+        ]);
+    }
 }
