@@ -35,6 +35,15 @@
        <li class="sidebar-item">
            <a class="sidebar-link" href="{{ route('access.index') }}">
                <i class="fas fa-users"></i>
+               <span class="align-middle">Employee</span>
+           </a>
+       </li>
+       @endcan
+
+       @can('do:anthing')
+       <li class="sidebar-item">
+           <a class="sidebar-link" href="{{ route('users') }}">
+               <i class="fas fa-users"></i>
                <span class="align-middle">Users</span>
            </a>
        </li>

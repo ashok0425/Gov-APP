@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use App\Http\Controllers\Controller;
 
-class AuthController extends Controller
+class LoginController extends Controller
 {
     // API Register Method
     public function register(Request $request)
@@ -18,7 +18,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email',
-            'phone'    => 'required|string|max:20',
+            'phone'    => 'required|string|max:20|unique:users,phone',
             'address'  => 'required|string|max:255',
             'password' => 'required|string|min:6|confirmed', // needs password_confirmation
         ]);
@@ -36,6 +36,7 @@ class AuthController extends Controller
             'email'    => $request->email,
             'phone'    => $request->phone,
             'address'  => $request->address,
+            'is_user'=>1,
             'password' => Hash::make($request->password),
         ]);
 

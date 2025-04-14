@@ -20,6 +20,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('business', \App\Http\Controllers\BusinessController::class);
     Route::resource('pages', \App\Http\Controllers\PageController::class)->middleware('can:do anything');
     Route::resource('cms', \App\Http\Controllers\CmsController::class)->middleware('can:do anything');
+    Route::get('users/index', [\App\Http\Controllers\ManageAccessController::class,'users'])->middleware('can:do anything')->name('users');
+
 
     Route::group(['prefix' => 'manage-access'], function () {
         Route::get('/', [App\Http\Controllers\ManageAccessController::class, 'index'])->name('access.index');

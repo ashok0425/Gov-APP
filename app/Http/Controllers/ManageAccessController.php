@@ -209,4 +209,21 @@ class ManageAccessController extends Controller
 
         return redirect()->back()->with($notification);
     }
+
+
+    public function users()
+    {
+        if (! auth()->user()->can('can:do_anything')) {
+            $notification = [
+                'alert-type' => 'error',
+                'message' => 'You do not have sufficient permissions.',
+
+            ];
+            return redirect()->back()->with($notification);
+        }
+
+        $users=User::where('is_user',1)->latest()->paginate(20);
+        return view('user.index',compact('users'));
+
+    }
 }
