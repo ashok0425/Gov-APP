@@ -43,8 +43,9 @@ class BlogController extends Controller
         $blog->short_description = $request->short_description;
         $blog->long_description = $request->long_description;
         $blog->category_id = $request->category;
+        $blog->status = $request->status??$blog->status;
         $blog->thumbnail = $thumbnail;
-        $blog->business_id = $request->business_id??Auth::user()->business_id;
+        $blog->business_id = Auth::user()->business_id;
         $blog->cover = $cover;
         $blog->save();
 
@@ -78,8 +79,14 @@ class BlogController extends Controller
             'long_description' => 'required',
 
         ]);
-        if($blog->business_id!=Auth::user()->id){
-            return redirect()->back()->with('error','You are not allowed to edit this blog');
+        if(!Auth::user()->can('can:do-anything') && $blog->business_id!=Auth::user()->business_id){
+            $notification = [
+                'alert-type' => 'error',
+                'message' => 'unauthorized Request',
+
+            ];
+
+            return redirect()->route('blogs.index')->with($notification);
         }
         $thumbnail = $request->file('thumbnail')?->store('uploads', 'public') ?? $blog->thumbnail;
         $cover = $request->file('cover')?->store('uploads', 'public') ?? $blog->thumbnail;
@@ -89,8 +96,7 @@ class BlogController extends Controller
         $blog->short_description = $request->short_description;
         $blog->long_description = $request->long_description;
         $blog->thumbnail = $thumbnail;
-        $blog->status = $request->status??0;
-        $blog->business_id = $request->business_id??Auth::user()->business_id;
+        $blog->status = $request->status??$blog->status;
         $blog->category_id = $request->category;
         $blog->cover = $cover;
 
@@ -108,9 +114,12 @@ class BlogController extends Controller
 
     public function destroy(Blog $blog)
     {
-        if($blog->business_id!=Auth::user()->business_id&& auth()->user()->business_id!=null){
-            return redirect()->back()->with('error','You are not allowed to delete this blog');
-            }
+        if(!Auth::user()->can('do:anything')){
+            if($blog->business_id!=Auth::user()->business_id){
+                return redirect()->back()->with('error','You are not allowed to delete this blog');
+                }
+
+        }
 
         $blog->delete();
         $notification = [

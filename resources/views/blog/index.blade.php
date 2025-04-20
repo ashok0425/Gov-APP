@@ -33,9 +33,9 @@
                                 <td><img src="{{ getImage($blog->thumbnail) }}" width="80" alt="" /></td>
                                 <td>
                                     @if ($blog->status == 1)
-                                        <a class="btn btn-success">Active</a>
+                                        <a class="btn btn-success">Publish</a>
                                     @else
-                                        <a class="btn btn-danger">Deactive</a>
+                                        <a class="btn btn-danger">Draft</a>
                                     @endif
                                 </td>
                                 <td>

@@ -38,26 +38,22 @@
                         <td>{{ Carbon\Carbon::parse($user->created_at)->format('d/m/Y') }}</td>
 
                         <td>
-                            <div class="dropdown">
-                                <a
-                                    id="dropdownMenuButton"
-                                    data-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false"
-                                >
-                                    <i class="fas fa-ellipsis-h"></i>
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                                <div class="d-flex">
                                     <a
-                                        class="dropdown-item"
+                                        class="btn btn-success delete_btn"
                                         href="{{ route('business.edit', $user->id) }}"
                                     >
-                                        Edit
+                                        <i class="fas fa-edit"></i>
                                     </a>
-
+                                    <a
+                                    href="{{ route('business.destroy',$user->id) }}"
+                                    class="btn btn-danger delete_btn"
+                                >
+                                    <i class="fas fa-trash"></i>
+                                </a>
 
                                 </div>
-                            </div>
                         </td>
                     </tr>
                 @endforeach

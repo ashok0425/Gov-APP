@@ -47,7 +47,7 @@ class AuthController extends Controller
                 'alert-type' => 'error',
             ];
 
-            return redirect('/admin/login')->with($notification);
+            return redirect('/login')->with($notification);
         }
 
         return redirect()->route('dashboard');

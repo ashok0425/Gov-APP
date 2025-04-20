@@ -28,16 +28,20 @@ class HomeController extends Controller
 
     public function category(Request $request)
     {
-        $category = Category::whereHas('blogs',function($query) use ($request){
-            if ($request->ward_id)
-          $query->business_id=$request->ward_id;
+        $category = Category::whereHas('blogs', function ($query) use ($request) {
+            if ($request->ward_id) {
+                $query->where('business_id', $request->ward_id);
+            }
         })
-        ->latest()->paginate(25);
-       return response()->json([
-        'success'=>true,
-        'data'=>$category
-       ],200);
+        ->latest()
+        ->paginate(25);
+
+        return response()->json([
+            'success' => true,
+            'data' => $category
+        ], 200);
     }
+
 
     public function blogs($isMain=null)
     {

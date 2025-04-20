@@ -22,8 +22,7 @@
                             height="128"
                         />
                         <h5 class="card-title mb-0">{{ Auth::user()->name }}</h5>
-                        <div class="text-muted mb-2">Auper Admin</div>
-                        <form action="{{ route('admin.logout') }}" method="POST">
+                        <form action="{{ route('logout') }}" method="POST">
                             @csrf
                             <input
                                 type="submit"

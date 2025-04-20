@@ -38,7 +38,7 @@
                         </select>
                     </div>
 
-                    @can('do:anything')
+                    {{-- @can('do:anything')
                     <div class="mb-3 col-md-6">
                         <label class="form-label">Select Ward</label>
                         <select name="business_id" id="" class="form-control form-select" required>
@@ -48,7 +48,7 @@
                            @endforeach
                         </select>
                     </div>
-                    @endif
+                    @endif --}}
 
                     <div class="mb-3 col-md-4">
                         <label class="form-label">Thumbnail</label>
@@ -77,9 +77,14 @@
 
                     </div>
 
-                    <div class="form-group col-md-4 mb-3 mb-3">
-                        <label><input name="status" type="checkbox" style="transform: scale(2)" {{$blog->status?'checked':''}} >&nbsp;  Hide Post</label>
+                    <div class="form-group col-md-4 mb-3">
+                        <label for="status">Post Status</label>
+                        <select name="status" id="status" class="form-control form-select">
+                            <option value="1" {{ $blog->status == 1 ? 'selected' : '' }}>Publish</option>
+                            <option value="0" {{ $blog->status == 0 ? 'selected' : '' }}>Draft</option>
+                        </select>
                     </div>
+
 
                     <div class="mb-3 col-md-12">
                         <label class="form-label">Short Description</label>

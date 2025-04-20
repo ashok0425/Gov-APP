@@ -41,7 +41,7 @@
                         </select>
                     </div>
 
-                    @can('do:anything')
+                    {{-- @can('do:anything')
                     <div class="mb-3 col-md-6">
                         <label class="form-label">Select Ward</label>
                         <select name="business_id" id="" class="form-control form-select" required>
@@ -51,7 +51,16 @@
                            @endforeach
                         </select>
                     </div>
-                    @endif
+                    @endif --}}
+
+                    <div class="form-group col-md-4 mb-3">
+                        <label for="status">Post Status</label>
+                        <select name="status" id="status" class="form-control">
+                            <option value="1" {{old('status') == 1 ? 'selected' : '' }}>Publish</option>
+                            <option value="0" {{ old('status')  == 0 ? 'selected' : '' }}>Draft</option>
+                        </select>
+                    </div>
+
 
                     <div class="mb-3 col-md-6">
                         <label class="form-label">Thumbnail</label>
