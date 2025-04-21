@@ -41,7 +41,7 @@
 
                                 <div class="d-flex">
                                     <a
-                                        class="btn btn-success delete_btn"
+                                        class="btn btn-success"
                                         href="{{ route('business.edit', $user->id) }}"
                                     >
                                         <i class="fas fa-edit"></i>
