@@ -56,6 +56,12 @@
                                     >
                                         <i class="far fa-edit"></i>
                                     </a>
+                                    <a
+                                    href="{{ route('categories.destroy',$category->id) }}"
+                                    class="btn btn-danger delete_btn"
+                                >
+                                    <i class="fas fa-trash"></i>
+                                </a>
                                 </td>
                             </tr>
                         @endforeach

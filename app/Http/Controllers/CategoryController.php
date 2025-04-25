@@ -86,5 +86,13 @@ class CategoryController extends Controller
 
     public function show(Category $category) {}
 
-    public function destroy(Category $category) {}
+    public function destroy(Category $category) {
+        $category->delete();
+        $notification = [
+          'alert-type' => 'success',
+          'message' => 'category   Deleted',
+      ];
+
+      return redirect()->back()->with($notification);
+    }
 }
