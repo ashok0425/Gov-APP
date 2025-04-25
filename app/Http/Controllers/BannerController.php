@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Banner;
+use App\Models\Business;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -31,7 +32,8 @@ class BannerController extends Controller
         if (! auth()->user()->can('banners:create')) {
             abort(403);
          }
-        return view('banner.create');
+         $businesses=Business::all();
+        return view('banner.create',compact('businesses'));
     }
 
     public function store(Request $request)
@@ -50,7 +52,7 @@ class BannerController extends Controller
         $banner->title = $request->title;
         $banner->description = $request->description;
         $banner->status = $request->status??1;
-        $banner->business_id = Auth::user()->business_id;
+        $banner->business_id = $request->business_id??Auth::user()->business_id;
         $banner->is_homepage_banner = $request->is_homepage_banner;
         $banner->type = $request->type??1;
 
@@ -70,8 +72,9 @@ class BannerController extends Controller
             }
 
         )->where('id',$id)->firstOrFail();
+        $businesses=Business::all();
 
-        return view('banner.edit', compact('banner'));
+        return view('banner.edit', compact('banner',compact('businesses')));
     }
 
     public function update(Request $request, $id)
@@ -97,6 +100,7 @@ class BannerController extends Controller
         $banner->description = $request->description;
         $banner->is_homepage_banner = $request->is_homepage_banner;
         $banner->status = $request->status??1;
+        $banner->business_id = $request->business_id??Auth::user()->business_id;
         $banner->save();
 
         return redirect()->route('banners.index',['type'=>$banner->type])->with('success', 'Banner updated successfully');

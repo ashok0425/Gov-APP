@@ -30,4 +30,8 @@ class Blog extends Model
         });
     }
 
+    public function business(){
+        return $this->belongsTo(Business::class);
+    }
+
 }

@@ -32,23 +32,23 @@
                         <label class="form-label">Select Category</label>
                         <select name="category" id="" class="form-control form-select" required>
                            <option value="">select category</option>
-                           @foreach (App\Models\Category::all() as $category)
+                           @foreach ($categories as $category)
                            <option value="{{$category->id}}" {{$category->id==$blog->category_id?'selected':''}}>{{$category->name}}</option>
                            @endforeach
                         </select>
                     </div>
 
-                    {{-- @can('do:anything')
+                    @can('do:anything')
                     <div class="mb-3 col-md-6">
                         <label class="form-label">Select Ward</label>
                         <select name="business_id" id="" class="form-control form-select" required>
                            <option value="">select Ward</option>
-                           @foreach (App\Models\Business::all() as $business)
+                           @foreach ($businesses as $business)
                            <option value="{{$business->id}}" {{$business->id==$blog->business_id?'selected':''}}>{{$business->name}}</option>
                            @endforeach
                         </select>
                     </div>
-                    @endif --}}
+                    @endif
 
                     <div class="mb-3 col-md-4">
                         <label class="form-label">Thumbnail</label>

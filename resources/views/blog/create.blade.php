@@ -41,17 +41,17 @@
                         </select>
                     </div>
 
-                    {{-- @can('do:anything')
+                    @can('do:anything')
                     <div class="mb-3 col-md-6">
                         <label class="form-label">Select Ward</label>
                         <select name="business_id" id="" class="form-control form-select" required>
                            <option value="">select Ward</option>
-                           @foreach (App\Models\Business::all() as $business)
+                           @foreach ($businesses as $business)
                            <option value="{{$business->id}}">{{$business->name}}</option>
                            @endforeach
                         </select>
                     </div>
-                    @endif --}}
+                    @endif
 
                     <div class="form-group col-md-4 mb-3">
                         <label for="status">Post Status</label>

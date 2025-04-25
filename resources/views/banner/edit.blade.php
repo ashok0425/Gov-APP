@@ -42,7 +42,17 @@
                         <option value="0" {{old('status',$banner->status)==0?'selected':''}}>Draft</option>
                     </select>
                 </div>
-
+                @can('do:anything')
+                <div class="mb-3 col-md-6">
+                    <label class="form-label">Select Ward</label>
+                    <select name="business_id" id="" class="form-control form-select" required>
+                       <option value="">select Ward</option>
+                       @foreach ($businesses as $business)
+                       <option value="{{$business->id}}" {{$business->id==$blog->business_id?'selected':''}}>{{$business->name}}</option>
+                       @endforeach
+                    </select>
+                </div>
+                @endif
                 <div class="mb-3 col-md-6">
                     <label class="form-label">Banner image</label>
                     <div class="file-upload-wrapper" data-text="Select your file!">
