@@ -44,9 +44,9 @@
                                 </td>
                                 <td>
                                     @if ($category->status == 1)
-                                        <a class="btn btn-success">Active</a>
+                                        <a class="badge bg-success">Publish</a>
                                     @else
-                                        <a class="btn btn-danger">Deactive</a>
+                                        <a class="badge bg-danger">Draft</a>
                                     @endif
                                 </td>
                                 <td>
