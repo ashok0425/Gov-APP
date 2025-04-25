@@ -9,28 +9,6 @@
     <ul class="navbar-nav navbar-align">
 
 
-      @can('do:anything')
-
-      <li class="nav-item dropdown">
-        <a
-          class="nav-icon dropdown-toggle d-inline-block d-sm-none"
-          href="#"
-          data-toggle="dropdown"
-        >
-
-        </a>
-
-                <a
-                    class="nav-link dropdown-toggle d-none d-sm-inline-block"
-                    href="#"
-                    data-toggle="dropdown"
-                >
-                <i class="fas fa-cog"></i>
-
-                </a>
-            </li>
-            @endcan
-
       <li class="nav-item dropdown">
                 <a
                     class="nav-link dropdown-toggle d-none d-sm-inline-block"
