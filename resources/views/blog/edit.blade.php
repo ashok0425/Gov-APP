@@ -78,7 +78,7 @@
                     </div>
 
                     <div class="form-group col-md-4 mb-3">
-                        <label for="status">Post Status</label>
+                        <label for="status">Status</label>
                         <select name="status" id="status" class="form-control form-select">
                             <option value="1" {{ $blog->status == 1 ? 'selected' : '' }}>Publish</option>
                             <option value="0" {{ $blog->status == 0 ? 'selected' : '' }}>Draft</option>

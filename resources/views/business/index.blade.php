@@ -25,6 +25,7 @@
                     <th>Address</th>
                     <th>Order</th>
                     <th>Thumbnail</th>
+                    <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -37,7 +38,13 @@
                         <td>{{ $user->address }}</td>
                         <td>{{ $user->business_order }}</td>
                         <td><img src="{{getImage($user->thumbnail )}}" alt="" width="100"></td>
-
+                        <td>
+                            @if ($user->status == 1)
+                                <a class="badge bg-success">Publish</a>
+                            @else
+                                <a class="badge bg-danger">Draft</a>
+                            @endif
+                        </td>
 
                         <td>{{ Carbon\Carbon::parse($user->created_at)->format('d/m/Y') }}</td>
 

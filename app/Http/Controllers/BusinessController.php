@@ -43,6 +43,7 @@ class BusinessController extends Controller
         $business->other = $request->other;
         $business->category_ids = $request->category;
         $business->business_order = 1;
+        $business->status = $request->status;
 
         if ($request->hasFile('thumbnail')) {
             $path = $request->file('thumbnail')->store('uploads', 'public');
@@ -87,6 +88,8 @@ class BusinessController extends Controller
         $business->phone = $request->phone;
         $business->facebook = $request->facebook;
         $business->whatsapp = $request->whatsapp;
+        $business->status = $request->status;
+
 
         $business->other = $request->other;
         if ($request->hasFile('thumbnail')) {

@@ -78,6 +78,14 @@
                         </select>
                     </div>
 
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label">Status</label>
+                        <select name="status" id="" class="form-control form-select">
+                            <option value="1" {{old('status')==1?'selected':''}}>Publish</option>
+                            <option value="0" {{old('status')==0?'selected':''}}>Draft</option>
+                        </select>
+                    </div>
+
                     {{-- <div class="form-group col-md-4 mb-3 mb-3">
                         <label><input name="is_owner" type="checkbox" style="transform: scale(2)"> &nbsp; Is Admin For ward</label>
                     </div> --}}

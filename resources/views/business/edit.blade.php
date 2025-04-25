@@ -108,6 +108,14 @@
                             value="{{ old('other',$business->other) }}" />
                     </div>
 
+                    <div class="form-group col-md-4 mb-3">
+                        <label for="status">Status</label>
+                        <select name="status" id="status" class="form-control form-select">
+                            <option value="1" {{ $business->status == 1 ? 'selected' : '' }}>Publish</option>
+                            <option value="0" {{ $business->status == 0 ? 'selected' : '' }}>Draft</option>
+                        </select>
+                    </div>
+
                 </div>
 
                 <button type="submit" class="btn btn-primary">save</button>

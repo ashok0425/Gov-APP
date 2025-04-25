@@ -85,7 +85,8 @@ class ManageAccessController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'phone' => $request->phone,
-            'business_id'=>$request->business_id
+            'business_id'=>$request->business_id,
+            'status'=>$request->status
             ]);
 
             if ($request->is_owner==1) {
@@ -96,8 +97,12 @@ class ManageAccessController extends Controller
 
         $user->syncPermissions($request->permissions);
 
+        $notification = [
+            'alert-type' => 'success',
+            'message' => 'updated successfully',
 
-        return redirect()->route('access.index');
+        ];
+        return redirect()->route('access.index')->with($notification);
     }
 
     public function edit($id)
@@ -163,6 +168,7 @@ class ManageAccessController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
+            'status'=>$request->status
         ]);
 
         if($request->password){

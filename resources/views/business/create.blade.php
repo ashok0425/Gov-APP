@@ -68,6 +68,13 @@
                         <input type="text" name="other" class="form-control" placeholder="other link"
                             value="{{ old('other') }}" />
                     </div>
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label">Status</label>
+                        <select name="status" id="" class="form-control form-select">
+                            <option value="1" {{old('status')==1?'selected':''}}>Publish</option>
+                            <option value="0" {{old('status')==0?'selected':''}}>Draft</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="mt-4">
                     <button type="submit" class="btn btn-primary">Add</button>

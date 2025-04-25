@@ -22,6 +22,7 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Ward</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -31,7 +32,13 @@
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->business?->name??'Gaupalika' }}</td>
-
+                                    <td>
+                                        @if ($user->status == 1)
+                                            <a class="badge bg-success">Publish</a>
+                                        @else
+                                            <a class="badge bg-danger">Draft</a>
+                                        @endif
+                                    </td>
                                     <td>
                                         <div class="actions-div">
                                             <a href="{{ route('access.edit', ['id' => $user->id]) }}" class="btn btn-info btn-sm mx-3">

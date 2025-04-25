@@ -77,7 +77,13 @@
                                             @endforeach
                                         </select>
                                     </div>
-
+                                    <div class="form-group col-md-4 mb-3">
+                                        <label for="status">Status</label>
+                                        <select name="status" id="status" class="form-control form-select">
+                                            <option value="1" {{ $user->status == 1 ? 'selected' : '' }}>Publish</option>
+                                            <option value="0" {{ $user->status == 0 ? 'selected' : '' }}>Draft</option>
+                                        </select>
+                                    </div>
                     {{-- <div class="form-group col-md-4 mb-3 mb-3">
                         <label><input name="is_owner" type="checkbox" style="transform: scale(2)" {{$user->is_owner?'checked':''}}> &nbsp; Is Admin For ward</label>
                     </div> --}}
