@@ -200,7 +200,6 @@ $totalUser=App\Models\User::when(!Auth::user()->can('do:anything'),function($que
                                 #
                             </th>
                             <th>Name</th>
-                            <th>Email</th>
                             <th>Phone</th>
                         </thead>
                         <tbody>
@@ -208,7 +207,6 @@ $totalUser=App\Models\User::when(!Auth::user()->can('do:anything'),function($que
                             <tr>
                                 <td>{{$loop->iteration}}</td>
                                 <td>{{$user->name}}</td>
-                                <td>{{$user->email}}</td>
                                 <td>{{$user->phone}}</td>
 
 
