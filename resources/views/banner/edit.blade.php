@@ -48,7 +48,7 @@
                     <select name="business_id" id="" class="form-control form-select" required>
                        <option value="">select Ward</option>
                        @foreach ($businesses as $business)
-                       <option value="{{$business->id}}" {{$business->id==$blog->business_id?'selected':''}}>{{$business->name}}</option>
+                       <option value="{{$business->id}}" {{$business->id==$banner->business_id?'selected':''}}>{{$business->name}}</option>
                        @endforeach
                     </select>
                 </div>

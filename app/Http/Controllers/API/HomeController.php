@@ -33,6 +33,7 @@ class HomeController extends Controller
         $business=Business::find($request->ward_id);
         $query->whereIn('id', $business->category_ids??[]);
         })
+        ->where('status',1)
         ->paginate(25);
 
         return response()->json([

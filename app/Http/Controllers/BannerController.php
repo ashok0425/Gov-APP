@@ -74,7 +74,7 @@ class BannerController extends Controller
         )->where('id',$id)->firstOrFail();
         $businesses=Business::all();
 
-        return view('banner.edit', compact('banner',compact('businesses')));
+        return view('banner.edit', compact('banner','businesses'));
     }
 
     public function update(Request $request, $id)

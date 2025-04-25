@@ -78,8 +78,9 @@
                     </div>
 
                     <div class="col-6">
+                        <input type="hidden" name="category[]" id="cat">
                         <label for="">Category</label>
-                        <select name="category[]" id="" class="form-control from-select select2" multiple="multiple">
+                        <select name id="" class="form-control from-select select2" multiple="multiple">
                             @foreach ($categories as $category)
                                 <option value="{{$category->id}}" {{in_array($category->id,$business->category_ids??[])?'selected':''}}>{{$category->name}}</option>
                             @endforeach
@@ -132,7 +133,23 @@
 
 <script>
     $(document).ready(function() {
-    $('.select2').select2();
+    const $select = $('.select2').select2();
+  let orderedSelections = [];
+
+  $select.on('select2:select', function (e) {
+    const value = e.params.data.id;
+    if (!orderedSelections.includes(value)) {
+      orderedSelections.push(value);
+    }
+    $('#cat').val(orderedSelections)
+  });
+
+  $select.on('select2:unselect', function (e) {
+
+    orderedSelections = orderedSelections.filter(v => v !== value);
+    $('#cat').val(orderedSelections)
+
+  });
 });
 </script>
 @endpush
