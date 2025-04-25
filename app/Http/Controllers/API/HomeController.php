@@ -19,7 +19,7 @@ class HomeController extends Controller
 {
     public function wards()
     {
-        $business = Business::latest()->orderBy('business_order')->paginate(25);
+        $business = Business::latest()->orderBy('business_order','asc')->paginate(25);
        return response()->json([
         'success'=>true,
         'data'=>$business
@@ -28,9 +28,11 @@ class HomeController extends Controller
 
     public function category(Request $request)
     {
-        $business=Business::find($request->ward_id);
 
-        $category = Category::whereIn('id', $business->category_ids??[])
+        $category = Category::when($request->ward_id,function($query) use ($request){
+        $business=Business::find($request->ward_id);
+        $query->whereIn('id', $business->category_ids??[]);
+        })
         ->latest()
         ->paginate(25);
 
@@ -62,9 +64,14 @@ class HomeController extends Controller
        ],200);
     }
 
-    public function blogByWard($id)
+    public function blogByWard(Request $request,$id)
     {
-        $blog = Blog::latest()->where('status',1)->where('business_id',$id)->select('id','title','thumbnail','slug','short_description')->paginate(25);
+        $blog = Blog::latest()
+         ->when($request->category_id,function($query) use ($request){
+            $query->where('category_id', $request->category_id);
+            })
+        ->where('status',1)->where('business_id',$id)
+        ->select('id','title','thumbnail','slug','short_description')->paginate(25);
        return response()->json([
         'success'=>true,
         'data'=>$blog

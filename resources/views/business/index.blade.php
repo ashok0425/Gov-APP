@@ -10,6 +10,10 @@
                     <i class="fas fa-plus"></i>
                     Add Ward
                 </a>
+                <a href="{{ route('business.reorder') }}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-sync"></i>
+                    Reorder Ward
+                </a>
             </div>
         </div>
         <table id="myTable" class="table table-responsive-sm">

@@ -19,6 +19,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('blogs', \App\Http\Controllers\BlogController::class);
     Route::resource('banners', \App\Http\Controllers\BannerController::class);
     Route::resource('business', \App\Http\Controllers\BusinessController::class);
+    Route::get('business-reorder', [\App\Http\Controllers\BusinessController::class,'reorder'])->name('business.reorder');
+    Route::post('business-reorder', [\App\Http\Controllers\BusinessController::class,'reorderStore'])->name('business.reorder.store');
+
+
     Route::resource('pages', \App\Http\Controllers\PageController::class)->middleware('can:do anything');
     Route::resource('cms', \App\Http\Controllers\CmsController::class)->middleware('can:do anything');
     Route::get('users/index', [\App\Http\Controllers\ManageAccessController::class,'users'])->middleware('can:do anything')->name('users');

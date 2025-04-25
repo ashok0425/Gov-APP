@@ -49,17 +49,6 @@
                             required
                         />
                     </div>
-                    <div class="mb-3 col-md-6">
-                        <label class="form-label">Order</label>
-                        <input
-                            type="number"
-                            name="order"
-                            class="form-control"
-                            placeholder="Enter Ward Order"
-                            value="{{ old('order',$business->business_order) }}"
-                            required
-                        />
-                    </div>
 
                     <div class="mb-3 col-md-6">
                         <label class="form-label">Thumbnail</label>
@@ -88,13 +77,35 @@
 
                     </div>
 
-                    <div class="col-12">
+                    <div class="col-6">
                         <label for="">Category</label>
                         <select name="category[]" id="" class="form-control from-select select2" multiple="multiple">
                             @foreach ($categories as $category)
                                 <option value="{{$category->id}}" {{in_array($category->id,$business->category_ids)?'selected':''}}>{{$category->name}}</option>
                             @endforeach
                         </select>
+                    </div>
+
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label">Email</label>
+                        <input type="text" name="email" class="form-control" placeholder="Enter Email address"
+                            value="{{ old('email',$business->email) }}" />
+                    </div>
+
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label">Facebook</label>
+                        <input type="text" name="facebook" class="form-control" placeholder="facebook"
+                            value="{{ old('facebook',$business->facebook) }}" />
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label">WhatsApp</label>
+                        <input type="text" name="whatsapp" class="form-control" placeholder="whatsapp"
+                            value="{{ old('whatsapp',$business->whatsapp) }}" />
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label">Any other link</label>
+                        <input type="text" name="other" class="form-control" placeholder="other link"
+                            value="{{ old('other',$business->other) }}" />
                     </div>
 
                 </div>

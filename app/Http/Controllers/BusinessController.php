@@ -13,7 +13,7 @@ class BusinessController extends Controller
 {
     public function index()
     {
-        $business = Business::latest()->paginate(10);
+        $business = Business::orderBy('business_order','asc')->paginate(10);
 
         return view('business.index', compact('business'));
     }
@@ -36,8 +36,14 @@ class BusinessController extends Controller
         $business->name = $request->name;
         $business->phone = $request->phone;
         $business->address = $request->address;
-        $business->business_order = $request->order;
+        $business->email = $request->email;
+        $business->phone = $request->phone;
+        $business->facebook = $request->facebook;
+        $business->whatsapp = $request->whatsapp;
+        $business->other = $request->other;
         $business->category_ids = $request->category;
+        $business->business_order = 1;
+
         if ($request->hasFile('thumbnail')) {
             $path = $request->file('thumbnail')->store('uploads', 'public');
             $business->thumbnail = $path;
@@ -76,9 +82,13 @@ class BusinessController extends Controller
         $business->name = $request->name;
         $business->phone = $request->phone;
         $business->address = $request->address;
-        $business->business_order = $request->order;
         $business->category_ids = $request->category;
+        $business->email = $request->email;
+        $business->phone = $request->phone;
+        $business->facebook = $request->facebook;
+        $business->whatsapp = $request->whatsapp;
 
+        $business->other = $request->other;
         if ($request->hasFile('thumbnail')) {
             $path = $request->file('thumbnail')->store('uploads', 'public');
             $business->thumbnail = $path;
@@ -95,7 +105,22 @@ class BusinessController extends Controller
         return redirect()->back()->with($notification);
     }
 
-    public function show(User $user) {}
+    public function show() {}
+
+    public function reorder() {
+        $business = Business::orderBy('business_order','asc')->paginate(10);
+
+        return view('business.drag', compact('business'));
+    }
+
+    public function reorderStore(Request $request){
+        $orders=$request->order;
+        foreach ($orders as $key => $order) {
+            $business=Business::find($order['id']);
+            $business->business_order=$order['position'];
+            $business->save();
+        }
+    }
 
     public function destroy(Business $business) {
           $business->delete();
