@@ -58,7 +58,16 @@
                                 </div>
                             </div>
                             @can('do:anything')
+                            <div class="form-group col-md-4 mb-3">
+                            <label class="col-form-label">Enter password </label>
+                            <div class="">
+                                <input type="text" value="{{ old('password') }}" class="form-control" name="password">
 
+                                @error('password')
+                                    <span class="error-msg">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
                                     <div class="form-group col-md-4 mb-3">
                                         <label class="form-label">Ward</label>
                                         <select name="ward" id="" class="form-control form-select">

@@ -25,7 +25,7 @@
 
                         <th>Banner Image</th>
                         <th>Title</th>
-                        {{-- <th>Detail</th> --}}
+                        <th>Ward</th>
 
                         <th>Status</th>
                         <th>Action</th>
@@ -37,12 +37,14 @@
                             <td>{{ $loop->iteration }}</td>
                             <td><img src="{{ getImage($item->thumbnail) }}" alt="" width="70" /></td>
                             <td>{{ $item->title }}</td>
+                            <td>{{ $item->business?->name??'Gaupalika' }}</td>
+
 
                             <td>
                                 @if ($item->status == 1)
-                                    <a class="btn btn-success">Active</a>
+                                    <a class="badge bg-success">Publish</a>
                                 @else
-                                    <a class="btn btn-danger">Deactive</a>
+                                    <a class="badge bg-danger">Draft</a>
                                 @endif
                             </td>
                             <td>

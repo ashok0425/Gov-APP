@@ -32,7 +32,15 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
         />
     </head>
+
     <style>
+    .rotate-180 {
+        transform: rotate(180deg);
+        transition: transform 0.3s ease;
+    }
+    ul ,.submenu{
+        list-style: none!important;
+    }
         .file-upload-wrapper {
             position: relative;
             width: 100%;
@@ -255,5 +263,28 @@
 });
 
 </script>
+
+
+
+<script>
+    document.querySelectorAll('[data-toggle]').forEach(function(toggleBtn) {
+        toggleBtn.addEventListener('click', function () {
+            const targetId = this.getAttribute('data-toggle');
+            const dropdown = document.getElementById(targetId);
+
+            if (dropdown.classList.contains('d-none')) {
+                dropdown.classList.remove('d-none');
+                dropdown.classList.add('d-block');
+                this.querySelector('.toggle-icon')?.classList.add('rotate-180');
+            } else {
+                dropdown.classList.remove('d-block');
+                dropdown.classList.add('d-none');
+                this.querySelector('.toggle-icon')?.classList.remove('rotate-180');
+            }
+        });
+    });
+</script>
+
+
     </body>
 </html>

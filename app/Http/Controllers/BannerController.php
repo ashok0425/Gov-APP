@@ -18,7 +18,10 @@ class BannerController extends Controller
 
         $banners = Banner::when(!Auth::user()->can('do:anything'),function($query){
                $query->where('business_id',Auth::user()->business_id);
-            })->latest()->paginate();
+            })->when(request()->query('type'),function($query){
+                $query->where('type',request()->query('type'));
+            })
+            ->latest()->paginate();
 
         return view('banner.index', compact('banners'));
     }
@@ -53,7 +56,7 @@ class BannerController extends Controller
 
         $banner->save();
 
-        return redirect()->route('banners.index')->with('success', 'Banner added successfully');
+        return redirect()->route('banners.index',['type'=>$banner->type])->with('success', 'Banner added successfully');
     }
 
     public function edit($id)
@@ -94,10 +97,9 @@ class BannerController extends Controller
         $banner->description = $request->description;
         $banner->is_homepage_banner = $request->is_homepage_banner;
         $banner->status = $request->status??1;
-        $banner->type = $request->type??1;
         $banner->save();
 
-        return redirect()->route('banners.index')->with('success', 'Banner updated successfully');
+        return redirect()->route('banners.index',['type'=>$banner->type])->with('success', 'Banner updated successfully');
     }
 
     public function show($id)
@@ -126,6 +128,6 @@ class BannerController extends Controller
 
         $banner->delete();
 
-        return redirect()->route('banners.index')->with('success', 'Banner deleted successfully');
+        return redirect()->route('banners.index',['type'=>$banner->type])->with('success', 'Banner deleted successfully');
     }
 }

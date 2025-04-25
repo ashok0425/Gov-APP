@@ -165,6 +165,11 @@ class ManageAccessController extends Controller
             'phone' => $request->phone,
         ]);
 
+        if($request->password){
+            $user->password = Hash::make($request->password);
+            $user->save();
+        }
+
         $user->syncPermissions($request->permissions);
 
         return redirect()->back();

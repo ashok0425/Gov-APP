@@ -20,48 +20,30 @@
             @method('PATCH')
                 @csrf
                 <div class="row">
-                <div class="mb-3 col-md-4">
+                <div class="mb-3 col-md-6">
                     <label class="form-label">Banner Title</label>
                     <input name="title" class="form-control" cols="30" rows="10" value="{!! $banner->title !!}"/>
                 </div>
-                <div class="mb-3 col-md-4">
-                    <label class="form-label">Type</label>
-                    <select name="type" id="" class="form-control">
-                        <option
-                            value="2"
-                            @if ($banner->type == 1)
-                                selected
-                            @endif
-                        >
-                            Slider 1
-                        </option>
-                        <option
-                            value="2"
-                            @if ($banner->type == 2)
-                                selected
-                            @endif
-                        > Slider 2
-                        </option>
-                        <option
-                        value="3"
-                        @if ($banner->type == 3)
-                            selected
-                        @endif
-                    > Slider 3
-                    </option>
-                    </select>
-                </div>
+
                 @can ('do:anything')
-                <div class="mb-3 col-md-4">
+                <div class="mb-3 col-md-6">
                     <label class="form-label">Is Homepage Banner</label>
-                    <select name="is_homepage_banner" id="" class="form-control">
+                    <select name="is_homepage_banner" id="" class="form-control form-select">
                         <option value="1" {{$banner->is_homepage_banner?'selected':''}}>Yes</option>
                         <option value="0" {{!$banner->is_homepage_banner?'selected':''}}>No</option>
                     </select>
                 </div>
                 @endif
 
-                <div class="mb-3 col-md-4">
+                <div class="mb-3 col-md-6">
+                    <label class="form-label">Status</label>
+                    <select name="status" id="" class="form-control form-select">
+                        <option value="1" {{old('status',$banner->status)==1?'selected':''}}>Publish</option>
+                        <option value="0" {{old('status',$banner->status)==0?'selected':''}}>Draft</option>
+                    </select>
+                </div>
+
+                <div class="mb-3 col-md-6">
                     <label class="form-label">Banner image</label>
                     <div class="file-upload-wrapper" data-text="Select your file!">
                         <input name="thumbnail" type="file" class="file-upload-field" value="" />

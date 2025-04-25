@@ -16,4 +16,10 @@ class Banner extends Model
         'status',
         'type',
     ];
+
+    public function business(){
+
+        return $this->belongsTo(Business::class,'business_id');
+
+    }
 }
