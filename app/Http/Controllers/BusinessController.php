@@ -31,7 +31,8 @@ class BusinessController extends Controller
             'phone' => 'required|integer|unique:businesses,phone',
             'address' => 'required',
         ]);
-
+        $input = $request->category;
+        $category = explode(',', $input[0]);
         $business = new Business();
         $business->name = $request->name;
         $business->phone = $request->phone;
@@ -41,7 +42,7 @@ class BusinessController extends Controller
         $business->facebook = $request->facebook;
         $business->whatsapp = $request->whatsapp;
         $business->other = $request->other;
-        $business->category_ids = $request->category;
+        $business->category_ids = $category;
         $business->business_order = 1;
         $business->status = $request->status;
 
@@ -79,11 +80,12 @@ class BusinessController extends Controller
          'phone' => 'required|integer',
             'address' => 'required',
         ]);
-
+        $input = $request->category;
+        $category = explode(',', $input[0]);
         $business->name = $request->name;
         $business->phone = $request->phone;
         $business->address = $request->address;
-        $business->category_ids = $request->category;
+        $business->category_ids = $category;
         $business->email = $request->email;
         $business->phone = $request->phone;
         $business->facebook = $request->facebook;

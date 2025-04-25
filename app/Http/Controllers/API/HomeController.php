@@ -28,11 +28,12 @@ class HomeController extends Controller
 
     public function category(Request $request)
     {
-
-        $category = Category::when($request->ward_id,function($query) use ($request){
         $business=Business::find($request->ward_id);
-        $query->whereIn('id', $business->category_ids??[]);
+        $category_ids=$business->category_ids??[];
+        $category = Category::when($request->ward_id,function($query) use ($category_ids){
+        $query->whereIn('id', $category_ids??[]);
         })
+        ->orderByRaw('FIELD(id, ' . implode(',', $category_ids) . ')')
         ->where('status',1)
         ->paginate(25);
 
