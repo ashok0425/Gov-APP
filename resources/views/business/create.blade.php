@@ -82,13 +82,33 @@
                             />
                         </div>
                     </div>
-
+<div class="col-12">
+    <label for="">Category</label>
+    <select name="category[]" id="" class="form-control from-select select2" multiple="multiple">
+        @foreach ($categories as $category)
+            <option value="{{$category->id}}">{{$category->name}}</option>
+        @endforeach
+    </select>
+</div>
 
 
                 </div>
 
+              <div class="mt-4">
                 <button type="submit" class="btn btn-primary">Add</button>
+              </div>
             </form>
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+    $('.select2').select2();
+});
+</script>
+@endpush

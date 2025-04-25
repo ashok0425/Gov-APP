@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Blog;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -22,8 +23,10 @@ class BlogController extends Controller
     }
 
     public function create()
-    {
-        return view('blog.create');
+    {   $categories=Category::when(!Auth::user()->can('do:anything',function($query){
+        $$query->whereIn('id',Auth::user()->business->category_ids);
+    }))->get();
+        return view('blog.create',compact('categories'));
     }
 
     public function store(Request $request)

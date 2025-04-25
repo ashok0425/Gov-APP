@@ -9,4 +9,7 @@ class Business extends Model
 {
     use HasFactory;
 
+    protected $casts=[
+        'category_ids'=>'array'
+    ];
 }

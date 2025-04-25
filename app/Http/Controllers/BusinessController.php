@@ -20,7 +20,8 @@ class BusinessController extends Controller
 
     public function create()
     {
-        return view('business.create');
+        $categories=Category::all();
+        return view('business.create',compact('categories'));
     }
 
     public function store(Request $request)
@@ -36,7 +37,7 @@ class BusinessController extends Controller
         $business->phone = $request->phone;
         $business->address = $request->address;
         $business->business_order = $request->order;
-
+        $business->category_ids = $request->category;
         if ($request->hasFile('thumbnail')) {
             $path = $request->file('thumbnail')->store('uploads', 'public');
             $business->thumbnail = $path;
@@ -60,7 +61,8 @@ class BusinessController extends Controller
 
     public function edit(Business $business)
     {
-        return view('business.edit', compact('business'));
+        $categories=Category::all();
+        return view('business.edit', compact('business','categories'));
     }
 
     public function update(Request $request, Business $business)
@@ -75,6 +77,8 @@ class BusinessController extends Controller
         $business->phone = $request->phone;
         $business->address = $request->address;
         $business->business_order = $request->order;
+        $business->category_ids = $request->category;
+
         if ($request->hasFile('thumbnail')) {
             $path = $request->file('thumbnail')->store('uploads', 'public');
             $business->thumbnail = $path;

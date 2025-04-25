@@ -28,11 +28,9 @@ class HomeController extends Controller
 
     public function category(Request $request)
     {
-        $category = Category::whereHas('blogs', function ($query) use ($request) {
-            if ($request->ward_id) {
-                $query->where('business_id', $request->ward_id);
-            }
-        })
+        $business=Business::find($request->ward_id);
+
+        $category = Category::whereIn('id', $business->category_ids??[])
         ->latest()
         ->paginate(25);
 
