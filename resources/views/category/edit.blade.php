@@ -28,14 +28,14 @@
                     </div>
 
                     <div class="mb-3 col-md-4">
-                        <label class="form-label">Is Active</label>
+                        <label class="form-label">Status</label>
                         <select name="status" id="" class="form-control form-select" required>
                             <option value="">select status</option>
                             <option value="1" {{ $category->status ? 'selected' : '' }}>
-                                Yes
+                                Publish
                             </option>
                             <option value="0" {{ ! $category->status ? 'selected' : '' }}>
-                                No
+                                Draft
                             </option>
                         </select>
                     </div>
