@@ -18,7 +18,7 @@ class BlogController extends Controller
               ->when(
             !Auth::user()->can('do:anything'),function($query){
                $query->where('business_id',Auth::user()->business_id);
-            })->when($request->status,function($query) use ($request){
+            })->when($request->status==0||$request->status,function($query) use ($request){
            $query->where('status',$request->status);
             })
             ->when($request->category,function($query) use ($request){
@@ -49,7 +49,7 @@ class BlogController extends Controller
         ->orderBy('id', 'desc')->paginate(20);
 
         $categories=Category::when(!Auth::user()->can('do:anything'),function($query){
-            $query->whereIn('id',Auth::user()->business->category_ids);
+            $query->whereIn('id',Auth::user()->business->category_ids??[]);
         })->get();
         $businesses=Business::all();
         // dd($request->all());
@@ -59,7 +59,7 @@ class BlogController extends Controller
     public function create()
     {
         $categories=Category::when(!Auth::user()->can('do:anything'),function($query){
-        $query->whereIn('id',Auth::user()->business->category_ids);
+        $query->whereIn('id',Auth::user()->business->category_ids??[]);
     })->get();
     $businesses=Business::all();
         return view('blog.create',compact('categories','businesses'));
@@ -108,7 +108,7 @@ class BlogController extends Controller
             return redirect()->route('blogs.index')->with($notification);
         }
         $categories=Category::when(!Auth::user()->can('do:anything'),function($query){
-        $query->whereIn('id',Auth::user()->business->category_ids);
+        $query->whereIn('id',Auth::user()->business->category_ids??[]);
         })->get();
         $businesses=Business::all();
         return view('blog.edit', compact('blog',compact('categories','businesses')));

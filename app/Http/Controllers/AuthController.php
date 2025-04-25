@@ -19,11 +19,6 @@ class AuthController extends Controller
 
     public function dashboard(Request $request)
     {
-        if(!auth::user()->can('do:anything')){
-        return view('subdashboard');
-        }
-
-
 
         return view('dashboard');
     }
