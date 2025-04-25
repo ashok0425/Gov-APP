@@ -81,7 +81,7 @@
                         <label for="">Category</label>
                         <select name="category[]" id="" class="form-control from-select select2" multiple="multiple">
                             @foreach ($categories as $category)
-                                <option value="{{$category->id}}" {{in_array($category->id,$business->category_ids)?'selected':''}}>{{$category->name}}</option>
+                                <option value="{{$category->id}}" {{in_array($category->id,$business->category_ids??[])?'selected':''}}>{{$category->name}}</option>
                             @endforeach
                         </select>
                     </div>
