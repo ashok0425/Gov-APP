@@ -48,7 +48,7 @@ class AuthController extends Controller
                 'message' => 'Your account has been block.Please contact administration',
                 'alert-type' => 'error',
             ];
-          Auth::user()->logout();
+          Auth::logout();
             return redirect('/login')->with($notification);
         }
 
