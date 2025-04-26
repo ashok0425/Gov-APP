@@ -6,7 +6,7 @@
                 <div class="col-md-3 mb-2">
                     <input type="search" name="keyword" value="{{request()->query('keyword')}}" class="form-control" placeholder="search...">
                 </div>
-                <div class="col-md-2 mb-2">
+                <div class="col-md-3 mb-2">
 
                 <select name="category[]" id="" class="form-control select2" multiple placeholder="category">
                    @foreach ($categories as $category)
@@ -22,7 +22,7 @@
                         </select>
                     </div>
                     @can('do:anything')
-                    <div class="col-md-2 mb-2">
+                    <div class="col-md-3 mb-2">
                         <select name="business[]" id="" class="form-control select" multiple>
                            @foreach ($businesses as $business)
                                <option value="{{$business->id}}" {{in_array($business->id,request()->query('business')??[])?'selected':''}}>{{$business->name}}</option>
@@ -30,9 +30,9 @@
                         </select>
                         </div>
                     @endcan
-                    <div class="col-md-2 mb-2">
+                    {{-- <div class="col-md-2 mb-2">
                         <input type="text" name="dates" id="" class="form-control" value="{{request()->query('dates')}}">
-                    </div>
+                    </div> --}}
                     <div class="col-md-1">
                         <button class="btn btn-primary"><i class="fas fa-search"></i></button>
                     </div>
@@ -41,12 +41,12 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between bg-dark">
                 <div>
-                    <h5 class="card-title text-white">Blog List</h5>
+                    <h5 class="card-title text-white">Post List</h5>
                 </div>
                 <div>
                     <a href="{{ route('blogs.create') }}" class="btn btn-info btn-sm">
                         <o class="fas fa-plus"></o>
-                        Add Blog
+                        Add Post
                     </a>
                 </div>
             </div>
@@ -58,6 +58,9 @@
                             <th>#</th>
                             <th>Title</th>
                             <th>Thumbnail</th>
+                            <th>Created At</th>
+                            <th>Status</th>
+
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -68,6 +71,8 @@
                                 <td>{{ $blog->title }}</td>
 
                                 <td><img src="{{ getImage($blog->thumbnail) }}" width="80" alt="" /></td>
+                                <td>{{ Carbon\Carbon::parse($blog->created_at)->format('d/m/Y') }}</td>
+
                                 <td>
                                     @if ($blog->status == 1)
                                         <a class="badge bg-success">Publish</a>

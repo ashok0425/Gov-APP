@@ -34,11 +34,13 @@
         <i class="fas fa-chevron-down toggle-icon"></i>
     </a>
     <ul class="submenu {{Request::is('banners','banners/*')?'d-block':' d-none'}}" id="banner-dropdown" >
+        @can('do:anything')
         <li class="submenu-item">
-            <a href="{{ route('banners.index',['type'=>1]) }}" class="sidebar-link">Top Banner</a>
+            <a href="{{ route('banners.index',['type'=>1]) }}" class="sidebar-link">Notice Banner</a>
         </li>
+        @endcan
         <li class="submenu-item">
-            <a href="{{ route('banners.index',['type'=>2]) }}" class="sidebar-link">Slider Banner</a>
+            <a href="{{ route('banners.index',['type'=>2]) }}" class="sidebar-link">Rep Banner</a>
         </li>
     </ul>
 </li>
@@ -75,7 +77,7 @@
         @endcan
 
 
-        @can(['blog:view','blog:create','blog:edit','blog:delete'])
+        @can(['post:view','post:create','post:edit','post:delete'])
         <li class="sidebar-item">
             <a class="sidebar-link {{Request::is('blogs','blogs/*')?'text-light':' '}}" href="{{ route('blogs.index') }}">
                 <i class="fas fa-photo-video"></i>

@@ -14,13 +14,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/password/update', [\App\Http\Controllers\AuthController::class, 'changePassword'])->name('password');
     Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
-    Route::resource('categories', \App\Http\Controllers\CategoryController::class);
+    Route::resource('categories', \App\Http\Controllers\CategoryController::class)->middleware('can:do anything');
 
     Route::resource('blogs', \App\Http\Controllers\BlogController::class);
     Route::resource('banners', \App\Http\Controllers\BannerController::class);
-    Route::resource('business', \App\Http\Controllers\BusinessController::class);
-    Route::get('business-reorder', [\App\Http\Controllers\BusinessController::class,'reorder'])->name('business.reorder');
-    Route::post('business-reorder', [\App\Http\Controllers\BusinessController::class,'reorderStore'])->name('business.reorder.store');
+    Route::resource('business', \App\Http\Controllers\BusinessController::class)->middleware('can:do anything');
+    Route::get('business-reorder', [\App\Http\Controllers\BusinessController::class,'reorder'])->name('business.reorder')->middleware('can:do anything');
+    Route::post('business-reorder', [\App\Http\Controllers\BusinessController::class,'reorderStore'])->name('business.reorder.store')->middleware('can:do anything');
 
 
     Route::resource('pages', \App\Http\Controllers\PageController::class)->middleware('can:do anything');

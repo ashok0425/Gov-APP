@@ -1,13 +1,9 @@
 @extends('layout.master')
 @section('main-content')
-    @php
-        define('PAGE', 'blog');
-    @endphp
-
     <div class="card">
         <div class="card-header d-flex justify-content-between bg-dark">
             <div>
-                <h5 class="card-title text-white">Add New Blog</h5>
+                <h5 class="card-title text-white">Add New Post</h5>
             </div>
         </div>
         <div class="card-body">
@@ -25,7 +21,7 @@
                             type="text"
                             name="title"
                             class="form-control"
-                            placeholder="Blog title"
+                            placeholder="Post title"
                             value="{{ old('title') }}"
                             required
                         />
@@ -43,8 +39,8 @@
 
                     @can('do:anything')
                     <div class="mb-3 col-md-6">
-                        <label class="form-label">Select Ward</label>
-                        <select name="business_id" id="" class="form-control form-select" required>
+                        <label class="form-label">Select Ward <small class="text-info">(Not selecting ward will be consider as Gaupalika Post)</small></label>
+                        <select name="business_id" id="" class="form-control form-select" >
                            <option value="">select Ward</option>
                            @foreach ($businesses as $business)
                            <option value="{{$business->id}}">{{$business->name}}</option>
@@ -93,7 +89,7 @@
                             type="text"
                             name="short_description"
                             class="form-control"
-                            placeholder="Blog Detail"
+                            placeholder="Post Detail"
                             required
                             rows="2"
                         >
@@ -109,7 +105,7 @@
                             name="long_description"
                             id="summernote"
                             class="form-control"
-                            placeholder="Blog Description"
+                            placeholder="Post Description"
                             required
                         >
 {{ old('long_description') }}

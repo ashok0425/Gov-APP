@@ -22,7 +22,7 @@
                             type="text"
                             name="title"
                             class="form-control"
-                            placeholder="Blog title"
+                            placeholder="Post title"
                             value="{{ old('title',$blog->title) }}"
                             required
                         />
@@ -40,8 +40,8 @@
 
                     @can('do:anything')
                     <div class="mb-3 col-md-6">
-                        <label class="form-label">Select Ward</label>
-                        <select name="business_id" id="" class="form-control form-select" required>
+                        <label class="form-label">Select Ward  <small class="text-info">(Not selecting ward will be consider as Gaupalika Post)</small></label>
+                        <select name="business_id" id="" class="form-control form-select">
                            <option value="">select Ward</option>
                            @foreach ($businesses as $business)
                            <option value="{{$business->id}}" {{$business->id==$blog->business_id?'selected':''}}>{{$business->name}}</option>
@@ -50,7 +50,7 @@
                     </div>
                     @endif
 
-                    <div class="mb-3 col-md-4">
+                    <div class="mb-3 col-md-6">
                         <label class="form-label">Thumbnail</label>
                         <div class="file-upload-wrapper" data-text="Select your file!">
                             <input
@@ -63,7 +63,7 @@
                         <img src="{{getImage($blog->thumbnail)}}" alt="" width="100">
                     </div>
 
-                    <div class="mb-3 col-md-4">
+                    <div class="mb-3 col-md-6">
                         <label class="form-label">Cover Photo (optional)</label>
                         <div class="file-upload-wrapper" data-text="Select your file!">
                             <input
@@ -77,7 +77,7 @@
 
                     </div>
 
-                    <div class="form-group col-md-4 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="status">Status</label>
                         <select name="status" id="status" class="form-control form-select">
                             <option value="1" {{ $blog->status == 1 ? 'selected' : '' }}>Publish</option>
@@ -92,7 +92,7 @@
                             type="text"
                             name="short_description"
                             class="form-control"
-                            placeholder="Blog Detail"
+                            placeholder="Post Detail"
                             required
                             rows="2"
                         >
@@ -108,7 +108,7 @@
                             name="long_description"
                             id="summernote"
                             class="form-control"
-                            placeholder="Blog Description"
+                            placeholder="Post Description"
                             required
                         >
 {{ old('long_description',$blog->long_description) }}

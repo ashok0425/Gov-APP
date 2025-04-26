@@ -113,13 +113,7 @@
                                                         @endif
 
                                                     </span></label>
-                                                    @if ($item == 'others:miscellaneous')
-                                                    (Contributions, Subscriptions)
-                                                @endif
 
-                                                @if ($item == 'others:content_management')
-                                                    (Pages, News, Faqs, Blog)
-                                                @endif
                                             </div>
                                             @endforeach
                                         </div>

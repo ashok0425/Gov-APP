@@ -56,7 +56,7 @@
                   name="description"
                   id="summernote"
                   class="form-control"
-                  placeholder="Blog Description"
+                  placeholder="Post Description"
                   required
                 >{{ old('description',$page->description) }}
                       </textarea

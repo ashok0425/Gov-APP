@@ -36,7 +36,7 @@
                         name="detail"
                         id="summernote"
                         class="form-control"
-                        placeholder="Blog Detail"
+                        placeholder="Post Detail"
                         required
                     >
                     {{ old('detail') }}

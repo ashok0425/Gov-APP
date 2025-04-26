@@ -14,7 +14,6 @@ class BusinessController extends Controller
     public function index()
     {
         $business = Business::orderBy('business_order','asc')->paginate(10);
-
         return view('business.index', compact('business'));
     }
 

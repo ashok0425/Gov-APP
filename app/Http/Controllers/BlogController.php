@@ -18,7 +18,8 @@ class BlogController extends Controller
               ->when(
             !Auth::user()->can('do:anything'),function($query){
                $query->where('business_id',Auth::user()->business_id);
-            })->when($request->status==0||$request->status,function($query) use ($request){
+            })
+            ->when($request->status!=''||$request->status,function($query) use ($request){
            $query->where('status',$request->status);
             })
             ->when($request->category,function($query) use ($request){
@@ -111,7 +112,7 @@ class BlogController extends Controller
         $query->whereIn('id',Auth::user()->business->category_ids??[]);
         })->get();
         $businesses=Business::all();
-        return view('blog.edit', compact('blog',compact('categories','businesses')));
+        return view('blog.edit', compact('blog','businesses','categories'));
     }
 
     public function update(Request $request, Blog $blog)
