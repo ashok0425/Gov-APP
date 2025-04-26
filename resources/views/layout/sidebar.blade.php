@@ -86,17 +86,16 @@
         </li>
           @endcan
 
-          <li class="sidebar-header">General</li>
             @can('do:anything')
+          <li class="sidebar-header">General</li>
+
             <li class="sidebar-item">
                 <a class="sidebar-link {{Request::is('pages','pages/*')?'text-light':' '}}" href="{{ route('pages.index') }}">
                     <i class="far fa-calendar-minus"></i>
                     <span class="align-middle">Pages</span>
                 </a>
             </li>
-            @endcan
 
-            @can('do:anything')
             <li class="sidebar-item">
                 <a class="sidebar-link {{Request::is('websites','websites/*')?'text-light':' '}}" href="{{ route('cms.edit', 1) }}">
                     <i class="fas fa-images"></i>
