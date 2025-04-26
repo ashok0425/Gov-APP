@@ -36,12 +36,19 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
         if (! Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
-
             $notification = [
                 'message' => 'Invalid username or password',
                 'alert-type' => 'error',
             ];
+            return redirect('/login')->with($notification);
+        }
 
+        if(Auth::user()->status){
+            $notification = [
+                'message' => 'Your account has been block.Please contact administration',
+                'alert-type' => 'error',
+            ];
+          Auth::user()->logout();
             return redirect('/login')->with($notification);
         }
 

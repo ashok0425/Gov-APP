@@ -168,7 +168,8 @@ class ManageAccessController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'status'=>$request->status
+            'status'=>$request->status,
+            'business_id'=>$request->business_id
         ]);
 
         if($request->password){
