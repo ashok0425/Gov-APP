@@ -70,7 +70,7 @@
                         </div>
                                     <div class="form-group col-md-4 mb-3">
                                         <label class="form-label">Ward</label>
-                                        <select name="ward" id="" class="form-control form-select">
+                                        <select name="business_id" id="" class="form-control form-select">
                                             <option value="">Select Ward</option>
                                             @foreach(App\Models\Business::all() as $location)
                                             <option value="{{$location->id}}" {{$location->id==$user->business_id?'selected':''}}>{{$location->name}}</option>
