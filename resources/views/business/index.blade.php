@@ -56,7 +56,7 @@
     >
         <i class="fas fa-edit"></i>
     </a>
-@if ($user->id!==1)
+@if ($user->id!==22)
 
     <a
     href="{{ route('business.destroy',$user->id) }}"
