@@ -15,11 +15,7 @@
                         <input type="text" name="name" class="form-control" placeholder="Enter name"
                             value="{{ old('name') }}" required />
                     </div>
-                    <div class="mb-3 col-md-6">
-                        <label class="form-label">Phone</label>
-                        <input type="number" name="phone" class="form-control" placeholder="Enter phone number"
-                            value="{{ old('phone') }}" required />
-                    </div>
+
                     <div class="mb-3 col-md-6">
                         <label class="form-label">Address</label>
                         <input type="text" name="address" class="form-control" placeholder="Enter Address"
@@ -50,6 +46,11 @@
                         </select>
                     </div>
                     <div class="mb-3 col-md-6">
+                        <label class="form-label">Phone</label>
+                        <input type="number" name="phone" class="form-control" placeholder="Enter phone number"
+                            value="{{ old('phone') }}" required />
+                    </div>
+                    <div class="mb-3 col-md-6">
                         <label class="form-label">Email</label>
                         <input type="text" name="email" class="form-control" placeholder="Enter Email address"
                             value="{{ old('email') }}" />
@@ -64,6 +65,11 @@
                         <label class="form-label">WhatsApp</label>
                         <input type="text" name="whatsapp" class="form-control" placeholder="whatsapp"
                             value="{{ old('whatsapp') }}" />
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label">Messanger</label>
+                        <input type="text" name="messanger" class="form-control" placeholder="Messanger"
+                            value="{{ old('messanger') }}" />
                     </div>
                     <div class="mb-3 col-md-6">
                         <label class="form-label">Any other link</label>

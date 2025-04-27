@@ -27,17 +27,7 @@
                             required
                         />
                     </div>
-                    <div class="mb-3 col-md-6">
-                        <label class="form-label">Phone</label>
-                        <input
-                            type="number"
-                            name="phone"
-                            class="form-control"
-                            placeholder="Enter phone number"
-                            value="{{ old('phone',$business->phone) }}"
-                            required
-                        />
-                    </div>
+
                     <div class="mb-3 col-md-6">
                         <label class="form-label">Address</label>
                         <input
@@ -86,7 +76,17 @@
                             @endforeach
                         </select>
                     </div>
-
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label">Phone</label>
+                        <input
+                            type="number"
+                            name="phone"
+                            class="form-control"
+                            placeholder="Enter phone number"
+                            value="{{ old('phone',$business->phone) }}"
+                            required
+                        />
+                    </div>
                     <div class="mb-3 col-md-6">
                         <label class="form-label">Email</label>
                         <input type="text" name="email" class="form-control" placeholder="Enter Email address"
@@ -102,6 +102,11 @@
                         <label class="form-label">WhatsApp</label>
                         <input type="text" name="whatsapp" class="form-control" placeholder="whatsapp"
                             value="{{ old('whatsapp',$business->whatsapp) }}" />
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label">Messanger</label>
+                        <input type="text" name="messanger" class="form-control" placeholder="Messenger"
+                            value="{{ old('messanger',$business->messanger) }}" />
                     </div>
                     <div class="mb-3 col-md-6">
                         <label class="form-label">Any other link</label>

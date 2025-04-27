@@ -42,6 +42,7 @@ class BusinessController extends Controller
         $business->whatsapp = $request->whatsapp;
         $business->other = $request->other;
         $business->category_ids = $category;
+        $business->messanger = $request->messanger;
         $business->business_order = 1;
         $business->status = $request->status;
 
@@ -90,6 +91,7 @@ class BusinessController extends Controller
         $business->facebook = $request->facebook;
         $business->whatsapp = $request->whatsapp;
         $business->status = $request->status;
+        $business->messanger = $request->messanger;
 
 
         $business->other = $request->other;
