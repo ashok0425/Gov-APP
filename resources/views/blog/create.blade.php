@@ -98,7 +98,7 @@
                         >
                     </div>
 
-                    <div class="mb-3 col-md-12">
+                    <div class="mb-3 col-md-12  px-5">
                         <label class="form-label">Long Description</label>
                         <textarea
                             type="text"

@@ -47,9 +47,7 @@ class HomeController extends Controller
     public function blogs($isMain=null)
     {
         $blog = Blog::latest()
-        ->when($isMain,function($query) use ($isMain){
-            $query->where('business_id',null);
-          })->where('status',1)->select('id','title','thumbnail','slug','short_description')->paginate(25);
+        ->where('status',1)->select('id','title','thumbnail','slug','short_description')->paginate(25);
        return response()->json([
         'success'=>true,
         'data'=>$blog
@@ -85,9 +83,6 @@ class HomeController extends Controller
         ->when($request->ward_id,function($query) use ($request){
            $query->where('business_id',$request->ward_id);
         })
-        ->when($request->palika_id,function($query) use ($request){
-            $query->where('business_id',null);
-         })
         ->where('category_id',$id)->select('id','title','thumbnail','slug','short_description')->paginate(25);
        return response()->json([
         'success'=>true,
