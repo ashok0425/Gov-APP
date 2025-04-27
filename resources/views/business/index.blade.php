@@ -49,22 +49,24 @@
                         <td>{{ Carbon\Carbon::parse($user->created_at)->format('d/m/Y') }}</td>
 
                         <td>
+<div class="d-flex">
+    <a
+        class="btn btn-success"
+        href="{{ route('business.edit', $user->id) }}"
+    >
+        <i class="fas fa-edit"></i>
+    </a>
+@if ($user->id!==1)
 
-                                <div class="d-flex">
-                                    <a
-                                        class="btn btn-success"
-                                        href="{{ route('business.edit', $user->id) }}"
-                                    >
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a
-                                    href="{{ route('business.destroy',$user->id) }}"
-                                    class="btn btn-danger delete_btn"
-                                >
-                                    <i class="fas fa-trash"></i>
-                                </a>
+    <a
+    href="{{ route('business.destroy',$user->id) }}"
+    class="btn btn-danger delete_btn"
+>
+    <i class="fas fa-trash"></i>
+</a>
+@endif
 
-                                </div>
+</div>
                         </td>
                     </tr>
                 @endforeach

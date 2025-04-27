@@ -19,7 +19,7 @@ class HomeController extends Controller
 {
     public function wards()
     {
-        $business = Business::orderBy('business_order','asc')->where('status',1)->paginate(25);
+        $business = Business::orderBy('business_order','asc')->where('id','!=',1)->where('status',1)->paginate(25);
        return response()->json([
         'success'=>true,
         'data'=>$business
