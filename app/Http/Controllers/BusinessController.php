@@ -11,9 +11,16 @@ use Illuminate\Http\Request;
 
 class BusinessController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $business = Business::orderBy('business_order','asc')->paginate(10);
+        $business = Business::orderBy('business_order','asc')
+        ->when($request->id,function($query) use ($request){
+            $query->where('id',$request->id);
+        })
+        ->when(!$request->id,function($query) use ($request){
+            $query->where('id','!=',$request->id);
+        })
+        ->paginate(10);
         return view('business.index', compact('business'));
     }
 
