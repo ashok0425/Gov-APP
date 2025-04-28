@@ -18,7 +18,7 @@ class BusinessController extends Controller
             $query->where('id',$request->id);
         })
         ->when(!$request->id,function($query) use ($request){
-            $query->where('id','!=',$request->id);
+            $query->where('id','!=',22);
         })
         ->paginate(10);
         return view('business.index', compact('business'));
