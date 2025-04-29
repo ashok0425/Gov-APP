@@ -154,7 +154,16 @@ class BlogController extends Controller
         return redirect()->route('blogs.index')->with($notification);
     }
 
-    public function show(Blog $blog) {}
+    public function show(Blog $blog) {
+        if(!Auth::user()->can('do:anything')){
+            if($blog->business_id!=Auth::user()->business_id){
+                return redirect()->back()->with('error','You are not allowed to delete this blog');
+                }
+
+        }
+
+        return view('blog.show', compact('blog'));
+    }
 
     public function destroy(Blog $blog)
     {

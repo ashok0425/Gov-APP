@@ -88,6 +88,13 @@
                                         <i class="far fa-edit"></i>
                                     </a>
                                     <a
+                                    href="{{ route('blogs.show', $blog) }}"
+                                    class="btn btn-primary"
+                                    target="_blank"
+                                >
+                                    <i class="far fa-eye"></i>
+                                </a>
+                                    <a
                                     href="{{ route('blogs.destroy',$blog) }}"
                                     class="btn btn-danger delete_btn"
                                 >
