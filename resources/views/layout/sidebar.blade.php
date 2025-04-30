@@ -40,11 +40,9 @@
         <i class="fas fa-chevron-down toggle-icon"></i>
     </a>
     <ul class="submenu {{Request::is('banners','banners/*')?'d-block':' d-none'}}" id="banner-dropdown" >
-        @can('do:anything')
         <li class="submenu-item">
             <a href="{{ route('banners.index',['type'=>1]) }}" class="sidebar-link">Notice Banner</a>
         </li>
-        @endcan
         <li class="submenu-item">
             <a href="{{ route('banners.index',['type'=>2]) }}" class="sidebar-link">Rep Banner</a>
         </li>

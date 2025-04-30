@@ -20,11 +20,8 @@ class BannerController extends Controller
         $banners = Banner::when(!Auth::user()->can('do:anything'),function($query){
                $query->where('business_id',Auth::user()->business_id);
             })->when(request()->query('type'),function($query){
-                if (!Auth::user()->can('do:anything')) {
-                $query->where('type',2);
-                }else{
+
                     $query->where('type',request()->query('type'));
-                }
             })
             ->latest()->paginate();
 
@@ -72,8 +69,7 @@ class BannerController extends Controller
          }
         $banner = Banner::when(
             !Auth::user()->can('do:anything'),function($query){
-               $query->where('business_id',Auth::user()->business_id)
-               ->where('type',2);
+               $query->where('business_id',Auth::user()->business_id);
             }
 
         )->where('id',$id)->firstOrFail();
