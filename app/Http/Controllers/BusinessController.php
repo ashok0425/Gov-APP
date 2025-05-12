@@ -88,7 +88,8 @@ class BusinessController extends Controller
             'address' => 'required',
         ]);
         $input = $request->category;
-        $category = explode(',', $input[0]);
+        $category = $input?explode(',', $input[0]):$business->category_ids;
+
         $business->name = $request->name;
         $business->phone = $request->phone;
         $business->address = $request->address;
@@ -99,8 +100,6 @@ class BusinessController extends Controller
         $business->whatsapp = $request->whatsapp;
         $business->status = $request->status;
         $business->messanger = $request->messanger;
-
-
         $business->other = $request->other;
         if ($request->hasFile('thumbnail')) {
             $path = $request->file('thumbnail')->store('uploads', 'public');

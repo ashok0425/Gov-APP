@@ -68,7 +68,7 @@
                     </div>
 
                     <div class="col-6">
-                        <input type="hidden" name="category[]" id="cat">
+                        <input type="hidden" name="category[]" id="cat" value="{{implode(',',$business->category_ids)}}">
                         <label for="">Category</label>
                         <select name id="" class="form-control from-select select2" multiple="multiple">
                             @foreach ($categories as $category)
@@ -139,8 +139,8 @@
 <script>
     $(document).ready(function() {
     const $select = $('.select2').select2();
-  let orderedSelections = [];
-
+  let orderedSelections = $('#cat').val()?$('#cat').val().split(',') : [];
+console.log(orderedSelections);
   $select.on('select2:select', function (e) {
     const value = e.params.data.id;
     if (!orderedSelections.includes(value)) {
@@ -150,7 +150,7 @@
   });
 
   $select.on('select2:unselect', function (e) {
-
+    const value = e.params.data.id;
     orderedSelections = orderedSelections.filter(v => v !== value);
     $('#cat').val(orderedSelections)
 

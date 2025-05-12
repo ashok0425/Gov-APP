@@ -114,7 +114,7 @@
   });
 
   $select.on('select2:unselect', function (e) {
-
+    const value = e.params.data.id;
     orderedSelections = orderedSelections.filter(v => v !== value);
     $('#cat').val(orderedSelections)
 

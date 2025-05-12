@@ -3,7 +3,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between bg-dark">
             <div>
-                <h5 class="card-title text-white">Edit Blog</h5>
+                <h5 class="card-title text-white">Edit Post</h5>
             </div>
         </div>
         <div class="card-body">
