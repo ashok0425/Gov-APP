@@ -3,7 +3,12 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between bg-dark">
             <div>
-                <h5 class="card-title text-white">Edit ward</h5>
+                  @if ($business->id==22)
+                <h5 class="card-title text-white">Edit Palika</h5>
+                @else
+                <h5 class="card-title text-white">Edid Ward</h5>
+
+                @endif
             </div>
         </div>
 
@@ -68,7 +73,7 @@
                     </div>
 
                     <div class="col-6">
-                        <input type="hidden" name="category[]" id="cat" value="{{implode(',',$business->category_ids)}}">
+                        <input type="hidden" name="category[]" id="cat" value="{{implode(',',$business->category_ids??[])}}">
                         <label for="">Category</label>
                         <select name id="" class="form-control from-select select2" multiple="multiple">
                             @foreach ($categories as $category)

@@ -3,17 +3,27 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between bg-dark">
             <div>
+                  @if (request()->query('id'))
+                <h5 class="card-title text-white">Palika List</h5>
+                @else
                 <h5 class="card-title text-white">Ward List</h5>
+
+                @endif
             </div>
             <div>
+                @if (!request()->query('id'))
+
                 <a href="{{ route('business.create') }}" class="btn btn-info btn-sm">
                     <i class="fas fa-plus"></i>
                     Add Ward
                 </a>
+
                 <a href="{{ route('business.reorder') }}" class="btn btn-primary btn-sm">
                     <i class="fas fa-sync"></i>
                     Reorder Ward
                 </a>
+                @endif
+
             </div>
         </div>
         <table id="myTable" class="table table-responsive-sm">

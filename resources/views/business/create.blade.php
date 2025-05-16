@@ -3,7 +3,12 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between bg-dark">
             <div>
-                <h5 class="card-title text-white">Add new ward</h5>
+             @if (request()->query('id'))
+                <h5 class="card-title text-white">Add Palika</h5>
+                @else
+                <h5 class="card-title text-white">Add Ward</h5>
+
+                @endif
             </div>
         </div>
         <div class="card-body">
