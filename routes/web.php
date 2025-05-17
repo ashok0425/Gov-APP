@@ -38,3 +38,8 @@ Route::middleware('auth')->group(function () {
     });
 
 });
+
+Route::get('page/{slug}', function ($slug) {
+    return view('page', ['slug' => $slug]);
+});
+
