@@ -1,7 +1,6 @@
 
     @php
         $page=App\Models\Page::where('slug',$slug)->firstOrFail();
-
     @endphp
 
 

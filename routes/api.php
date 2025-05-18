@@ -20,11 +20,11 @@ Route::post('/sign-in', [LoginController::class,'login']);
 Route::middleware('auth:sanctum')->group(function () {
    Route::get('/account/delete',[LoginController::class,'delete']);
    Route::get('/contact',[HomeController::class,'contact']);
-   Route::get('/page',[HomeController::class,'page']);
 
 
 });
 
+   Route::get('/page',[HomeController::class,'page']);
 
 
 Route::middleware('verifyToken')->group(function(){
