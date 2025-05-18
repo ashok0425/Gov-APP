@@ -127,7 +127,7 @@ class HomeController extends Controller
 
     public function page(Request $request)
     {
-        $data = Page::where('slug',$request)->first();
+        $data = Page::where('slug',$request->page)->first();
        return response()->json([
         'success'=>true,
         'data'=>$data
