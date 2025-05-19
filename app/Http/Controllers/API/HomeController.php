@@ -93,7 +93,7 @@ class HomeController extends Controller
 
     public function banner($type,$is_homepage_banner=null)
     {
-        $banners = Banner::where('business_id',null)->select('id','thumbnail','title')->when($type,function($query) use ($type){
+        $banners = Banner::where('business_id',null)->where('status',1)->select('id','thumbnail','title')->when($type,function($query) use ($type){
             $query->where('type',$type);
           })->when($is_homepage_banner,function($query) use ($is_homepage_banner){
             $query->where('is_homepage_banner',$is_homepage_banner);
@@ -106,7 +106,7 @@ class HomeController extends Controller
 
     public function bannerbyWard($id,$type)
     {
-        $banners = Banner::where('business_id',$id)->select('id','thumbnail','title')->when($type,function($query) use ($type){
+        $banners = Banner::where('business_id',$id)->where('status',1)->select('id','thumbnail','title')->when($type,function($query) use ($type){
             $query->where('type',$type);
           })->paginate(25);
        return response()->json([
