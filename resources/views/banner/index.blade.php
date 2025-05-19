@@ -11,7 +11,7 @@
                     <h5 class="card-title text-white">Banner List</h5>
                 </div>
                 <div>
-                    <a href="{{ route('banners.create') }}" class="btn btn-info btn-sm">
+                    <a href="{{ route('banners.create',['type'=>request()->query('type')]) }}" class="btn btn-info btn-sm">
                         <o class="fas fa-plus"></o>
                         Add Banner
                     </a>
