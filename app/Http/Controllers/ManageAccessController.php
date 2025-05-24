@@ -192,10 +192,15 @@ class ManageAccessController extends Controller
             !Auth::user()->can('do:anything'),function($query){
                $query->where('business_id',Auth::user()->business_id);
             }
-
         )->where('id',$id)->firstOrFail();
         $user->delete();
 
+          $notification = [
+                'alert-type' => 'success',
+                'message' => 'User Deleted',
+
+            ];
+            return redirect()->back()->with($notification);
         return redirect()->route('access.index');
     }
 

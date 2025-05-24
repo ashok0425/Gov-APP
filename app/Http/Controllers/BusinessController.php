@@ -145,7 +145,30 @@ class BusinessController extends Controller
     }
 
 
+public function editCategories($id)
+{
+    $business = Business::findOrFail($id);
+    $assignedCategories = $business->categories;
+    $assigned = $assignedCategories->pluck('id')->toArray();
+    $allCategories = Category::all();
 
+    return view('business.edit-categories', compact('business', 'assigned', 'allCategories','assignedCategories'));
+}
+
+public function updateCategories(Request $request, $id)
+{
+     $business = Business::findOrFail($id);
+    $ids = explode(',', $request->input('categories', ''));
+
+    $syncData = [];
+    foreach ($ids as $index => $categoryId) {
+        $syncData[$categoryId] = ['position' => $index + 1];
+    }
+
+    $business->categories()->sync($syncData);
+
+    return redirect()->back()->with('success', 'Categories updated successfully.');
+}
 
 
 }

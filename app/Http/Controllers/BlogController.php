@@ -91,7 +91,7 @@ class BlogController extends Controller
 
         $notification = [
             'alert-type' => 'success',
-            'message' => 'Blog  Added',
+            'message' => 'Post  Added',
 
         ];
 
@@ -147,7 +147,7 @@ class BlogController extends Controller
         $blog->save();
         $notification = [
             'alert-type' => 'success',
-            'message' => 'Blog  updated',
+            'message' => 'Post  updated',
 
         ];
 
@@ -177,7 +177,7 @@ class BlogController extends Controller
         $blog->delete();
         $notification = [
             'alert-type' => 'success',
-            'message' => 'Blog  Deleted',
+            'message' => 'Post  Deleted',
         ];
 
         return redirect()->route('blogs.index')->with($notification);

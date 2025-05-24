@@ -60,6 +60,12 @@
 
                         <td>
 <div class="d-flex">
+     <a
+        class="btn btn-info mx-1"
+        href="{{ route('business.categories.edit', $user->id) }}"
+    >
+        Category
+    </a>
     <a
         class="btn btn-success"
         href="{{ route('business.edit', $user->id) }}"

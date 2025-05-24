@@ -271,6 +271,7 @@
         toggleBtn.addEventListener('click', function () {
             const targetId = this.getAttribute('data-toggle');
             const dropdown = document.getElementById(targetId);
+            if(dropdown){
 
             if (dropdown.classList.contains('d-none')) {
                 dropdown.classList.remove('d-none');
@@ -281,6 +282,7 @@
                 dropdown.classList.add('d-none');
                 this.querySelector('.toggle-icon')?.classList.remove('rotate-180');
             }
+        }
         });
     });
 </script>

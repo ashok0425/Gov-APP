@@ -12,4 +12,8 @@ class Business extends Model
     protected $casts=[
         'category_ids'=>'array'
     ];
+
+    public function categories(){
+    return $this->belongsToMany(Category::class,'business_categories')->withPivot('position')->orderBy('pivot_position');
+    }
 }

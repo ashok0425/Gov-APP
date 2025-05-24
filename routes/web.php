@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BusinessController;
 use Illuminate\Support\Facades\Route;
 Route::get('/login', [\App\Http\Controllers\AuthController::class, 'index'])->name('login');
 Route::get('/', [\App\Http\Controllers\AuthController::class, 'index']);
@@ -23,6 +24,8 @@ Route::middleware('auth')->group(function () {
     Route::get('business-reorder', [\App\Http\Controllers\BusinessController::class,'reorder'])->name('business.reorder')->middleware('can:do anything');
     Route::post('business-reorder', [\App\Http\Controllers\BusinessController::class,'reorderStore'])->name('business.reorder.store')->middleware('can:do anything');
 
+Route::get('/business/{id}/categories', [BusinessController::class, 'editCategories'])->name('business.categories.edit');
+Route::post('/business/{id}/categories', [BusinessController::class, 'updateCategories'])->name('business.categories.update');
 
     Route::resource('pages', \App\Http\Controllers\PageController::class)->middleware('can:do anything');
     Route::resource('cms', \App\Http\Controllers\CmsController::class)->middleware('can:do anything');
@@ -35,7 +38,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', [App\Http\Controllers\ManageAccessController::class, 'store'])->name('access.store');
         Route::get('{id}/edit', [App\Http\Controllers\ManageAccessController::class, 'edit'])->name('access.edit');
         Route::post('{id}/update', [App\Http\Controllers\ManageAccessController::class, 'update'])->name('access.update');
-        Route::post('{id}/delete', [App\Http\Controllers\ManageAccessController::class, 'destroy'])->name('access.destroy');
+        Route::delete('{id}/delete', [App\Http\Controllers\ManageAccessController::class, 'destroy'])->name('access.destroy');
     });
 
 });

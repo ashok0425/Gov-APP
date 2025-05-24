@@ -46,19 +46,21 @@ class HomeController extends Controller
 
     public function category(Request $request)
     {
+       if ($request->ward_id) {
         $business = Business::find($request->ward_id);
-        $category_ids = $business?->category_ids ?? [];
-        $category = Category::when($request->ward_id, function ($query) use ($category_ids) {
-            $query->whereIn('id', $category_ids ?? [])->orderByRaw('FIELD(id, ' . implode(',', $category_ids) . ')');
-        })
 
+        $categories = $business?->categories()
             ->where('status', 1)
-            ->paginate(25);
+            ->orderBy('pivot_position') // if you track order in pivot
+            ->get() ?? collect([]);
+    } else {
+        $categories = Category::where('status', 1)->get();
+    }
 
         return response()->json(
             [
                 'success' => true,
-                'data' => $category,
+                'data' => $categories,
             ],
             200,
         );

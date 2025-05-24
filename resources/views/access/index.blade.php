@@ -44,11 +44,10 @@
                                             <a href="{{ route('access.edit', ['id' => $user->id]) }}" class="btn btn-info btn-sm mx-3">
                                                 <i class="fas fa-edit"></i>
                                             </a>
+                                             <a href="{{ route('access.destroy', $user->id) }}" class="btn btn-danger delete_btn" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
 
-                                            <a data-src="{{ route('access.destroy', $user) }}" data-target="#deleteModal" data-toggle="modal" class="btn btn-danger btn-sm">
-                                                <i class="fas fa-trash"></i>
-
-                                            </a>
                                         </div>
                                     </td>
                                     <td></td>
@@ -63,10 +62,5 @@
 @endsection
 
 @push('scripts')
-    <script>
-        $("#kt_datatable").KTDatatable({
-            data: { saveState: false },
-            search: { input: $("#kt_datatable_search_query"), key: "generalSearch" },
-        });
-    </script>
+
 @endpush
