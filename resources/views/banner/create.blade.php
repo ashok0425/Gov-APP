@@ -42,7 +42,7 @@
                     @can('do:anything')
                         <div class="mb-3 col-md-6" id="ward-dropdown">
                             <label class="form-label">Select Ward</label>
-                            <select name="business_id" class="form-control form-select" required>
+                            <select name="business_id" class="form-control form-select" >
                                 <option value="">Select Ward</option>
                                 @foreach ($businesses as $business)
                                     <option value="{{ $business->id }}">{{ $business->name }}</option>
