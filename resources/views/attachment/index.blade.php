@@ -43,7 +43,7 @@
 
                                     <button
                                         class="btn btn-secondary copy-btn"
-                                        data-link="{{ getImage($attachment->attachment) }}"
+                                        data-link="{{ asset('storage/'.$attachment->attachment) }}"
                                         title="Copy Link"
                                     >
                                         <i class="far fa-copy"></i>
