@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API;
 
-
 use App\Models\Business;
 use App\Models\Category;
 use App\Models\User;
@@ -17,120 +16,176 @@ use App\Models\Website;
 
 class HomeController extends Controller
 {
-    public function wards()
+    public function wards(Request $request)
     {
-        $business = Business::orderBy('business_order','asc')->where('id','!=',22)->where('status',1)->paginate(25);
-       return response()->json([
-        'success'=>true,
-        'data'=>$business
-       ],200);
+        if ($request->palika) {
+            $business = Business::orderBy('business_order', 'asc')->where('id', 22)->where('status', 1)->paginate(25);
+        } else {
+            $business = Business::orderBy('business_order', 'asc')->where('id', '!=', 22)->where('status', 1)->paginate(25);
+        }
+
+        return response()->json(
+            [
+                'success' => true,
+                'data' => $business,
+            ],
+            200,
+        );
+    }
+    public function palika()
+    {
+        $business = Business::orderBy('business_order', 'asc')->where('id', 22)->where('status', 1)->paginate(25);
+        return response()->json(
+            [
+                'success' => true,
+                'data' => $business,
+            ],
+            200,
+        );
     }
 
     public function category(Request $request)
     {
-        $business=Business::find($request->ward_id);
-        $category_ids=$business?->category_ids??[];
-        $category = Category::when($request->ward_id,function($query) use ($category_ids){
-        $query->whereIn('id', $category_ids??[])
-        ->orderByRaw('FIELD(id, ' . implode(',', $category_ids) . ')');
+        $business = Business::find($request->ward_id);
+        $category_ids = $business?->category_ids ?? [];
+        $category = Category::when($request->ward_id, function ($query) use ($category_ids) {
+            $query->whereIn('id', $category_ids ?? [])->orderByRaw('FIELD(id, ' . implode(',', $category_ids) . ')');
         })
 
-        ->where('status',1)
-        ->paginate(25);
+            ->where('status', 1)
+            ->paginate(25);
 
-        return response()->json([
-            'success' => true,
-            'data' => $category
-        ], 200);
+        return response()->json(
+            [
+                'success' => true,
+                'data' => $category,
+            ],
+            200,
+        );
     }
 
-
-    public function blogs($isMain=null)
+    public function blogs($isMain = null)
     {
-        $blog = Blog::latest()
-        ->where('status',1)->select('id','title','thumbnail','slug','short_description')->paginate(25);
-       return response()->json([
-        'success'=>true,
-        'data'=>$blog
-       ],200);
+        $blog = Blog::latest()->where('status', 1)->select('id', 'title', 'thumbnail', 'slug', 'short_description')->paginate(25);
+        return response()->json(
+            [
+                'success' => true,
+                'data' => $blog,
+            ],
+            200,
+        );
     }
 
     public function blogDetail($id)
     {
-        $blog = Blog::where('id',$id)->where('status',1)->firstOrFail();
-       return response()->json([
-        'success'=>true,
-        'data'=>$blog
-       ],200);
+        $blog = Blog::where('id', $id)->where('status', 1)->firstOrFail();
+        return response()->json(
+            [
+                'success' => true,
+                'data' => $blog,
+            ],
+            200,
+        );
     }
 
-    public function blogByWard(Request $request,$id)
+    public function blogByWard(Request $request, $id)
     {
         $blog = Blog::latest()
-         ->when($request->category_id,function($query) use ($request){
-            $query->where('category_id', $request->category_id);
+            ->when($request->category_id, function ($query) use ($request) {
+                $query->where('category_id', $request->category_id);
             })
-        ->where('status',1)->where('business_id',$id)
-        ->select('id','title','thumbnail','slug','short_description')->paginate(25);
-       return response()->json([
-        'success'=>true,
-        'data'=>$blog
-       ],200);
+            ->where('status', 1)
+            ->where('business_id', $id)
+            ->select('id', 'title', 'thumbnail', 'slug', 'short_description')
+            ->paginate(25);
+        return response()->json(
+            [
+                'success' => true,
+                'data' => $blog,
+            ],
+            200,
+        );
     }
 
-    public function blogByCategory(Request $request,$id)
+    public function blogByCategory(Request $request, $id)
     {
-        $blog = Blog::latest()->where('status',1)
-        ->when($request->ward_id,function($query) use ($request){
-           $query->where('business_id',$request->ward_id);
-        })
-        ->where('category_id',$id)->select('id','title','thumbnail','slug','short_description')->paginate(25);
-       return response()->json([
-        'success'=>true,
-        'data'=>$blog
-       ],200);
+        $blog = Blog::latest()
+            ->where('status', 1)
+            ->when($request->ward_id, function ($query) use ($request) {
+                $query->where('business_id', $request->ward_id);
+            })
+            ->where('category_id', $id)
+            ->select('id', 'title', 'thumbnail', 'slug', 'short_description')
+            ->paginate(25);
+        return response()->json(
+            [
+                'success' => true,
+                'data' => $blog,
+            ],
+            200,
+        );
     }
 
-    public function banner($type,$is_homepage_banner=null)
+    public function banner($type, $is_homepage_banner = null)
     {
-        $banners = Banner::where('business_id',null)->where('status',1)->select('id','thumbnail','title')->when($type,function($query) use ($type){
-            $query->where('type',$type);
-          })->when($is_homepage_banner,function($query) use ($is_homepage_banner){
-            $query->where('is_homepage_banner',$is_homepage_banner);
-          })->paginate(25);
-       return response()->json([
-        'success'=>true,
-        'data'=>$banners
-       ],200);
+        $banners = Banner::where('business_id', null)
+            ->where('status', 1)
+            ->select('id', 'thumbnail', 'title')
+            ->when($type, function ($query) use ($type) {
+                $query->where('type', $type);
+            })
+            ->when($is_homepage_banner, function ($query) use ($is_homepage_banner) {
+                $query->where('is_homepage_banner', $is_homepage_banner);
+            })
+            ->paginate(25);
+        return response()->json(
+            [
+                'success' => true,
+                'data' => $banners,
+            ],
+            200,
+        );
     }
 
-    public function bannerbyWard($id,$type)
+    public function bannerbyWard($id, $type)
     {
-        $banners = Banner::where('business_id',$id)->where('status',1)->select('id','thumbnail','title')->when($type,function($query) use ($type){
-            $query->where('type',$type);
-          })->paginate(25);
-       return response()->json([
-        'success'=>true,
-        'data'=>$banners
-       ],200);
+        $banners = Banner::where('business_id', $id)
+            ->where('status', 1)
+            ->select('id', 'thumbnail', 'title')
+            ->when($type, function ($query) use ($type) {
+                $query->where('type', $type);
+            })
+            ->paginate(25);
+        return response()->json(
+            [
+                'success' => true,
+                'data' => $banners,
+            ],
+            200,
+        );
     }
-
 
     public function contact()
     {
         $data = Cms::first();
-       return response()->json([
-        'success'=>true,
-        'data'=>$data
-       ],200);
+        return response()->json(
+            [
+                'success' => true,
+                'data' => $data,
+            ],
+            200,
+        );
     }
 
     public function page(Request $request)
     {
-        $data = Page::where('slug',$request->page)->first();
-       return response()->json([
-        'success'=>true,
-        'data'=>$data
-       ],200);
+        $data = Page::where('slug', $request->page)->first();
+        return response()->json(
+            [
+                'success' => true,
+                'data' => $data,
+            ],
+            200,
+        );
     }
 }
