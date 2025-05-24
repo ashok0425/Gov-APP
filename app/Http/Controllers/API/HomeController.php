@@ -82,7 +82,7 @@ class HomeController extends Controller
     {
         $blog = Blog::where('id', $id)->where('status', 1)->firstOrFail();
 
-            $html = preg_replace('/style="[^"]*"/i', '', $blog->long_description);
+         /*   $html = preg_replace('/style="[^"]*"/i', '', $blog->long_description);
 
     // Remove fixed width/height attributes
     $html = preg_replace('/(width|height)="[^"]*"/i', '', $html);
@@ -93,6 +93,7 @@ class HomeController extends Controller
     }, $html);
 
     $blog->long_description=$html;
+    */
 
 
         return response()->json(
