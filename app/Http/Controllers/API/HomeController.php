@@ -81,6 +81,20 @@ class HomeController extends Controller
     public function blogDetail($id)
     {
         $blog = Blog::where('id', $id)->where('status', 1)->firstOrFail();
+
+            $html = preg_replace('/style="[^"]*"/i', '', $blog->long_description);
+
+    // Remove fixed width/height attributes
+    $html = preg_replace('/(width|height)="[^"]*"/i', '', $html);
+
+    // Wrap <table> in a scrollable div
+    $html = preg_replace_callback('/<table.*?>.*?<\/table>/is', function ($matches) {
+        return '<div style="overflow-x:auto;">' . $matches[0] . '</div>';
+    }, $html);
+
+    $blog->long_description=$html;
+
+
         return response()->json(
             [
                 'success' => true,

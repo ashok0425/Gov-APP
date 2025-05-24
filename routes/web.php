@@ -47,3 +47,8 @@ Route::get('page/{slug}', function ($slug) {
     return view('page', ['slug' => $slug]);
 });
 
+
+Route::get('blog/{id}', function ($slug) {
+    return view('page', ['slug' => $slug]);
+});
+
