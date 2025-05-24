@@ -50,6 +50,13 @@
 </li>
 @endcan
 
+ <li class="sidebar-item">
+           <a class="sidebar-link {{Request::is('attachments','attachments/*')?'text-light':' '}}" href="{{ route('attachments.index') }}">
+               <i class="fas fa-copy"></i>
+               <span class="align-middle">Attachment</span>
+           </a>
+       </li>
+
        @can('user:view')
        <li class="sidebar-item">
            <a class="sidebar-link {{Request::is('manage-access','manage-access/*')?'text-light':' '}}" href="{{ route('access.index') }}">
