@@ -19,7 +19,7 @@ class HomeController extends Controller
     public function wards(Request $request)
     {
         if ($request->palika) {
-            $business = Business::orderBy('business_order', 'asc')->where('id', 22)->where('status', 1)->paginate(25);
+            $business = Business::orderBy('business_order', 'asc')->where('status', 1)->where('id', 22)->where('status', 1)->paginate(25);
         } else {
             $business = Business::orderBy('business_order', 'asc')->where('id', '!=', 22)->where('status', 1)->paginate(25);
         }
@@ -201,6 +201,18 @@ class HomeController extends Controller
             [
                 'success' => true,
                 'data' => $data,
+            ],
+            200,
+        );
+    }
+
+      public function notification(Request $request)
+    {
+        $blogs = Blog::whereDate('created_at', today())->latest()->get();
+        return response()->json(
+            [
+                'success' => true,
+                'data' => $blogs,
             ],
             200,
         );

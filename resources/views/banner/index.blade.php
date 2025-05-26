@@ -37,7 +37,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td><img src="{{ getImage($item->thumbnail) }}" alt="" width="70" /></td>
                             <td>{{ $item->title }}</td>
-                            <td>{{ $item->business?->name??'Gaupalika' }}</td>
+                            <td>{{ $item->business?->name??'Home Page Banner' }}</td>
 
 
                             <td>

@@ -13,7 +13,10 @@ class AttachmentController extends Controller
     public function index()
     {
 
-        $attachments = Attachment::latest()->paginate(20);
+        $attachments = Attachment::when(
+            !Auth::user()->can('do:anything'),function($query){
+               $query->where('business_id',Auth::user()->business_id);
+            })->latest()->paginate(20);
 
         return view('attachment.index', compact('attachments'));
     }
@@ -34,6 +37,7 @@ class AttachmentController extends Controller
         $attachment->title = $request->title;
         $attachment->slug = Str::slug($request->title).'-'.rand(1,10000000000);
         $attachment->attachment = $thumbnail;
+        $attachment->business_id = auth()->user()->id;
         $attachment->save();
         $notification = [
             'alert-type' => 'success',

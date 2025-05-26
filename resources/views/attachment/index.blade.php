@@ -25,6 +25,7 @@
                             <th>#</th>
                             <th>Name</th>
                             <th>Attachment</th>
+                            <th>Ward</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -33,21 +34,26 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $attachment->title }}</td>
+
                                 <td>
                                     <a href="{{ getImage($attachment->attachment) }}" target="_blank">View</a>
                                 </td>
+                                <td>{{ $attachment->business?->name }}</td>
+
                                 <td>
                                     <a href="{{ route('attachments.edit', $attachment) }}" class="btn btn-primary" title="Edit">
                                         <i class="far fa-edit"></i>
                                     </a>
 
-                                    <button
+                                  @can('do:anything')
+                                      <button
                                         class="btn btn-secondary copy-btn"
                                         data-link="{{ asset('storage/'.$attachment->attachment) }}"
                                         title="Copy Link"
                                     >
                                         <i class="far fa-copy"></i>
                                     </button>
+                                  @endcan
 
                                     <a href="{{ route('attachments.destroy', $attachment->id) }}" class="btn btn-danger delete_btn" title="Delete">
                                         <i class="fas fa-trash"></i>
