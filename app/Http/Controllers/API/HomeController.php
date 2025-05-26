@@ -66,8 +66,18 @@ class HomeController extends Controller
         );
     }
 
-    public function blogs($isMain = null)
+    public function blogs(Request $request,$isMain = null)
     {
+        if($request->notification && $request->notification==1){
+             $blogs = Blog::whereDate('created_at', today())->latest()->get();
+        return response()->json(
+            [
+                'success' => true,
+                'data' => $blogs,
+            ],
+            200,
+        );
+        }
         $blog = Blog::latest()->where('status', 1)->select('id', 'title', 'thumbnail', 'slug', 'short_description')->paginate(25);
         return response()->json(
             [
@@ -206,15 +216,4 @@ class HomeController extends Controller
         );
     }
 
-      public function notification(Request $request)
-    {
-        $blogs = Blog::whereDate('created_at', today())->latest()->get();
-        return response()->json(
-            [
-                'success' => true,
-                'data' => $blogs,
-            ],
-            200,
-        );
-    }
 }
