@@ -37,7 +37,7 @@ class AttachmentController extends Controller
         $attachment->title = $request->title;
         $attachment->slug = Str::slug($request->title).'-'.rand(1,10000000000);
         $attachment->attachment = $thumbnail;
-        $attachment->business_id = auth()->user()->id;
+        $attachment->business_id = auth()->user()->business_id;
         $attachment->save();
         $notification = [
             'alert-type' => 'success',

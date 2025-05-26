@@ -31,7 +31,7 @@
                                 <tr>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
-                                    <td>{{ $user->business?->name??'Gaupalika' }}</td>
+                                    <td>{{ $user->business?->name??'Palika' }}</td>
                                     <td>
                                         @if ($user->status == 1)
                                             <a class="badge bg-success">Publish</a>
