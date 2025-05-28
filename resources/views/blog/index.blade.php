@@ -94,12 +94,14 @@
                                 >
                                     <i class="far fa-eye"></i>
                                 </a>
-                                    <a
+                                  @can('post:delete')
+  <a
                                     href="{{ route('blogs.destroy',$blog) }}"
                                     class="btn btn-danger delete_btn"
                                 >
                                     <i class="fas fa-trash"></i>
                                 </a>
+                                  @endcan
                                 </td>
                             </tr>
                         @endforeach

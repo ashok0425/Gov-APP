@@ -88,14 +88,14 @@
         @endcan
 
 
-        @can(['post:view','post:create','post:edit','post:delete'])
+        @canAny(['post:view','post:create','post:edit','post:delete'])
         <li class="sidebar-item">
             <a class="sidebar-link {{Request::is('blogs','blogs/*')?'text-light':' '}}" href="{{ route('blogs.index') }}">
                 <i class="fas fa-photo-video"></i>
                 <span class="align-middle">Post</span>
             </a>
         </li>
-          @endcan
+          @endcanAny
 
             @can('do:anything')
           <li class="sidebar-header">General</li>
