@@ -33,6 +33,30 @@
                         />
                     </div>
 
+                      <div class="mb-3 col-md-6">
+                        <label class="form-label">Jan Prathinidhi</label>
+                        <input
+                            type="text"
+                            name="owner_name"
+                            class="form-control"
+                            placeholder="Jan Prathinidhi name"
+                            value="{{ old('owner_name',$business->owner_name) }}"
+                            required
+                        />
+                    </div>
+
+                      <div class="mb-3 col-md-6">
+                        <label class="form-label">Google Map Link</label>
+                        <input
+                            type="text"
+                            name="google_map_link"
+                            class="form-control"
+                            placeholder="Enter Map Link"
+                            value="{{ old('google_map_link',$business->google_map_link) }}"
+                            required
+                        />
+                    </div>
+
                     <div class="mb-3 col-md-6">
                         <label class="form-label">Address</label>
                         <input

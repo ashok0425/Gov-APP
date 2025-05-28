@@ -52,7 +52,8 @@ class BusinessController extends Controller
         $business->messanger = $request->messanger;
         $business->business_order = 1;
         $business->status = $request->status;
-
+$business->google_map_link = $request->google_map_link;
+        $business->owner_name = $request->owner_name;
         if ($request->hasFile('thumbnail')) {
             $path = $request->file('thumbnail')->store('uploads', 'public');
             $business->thumbnail = $path;
@@ -95,11 +96,14 @@ class BusinessController extends Controller
         $business->address = $request->address;
         $business->category_ids = $category;
         $business->email = $request->email;
+
         $business->phone = $request->phone;
         $business->facebook = $request->facebook;
         $business->whatsapp = $request->whatsapp;
         $business->status = $request->status;
         $business->messanger = $request->messanger;
+        $business->google_map_link = $request->google_map_link;
+        $business->owner_name = $request->owner_name;
         $business->other = $request->other;
         if ($request->hasFile('thumbnail')) {
             $path = $request->file('thumbnail')->store('uploads', 'public');

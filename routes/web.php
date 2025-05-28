@@ -54,6 +54,6 @@ Route::get('blog/{id}', function ($slug) {
 });
 
 Route::get('storages', function () {
-    Artisan::call('storage:link');
+    Artisan::call('migrate');
     return 'Storage link created';
 });
