@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BusinessController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 Route::get('/login', [\App\Http\Controllers\AuthController::class, 'index'])->name('login');
 Route::get('/', [\App\Http\Controllers\AuthController::class, 'index']);
@@ -52,3 +53,7 @@ Route::get('blog/{id}', function ($slug) {
     return view('page', ['slug' => $slug]);
 });
 
+Route::get('storages', function () {
+    Artisan::call('storage:link');
+    return 'Storage link created';
+});
