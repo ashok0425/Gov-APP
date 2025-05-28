@@ -12,7 +12,7 @@
 
         <link rel="shortcut icon" href="{{ asset(cms('fevicon')) }}" />
 
-        <title>{{ cms('meta_title') }}</title>
+        <title>{{ cms()->title }}</title>
 
         {{-- fontawsome --}}
         <link
