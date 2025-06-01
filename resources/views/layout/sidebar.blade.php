@@ -66,14 +66,14 @@
        </li>
        @endcan
 
-       @can('do:anthing')
+       {{-- @can('do:anthing')
        <li class="sidebar-item">
            <a class="sidebar-link {{Request::is('users','users/*')?'text-light':' '}}" href="{{ route('users') }}">
                <i class="fas fa-users"></i>
                <span class="align-middle">Users</span>
            </a>
        </li>
-       @endcan
+       @endcan --}}
 
         <ul class="sidebar-nav">
             <li class="sidebar-header">Manage Post</li>
