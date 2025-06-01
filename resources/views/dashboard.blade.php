@@ -188,7 +188,7 @@ $totalUser=App\Models\User::when(!Auth::user()->can('do:anything'),function($que
             </div>
         </div>
 
-        <div class="col-md-6">
+        {{-- <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
                     Employee List
@@ -217,7 +217,7 @@ $totalUser=App\Models\User::when(!Auth::user()->can('do:anything'),function($que
                     </table>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 
 
