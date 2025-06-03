@@ -170,7 +170,12 @@ public function updateCategories(Request $request, $id)
     }
     $business->categories()->sync($syncData);
 
-    return redirect()->back()->with('success', 'Categories updated successfully.');
+   $notification = [
+            'alert-type' => 'success',
+            'message' => 'Category sync successfully',
+        ];
+
+        return redirect()->back()->with($notification);
 }
 
 
