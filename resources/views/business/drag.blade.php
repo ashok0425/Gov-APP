@@ -15,7 +15,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($business as $user)
+                @foreach ($wards as $user)
                     <tr data-id="{{$user->id}}">
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $user->name }}</td>

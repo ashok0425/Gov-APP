@@ -8,7 +8,7 @@
         </div>
         <div class="card-body">
             <form
-                action="{{ route('blogs.update',$blog) }}"
+                action="{{ route('blogs.update',$post) }}"
                 method="POST"
                 enctype="multipart/form-data"
             >
@@ -23,7 +23,7 @@
                             name="title"
                             class="form-control"
                             placeholder="Post title"
-                            value="{{ old('title',$blog->title) }}"
+                            value="{{ old('title',$post->title) }}"
                             required
                         />
                     </div>
@@ -33,7 +33,7 @@
                         <select name="category" id="" class="form-control form-select" required>
                            <option value="">select category</option>
                            @foreach ($categories as $category)
-                           <option value="{{$category->id}}" {{$category->id==$blog->category_id?'selected':''}}>{{$category->name}}</option>
+                           <option value="{{$category->id}}" {{$category->id==$post->category_id?'selected':''}}>{{$category->name}}</option>
                            @endforeach
                         </select>
                     </div>
@@ -44,7 +44,7 @@
                         <select name="business_id" id="" class="form-control form-select">
                            <option value="">select Ward</option>
                            @foreach ($businesses as $business)
-                           <option value="{{$business->id}}" {{$business->id==$blog->business_id?'selected':''}}>{{$business->name}}</option>
+                           <option value="{{$business->id}}" {{$business->id==$post->business_id?'selected':''}}>{{$business->name}}</option>
                            @endforeach
                         </select>
                     </div>
@@ -60,7 +60,7 @@
                                 value=""
                             />
                         </div>
-                        <img src="{{getImage($blog->thumbnail)}}" alt="" width="100">
+                        <img src="{{getImage($post->thumbnail)}}" alt="" width="100">
                     </div>
 
                     <div class="mb-3 col-md-6">
@@ -73,15 +73,15 @@
                                 value=""
                             />
                         </div>
-                        <img src="{{getImage($blog->cover)}}" alt="" width="100">
+                        <img src="{{getImage($post->cover)}}" alt="" width="100">
 
                     </div> --}}
 
                     <div class="col-md-6 mb-3">
                         <label for="status">Status</label>
                         <select name="status" id="status" class="form-control form-select">
-                            <option value="1" {{ $blog->status == 1 ? 'selected' : '' }}>Publish</option>
-                            <option value="0" {{ $blog->status == 0 ? 'selected' : '' }}>Draft</option>
+                            <option value="1" {{ $post->status == 1 ? 'selected' : '' }}>Publish</option>
+                            <option value="0" {{ $post->status == 0 ? 'selected' : '' }}>Draft</option>
                         </select>
                     </div>
 
@@ -96,7 +96,7 @@
                             required
                             rows="2"
                         >
-                          {{ old('short_description',$blog->short_description) }}
+                          {{ old('short_description',$post->short_description) }}
                       </textarea
                         >
                     </div>
@@ -111,7 +111,7 @@
                             placeholder="Post Description"
                             required
                         >
-{{ old('long_description',$blog->long_description) }}
+{{ old('long_description',$post->long_description) }}
                       </textarea
                         >
                     </div>

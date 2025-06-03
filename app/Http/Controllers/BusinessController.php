@@ -13,7 +13,7 @@ class BusinessController extends Controller
 {
     public function index(Request $request)
     {
-        $business = Business::orderBy('business_order','asc')
+        $wards = Business::orderBy('business_order','asc')
         ->when($request->id,function($query) use ($request){
             $query->where('id',$request->id);
         })
@@ -21,7 +21,7 @@ class BusinessController extends Controller
             $query->where('id','!=',22);
         })
         ->paginate(10);
-        return view('business.index', compact('business'));
+        return view('business.index', compact('wards'));
     }
 
     public function create()
@@ -74,13 +74,13 @@ $business->google_map_link = $request->google_map_link;
         return redirect()->back()->with($notification);
     }
 
-    public function edit(Business $business)
+    public function edit(Business $ward)
     {
         $categories=Category::all();
-        return view('business.edit', compact('business','categories'));
+        return view('business.edit', compact('ward','categories'));
     }
 
-    public function update(Request $request, Business $business)
+    public function update(Request $request, Business $ward)
     {
         $request->validate([
             'name' => 'required|max:255',
@@ -89,29 +89,29 @@ $business->google_map_link = $request->google_map_link;
         ]);
         $category = [];
 
-        $business->name = $request->name;
-        $business->phone = $request->phone;
-        $business->address = $request->address;
-        $business->category_ids = $category;
-        $business->email = $request->email;
+        $ward->name = $request->name;
+        $ward->phone = $request->phone;
+        $ward->address = $request->address;
+        $ward->category_ids = $category;
+        $ward->email = $request->email;
 
-        $business->phone = $request->phone;
-        $business->facebook = $request->facebook;
-        $business->whatsapp = $request->whatsapp;
-        $business->status = $request->status;
-        $business->messanger = $request->messanger;
-        $business->google_map_link = $request->google_map_link;
-        $business->owner_name = $request->owner_name;
-        $business->other = $request->other;
+        $ward->phone = $request->phone;
+        $ward->facebook = $request->facebook;
+        $ward->whatsapp = $request->whatsapp;
+        $ward->status = $request->status;
+        $ward->messanger = $request->messanger;
+        $ward->google_map_link = $request->google_map_link;
+        $ward->owner_name = $request->owner_name;
+        $ward->other = $request->other;
         if ($request->hasFile('thumbnail')) {
             $path = $request->file('thumbnail')->store('uploads', 'public');
-            $business->thumbnail = $path;
+            $ward->thumbnail = $path;
         }
         if ($request->hasFile('cover_image')) {
             $cover_image = $request->file('cover_image')->store('uploads', 'public');
-            $business->cover_image = $cover_image;
+            $ward->cover_image = $cover_image;
         }
-        $business->save();
+        $ward->save();
         $notification = [
             'alert-type' => 'success',
             'message' => 'Ward updated ',
@@ -122,9 +122,9 @@ $business->google_map_link = $request->google_map_link;
     public function show() {}
 
     public function reorder() {
-        $business = Business::orderBy('business_order','asc')->paginate(10);
+        $wards = Business::orderBy('business_order','asc')->paginate(10);
 
-        return view('business.drag', compact('business'));
+        return view('business.drag', compact('wards'));
     }
 
     public function reorderStore(Request $request){
@@ -136,8 +136,8 @@ $business->google_map_link = $request->google_map_link;
         }
     }
 
-    public function destroy(Business $business) {
-          $business->delete();
+    public function destroy(Business $ward) {
+          $ward->delete();
           $notification = [
             'alert-type' => 'success',
             'message' => 'Ward   Deleted',
@@ -149,12 +149,12 @@ $business->google_map_link = $request->google_map_link;
 
 public function editCategories($id)
 {
-    $business = Business::findOrFail($id);
-    $assignedCategories = $business->categories;
+    $ward = Business::findOrFail($id);
+    $assignedCategories = $ward->categories;
     $assigned = $assignedCategories->pluck('id')->toArray();
     $allCategories = Category::all();
 
-    return view('business.edit-categories', compact('business', 'assigned', 'allCategories','assignedCategories'));
+    return view('business.edit-categories', compact('ward', 'assigned', 'allCategories','assignedCategories'));
 }
 
 public function updateCategories(Request $request, $id)

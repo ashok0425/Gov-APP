@@ -65,16 +65,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($blogs as $blog)
+                        @foreach ($posts as $post)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $blog->title }}</td>
+                                <td>{{ $post->title }}</td>
 
-                                <td><img src="{{ getImage($blog->thumbnail) }}" width="80" alt="" /></td>
-                                <td>{{ Carbon\Carbon::parse($blog->created_at)->format('d/m/Y') }}</td>
+                                <td><img src="{{ getImage($post->thumbnail) }}" width="80" alt="" /></td>
+                                <td>{{ Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }}</td>
 
                                 <td>
-                                    @if ($blog->status == 1)
+                                    @if ($post->status == 1)
                                         <a class="badge bg-success">Publish</a>
                                     @else
                                         <a class="badge bg-danger">Draft</a>
@@ -82,13 +82,13 @@
                                 </td>
                                 <td>
                                     <a
-                                        href="{{ route('blogs.edit', $blog) }}"
+                                        href="{{ route('blogs.edit', $post) }}"
                                         class="btn btn-primary"
                                     >
                                         <i class="far fa-edit"></i>
                                     </a>
                                     <a
-                                    href="{{ route('blogs.show', $blog) }}"
+                                    href="{{ route('blogs.show', $post) }}"
                                     class="btn btn-primary"
                                     target="_blank"
                                 >
@@ -96,7 +96,7 @@
                                 </a>
                                   @can('post:delete')
   <a
-                                    href="{{ route('blogs.destroy',$blog) }}"
+                                    href="{{ route('blogs.destroy',$post) }}"
                                     class="btn btn-danger delete_btn"
                                 >
                                     <i class="fas fa-trash"></i>
@@ -109,7 +109,7 @@
                 </table>
             </div>
         </div>
-        {{ $blogs->withQueryString()->links() }}
+        {{ $posts->withQueryString()->links() }}
 
     </div>
 @endsection

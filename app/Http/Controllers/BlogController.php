@@ -13,7 +13,7 @@ class BlogController extends Controller
 {
     public function index(Request $request)
     {
-        $blogs = Blog::query()
+        $posts = Blog::query()
               ->with('business')
               ->when(
             !Auth::user()->can('do:anything'),function($query){
@@ -59,7 +59,7 @@ class BlogController extends Controller
         })->get();
         $businesses=Business::all();
         // dd($request->all());
-        return view('blog.index', compact('blogs','categories','businesses'));
+        return view('blog.index', compact('posts','categories','businesses'));
     }
 
     public function create()
@@ -79,22 +79,22 @@ class BlogController extends Controller
 
         ]);
 
-        $blog = new Blog;
+        $post = new Blog;
         $category=Category::find($request->category);
 
         $thumbnail = $request->file('thumbnail')?->store('uploads', 'public') ?? $category->thumbnail;
         $cover = $request->file('cover')?->store('uploads', 'public') ?? null;
-        $blog->title = $request->title;
-        $blog->slug = Str::slug($request->title);
-        $blog->short_description = $request->short_description;
-        $blog->long_description = $request->long_description;
-        $blog->category_id = $request->category;
-        $blog->status = $request->status??$blog->status;
-        $blog->thumbnail = $thumbnail;
-        $blog->business_id = $request->business_id??Auth::user()->business_id;
-        $blog->user_id =Auth::user()->id;
-        $blog->cover = $cover;
-        $blog->save();
+        $post->title = $request->title;
+        $post->slug = Str::slug($request->title);
+        $post->short_description = $request->short_description;
+        $post->long_description = $request->long_description;
+        $post->category_id = $request->category;
+        $post->status = $request->status??$post->status;
+        $post->thumbnail = $thumbnail;
+        $post->business_id = $request->business_id??Auth::user()->business_id;
+        $post->user_id =Auth::user()->id;
+        $post->cover = $cover;
+        $post->save();
 
         $notification = [
             'alert-type' => 'success',
@@ -105,9 +105,9 @@ class BlogController extends Controller
         return redirect()->back()->with($notification);
     }
 
-    public function edit(Blog $blog)
+    public function edit(Blog $post)
     {
-        if(!Auth::user()->can('can:do-anything') && $blog->business_id!=Auth::user()->business_id){
+        if(!Auth::user()->can('can:do-anything') && $post->business_id!=Auth::user()->business_id){
             $notification = [
                 'alert-type' => 'error',
                 'message' => 'unauthorized Request',
@@ -119,17 +119,17 @@ class BlogController extends Controller
         $query->whereIn('id',Auth::user()->business->category_ids??[]);
         })->get();
         $businesses=Business::all();
-        return view('blog.edit', compact('blog','businesses','categories'));
+        return view('blog.edit', compact('post','businesses','categories'));
     }
 
-    public function update(Request $request, Blog $blog)
+    public function update(Request $request, Blog $post)
     {
         $request->validate([
             'title' => 'required',
             'long_description' => 'required',
 
         ]);
-        if(!Auth::user()->can('can:do-anything') && $blog->business_id!=Auth::user()->business_id){
+        if(!Auth::user()->can('can:do-anything') && $post->business_id!=Auth::user()->business_id){
             $notification = [
                 'alert-type' => 'error',
                 'message' => 'unauthorized Request',
@@ -138,20 +138,20 @@ class BlogController extends Controller
 
             return redirect()->route('blogs.index')->with($notification);
         }
-        $thumbnail = $request->file('thumbnail')?->store('uploads', 'public') ?? $blog->thumbnail;
-        $cover = $request->file('cover')?->store('uploads', 'public') ?? $blog->thumbnail;
+        $thumbnail = $request->file('thumbnail')?->store('uploads', 'public') ?? $post->thumbnail;
+        $cover = $request->file('cover')?->store('uploads', 'public') ?? $post->thumbnail;
 
-        $blog->title = $request->title;
-        $blog->slug = Str::slug($request->title);
-        $blog->short_description = $request->short_description;
-        $blog->long_description = $request->long_description;
-        $blog->thumbnail = $thumbnail;
-        $blog->status = $request->status??$blog->status;
-        $blog->category_id = $request->category;
-        $blog->business_id = $request->business_id??Auth::user()->business_id;
-        $blog->cover = $cover;
+        $post->title = $request->title;
+        $post->slug = Str::slug($request->title);
+        $post->short_description = $request->short_description;
+        $post->long_description = $request->long_description;
+        $post->thumbnail = $thumbnail;
+        $post->status = $request->status??$post->status;
+        $post->category_id = $request->category;
+        $post->business_id = $request->business_id??Auth::user()->business_id;
+        $post->cover = $cover;
 
-        $blog->save();
+        $post->save();
         $notification = [
             'alert-type' => 'success',
             'message' => 'Post  updated',
@@ -161,9 +161,9 @@ class BlogController extends Controller
         return redirect()->route('blogs.index')->with($notification);
     }
 
-    public function show(Blog $blog) {
+    public function show(Blog $post) {
         if(!Auth::user()->can('do:anything')){
-            if($blog->business_id!=Auth::user()->business_id){
+            if($post->business_id!=Auth::user()->business_id){
                 return redirect()->back()->with('error','You are not allowed to delete this blog');
                 }
 
@@ -172,15 +172,15 @@ class BlogController extends Controller
         return view('blog.show', compact('blog'));
     }
 
-    public function destroy(Blog $blog)
+    public function destroy(Blog $post)
     {
         if(!Auth::user()->can('do:anything')){
-            if($blog->business_id!=Auth::user()->business_id){
+            if($post->business_id!=Auth::user()->business_id){
                 return redirect()->back()->with('error','You are not allowed to delete this blog');
                 }
         }
 
-        $blog->delete();
+        $post->delete();
         $notification = [
             'alert-type' => 'success',
             'message' => 'Post  Deleted',

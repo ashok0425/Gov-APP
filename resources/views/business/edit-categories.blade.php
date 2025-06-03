@@ -2,7 +2,7 @@
 @section('main-content')
     <div class="row">
         <div class="col-md-2 offset-md-10">
-              <form method="POST" action="{{ route('business.categories.update', $business->id) }}">
+              <form method="POST" action="{{ route('business.categories.update', $ward->id) }}">
         @csrf
         <input type="hidden" name="categories" id="category_ids">
         <button type="submit" class="btn btn-primary mt-3">Save Changes</button>

@@ -40,7 +40,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($business as $user)
+                @foreach ($wards as $user)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $user->name }}</td>
@@ -89,6 +89,6 @@
             </tbody>
         </table>
 
-        {{$business->links()}}
+        {{$wards->links()}}
     </div>
 @endsection

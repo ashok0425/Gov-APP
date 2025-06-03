@@ -3,7 +3,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between bg-dark">
             <div>
-                  @if ($business->id==22)
+                  @if ($ward->id==22)
                 <h5 class="card-title text-white">Edit Palika</h5>
                 @else
                 <h5 class="card-title text-white">Edid Ward</h5>
@@ -14,7 +14,7 @@
 
         <div class="card-body">
             <form
-                action="{{ route('business.update',$business) }}"
+                action="{{ route('business.update',$ward) }}"
                 method="POST"
                 enctype="multipart/form-data"
             >
@@ -28,7 +28,7 @@
                             name="name"
                             class="form-control"
                             placeholder="Enter name"
-                            value="{{ old('name',$business->name) }}"
+                            value="{{ old('name',$ward->name) }}"
                             required
                         />
                     </div>
@@ -40,7 +40,7 @@
                             name="owner_name"
                             class="form-control"
                             placeholder="Jan Prathinidhi name"
-                            value="{{ old('owner_name',$business->owner_name) }}"
+                            value="{{ old('owner_name',$ward->owner_name) }}"
                             required
                         />
                     </div>
@@ -52,7 +52,7 @@
                             name="google_map_link"
                             class="form-control"
                             placeholder="Enter Map Link"
-                            value="{{ old('google_map_link',$business->google_map_link) }}"
+                            value="{{ old('google_map_link',$ward->google_map_link) }}"
                             required
                         />
                     </div>
@@ -64,7 +64,7 @@
                             name="address"
                             class="form-control"
                             placeholder="Enter Address"
-                            value="{{ old('address',$business->address) }}"
+                            value="{{ old('address',$ward->address) }}"
                             required
                         />
                     </div>
@@ -79,7 +79,7 @@
                                 value=""
                             />
                         </div>
-                        <img src="{{getImage($business->thumbnail)}}" alt="" class="img-fluid" width="100">
+                        <img src="{{getImage($ward->thumbnail)}}" alt="" class="img-fluid" width="100">
                     </div>
 
                     <div class="mb-3 col-md-6">
@@ -92,16 +92,16 @@
                                 value=""
                             />
                         </div>
-                        <img src="{{getImage($business->cover_image)}}" alt="" class="img-fluid" width="100">
+                        <img src="{{getImage($ward->cover_image)}}" alt="" class="img-fluid" width="100">
 
                     </div>
 {{--
                     <div class="col-6">
-                        <input type="hidden" name="category[]" id="cat" value="{{implode(',',$business->category_ids??[])}}">
+                        <input type="hidden" name="category[]" id="cat" value="{{implode(',',$ward->category_ids??[])}}">
                         <label for="">Category</label>
                         <select name id="" class="form-control from-select select2" multiple="multiple">
                             @foreach ($categories as $category)
-                                <option value="{{$category->id}}" {{in_array($category->id,$business->category_ids??[])?'selected':''}}>{{$category->name}}</option>
+                                <option value="{{$category->id}}" {{in_array($category->id,$ward->category_ids??[])?'selected':''}}>{{$category->name}}</option>
                             @endforeach
                         </select>
                     </div> --}}
@@ -112,42 +112,42 @@
                             name="phone"
                             class="form-control"
                             placeholder="Enter phone number"
-                            value="{{ old('phone',$business->phone) }}"
+                            value="{{ old('phone',$ward->phone) }}"
                             required
                         />
                     </div>
                     <div class="mb-3 col-md-6">
                         <label class="form-label">Email</label>
                         <input type="text" name="email" class="form-control" placeholder="Enter Email address"
-                            value="{{ old('email',$business->email) }}" />
+                            value="{{ old('email',$ward->email) }}" />
                     </div>
 
                     <div class="mb-3 col-md-6">
                         <label class="form-label">Facebook</label>
                         <input type="text" name="facebook" class="form-control" placeholder="facebook"
-                            value="{{ old('facebook',$business->facebook) }}" />
+                            value="{{ old('facebook',$ward->facebook) }}" />
                     </div>
                     <div class="mb-3 col-md-6">
                         <label class="form-label">WhatsApp</label>
                         <input type="text" name="whatsapp" class="form-control" placeholder="whatsapp"
-                            value="{{ old('whatsapp',$business->whatsapp) }}" />
+                            value="{{ old('whatsapp',$ward->whatsapp) }}" />
                     </div>
                     <div class="mb-3 col-md-6">
                         <label class="form-label">Messanger</label>
                         <input type="text" name="messanger" class="form-control" placeholder="Messenger"
-                            value="{{ old('messanger',$business->messanger) }}" />
+                            value="{{ old('messanger',$ward->messanger) }}" />
                     </div>
                     <div class="mb-3 col-md-6">
                         <label class="form-label">Any other link</label>
                         <input type="text" name="other" class="form-control" placeholder="other link"
-                            value="{{ old('other',$business->other) }}" />
+                            value="{{ old('other',$ward->other) }}" />
                     </div>
 
                     <div class="form-group col-md-4 mb-3">
                         <label for="status">Status</label>
                         <select name="status" id="status" class="form-control form-select">
-                            <option value="1" {{ $business->status == 1 ? 'selected' : '' }}>Publish</option>
-                            <option value="0" {{ $business->status == 0 ? 'selected' : '' }}>Draft</option>
+                            <option value="1" {{ $ward->status == 1 ? 'selected' : '' }}>Publish</option>
+                            <option value="0" {{ $ward->status == 0 ? 'selected' : '' }}>Draft</option>
                         </select>
                     </div>
 
