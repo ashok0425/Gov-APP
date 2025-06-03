@@ -16,10 +16,9 @@
                     <div class="card-body text-center">
                         <img
                             src="{{ getImage(Auth::user()->profile_photo_path) }}"
-                            alt="Christina Mason"
+                            alt="{{Auth::user()->name}}"
                             class="img-fluid rounded-circle mb-2"
-                            width="128"
-                            height="128"
+                            style="height: 100px;width:100px;border-radius:50%"
                         />
                         <h5 class="card-title mb-0">{{ Auth::user()->name }}</h5>
                         <form action="{{ route('logout') }}" method="POST">

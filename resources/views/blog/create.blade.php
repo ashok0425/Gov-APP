@@ -90,8 +90,9 @@
                             name="short_description"
                             class="form-control"
                             placeholder="Post Detail"
+                            style="padding: 0;margin:0"
                             required
-                            rows="2"
+
                         >
                           {{ old('short_description') }}
                       </textarea

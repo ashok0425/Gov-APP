@@ -63,7 +63,7 @@ class AuthController extends Controller
         ]);
 
         $admin = User::find(Auth::user()->id);
-        $path = $request->file?->store('upload/admin/', 's3') ?? $admin->profile_phot_path;
+        $path = $request->file('file')?->store('uploads', 'public') ?? $admin->profile_phot_path;
         $admin->email = $request->email;
         $admin->name = $request->name;
         $admin->profile_photo_path=$path;
