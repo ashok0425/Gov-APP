@@ -169,7 +169,7 @@ class BlogController extends Controller
 
         }
 
-        return view('blog.show', compact('blog'));
+        return view('blog.show', compact('post'));
     }
 
     public function destroy(Blog $post)
