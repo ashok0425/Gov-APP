@@ -59,7 +59,7 @@ class AttachmentController extends Controller
             'title' => 'required|max:255',
         ]);
 
-         $thumbnail = $request->file('thumbnail')?->store('uploads/attachment', 'public') ?? null;
+         $thumbnail = $request->file('thumbnail')?->store('uploads/attachment', 'public') ?? $attachment->attachment;
         $attachment->title = $request->title;
         $attachment->slug = Str::slug($request->title).'-'.rand(1,10000000000);
         $attachment->attachment = $thumbnail;
