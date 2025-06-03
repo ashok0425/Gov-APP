@@ -95,7 +95,7 @@
                         <img src="{{getImage($business->cover_image)}}" alt="" class="img-fluid" width="100">
 
                     </div>
-
+{{--
                     <div class="col-6">
                         <input type="hidden" name="category[]" id="cat" value="{{implode(',',$business->category_ids??[])}}">
                         <label for="">Category</label>
@@ -104,7 +104,7 @@
                                 <option value="{{$category->id}}" {{in_array($category->id,$business->category_ids??[])?'selected':''}}>{{$category->name}}</option>
                             @endforeach
                         </select>
-                    </div>
+                    </div> --}}
                     <div class="mb-3 col-md-6">
                         <label class="form-label">Phone</label>
                         <input

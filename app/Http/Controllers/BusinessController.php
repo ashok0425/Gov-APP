@@ -37,8 +37,7 @@ class BusinessController extends Controller
             'phone' => 'required|integer|unique:businesses,phone',
             'address' => 'required',
         ]);
-        $input = $request->category;
-        $category = explode(',', $input[0]);
+        $category = [];
         $business = new Business();
         $business->name = $request->name;
         $business->phone = $request->phone;
@@ -88,8 +87,7 @@ $business->google_map_link = $request->google_map_link;
          'phone' => 'required|integer',
             'address' => 'required',
         ]);
-        $input = $request->category;
-        $category = $input?explode(',', $input[0]):$business->category_ids;
+        $category = [];
 
         $business->name = $request->name;
         $business->phone = $request->phone;
@@ -166,9 +164,10 @@ public function updateCategories(Request $request, $id)
 
     $syncData = [];
     foreach ($ids as $index => $categoryId) {
+        if($categoryId){
         $syncData[$categoryId] = ['position' => $index + 1];
+        }
     }
-
     $business->categories()->sync($syncData);
 
     return redirect()->back()->with('success', 'Categories updated successfully.');

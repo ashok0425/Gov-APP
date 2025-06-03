@@ -62,7 +62,7 @@
                             <input name="cover_image" type="file" class="file-upload-field" value="" />
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    {{-- <div class="col-md-6">
                         <input type="hidden" name="category[]" id="cat">
 
                         <label for="">Category</label>
@@ -72,7 +72,7 @@
                                 <option value="{{ $category->id }}" {{in_array($category->id,old('category')??[])?'selected':''}}>{{ $category->name }}</option>
                             @endforeach
                         </select>
-                    </div>
+                    </div> --}}
                     <div class="mb-3 col-md-6">
                         <label class="form-label">Phone</label>
                         <input type="number" name="phone" class="form-control" placeholder="Enter phone number"
