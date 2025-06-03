@@ -29,6 +29,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'business_id',
         'address',
        'is_user',
+       'is_owner',
        'status'
     ];
 

@@ -16,7 +16,7 @@
                 @csrf
 
                 <div class="row">
-                    <div class="mb-3 col-md-6">
+                    <div class="mb-3 col-md-4">
                         <label class="form-label">Title</label>
                         <input
                             type="text"
@@ -28,7 +28,7 @@
                         />
                     </div>
 
-                    <div class="mb-3 col-md-6">
+                    <div class="mb-3 col-md-4">
                         <label class="form-label">Select Category</label>
                         <select name="category" id="" class="form-control form-select" required>
                            <option value="">select category</option>
@@ -39,7 +39,7 @@
                     </div>
 
                     @can('do:anything')
-                    <div class="mb-3 col-md-6">
+                    <div class="mb-3 col-md-4">
                         <label class="form-label">Select Ward  <small class="text-info">(Not selecting ward will be consider as Gaupalika Post)</small></label>
                         <select name="business_id" id="" class="form-control form-select">
                            <option value="">select Ward</option>
@@ -50,7 +50,7 @@
                     </div>
                     @endif
 
-                    <div class="mb-3 col-md-6">
+                    {{-- <div class="mb-3 col-md-6">
                         <label class="form-label">Thumbnail</label>
                         <div class="file-upload-wrapper" data-text="Select your file!">
                             <input
@@ -75,7 +75,7 @@
                         </div>
                         <img src="{{getImage($blog->cover)}}" alt="" width="100">
 
-                    </div>
+                    </div> --}}
 
                     <div class="col-md-6 mb-3">
                         <label for="status">Status</label>

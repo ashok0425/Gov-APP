@@ -71,6 +71,7 @@ class ManageAccessController extends Controller
         if (! auth()->user()->can('user:create')) {
             abort(403);
         }
+        // dd($request->all());
 
         $request->validate([
             'name' => 'required',
@@ -86,20 +87,21 @@ class ManageAccessController extends Controller
             'password' => bcrypt($request->password),
             'phone' => $request->phone,
             'business_id'=>$request->business_id,
-            'status'=>$request->status
+            'status'=>$request->status,
+            'is_owner'=>$request->is_owner
             ]);
 
-            if ($request->is_owner==1) {
-             $user->business()->update([
-                'owner_id' => $user->id,
-             ]);
-            }
+            // if ($request->is_owner==1) {
+            //  $user->business()->update([
+            //     'owner_id' => $user->id,
+            //  ]);
+            // }
 
         $user->syncPermissions($request->permissions);
 
         $notification = [
             'alert-type' => 'success',
-            'message' => 'updated successfully',
+            'message' => 'created successfully',
 
         ];
         return redirect()->route('access.index')->with($notification);
@@ -169,7 +171,8 @@ class ManageAccessController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'status'=>$request->status,
-            'business_id'=>$request->business_id
+            'business_id'=>$request->business_id,
+            'is_owner'=>$request->is_owner
         ]);
 
         if($request->password){
@@ -179,7 +182,13 @@ class ManageAccessController extends Controller
 
         $user->syncPermissions($request->permissions);
 
-        return redirect()->back();
+
+        $notification = [
+            'alert-type' => 'success',
+            'message' => 'updated successfully',
+
+        ];
+        return redirect()->route('access.index')->with($notification);
     }
 
     public function destroy($id)

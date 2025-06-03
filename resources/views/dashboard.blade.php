@@ -1,25 +1,41 @@
 @extends('layout.master')
 @php
 $totalBlog=App\Models\Blog::when(!Auth::user()->can('do:anything'),function($query){
-    $query->where('business_id',Auth::user()->business_id);
-})
+                $query= $query->where('business_id',Auth::user()->business_id);
+                if (!Auth::user()->is_owner) {
+                    $query->where('user_id',Auth::user()->id);
+                }
+
+            })
 ->count();
 $blogs=App\Models\Blog::when(!Auth::user()->can('do:anything'),function($query){
-    $query->where('business_id',Auth::user()->business_id);
-})
+                $query= $query->where('business_id',Auth::user()->business_id);
+                if (!Auth::user()->is_owner) {
+                    $query->where('user_id',Auth::user()->id);
+                }
+
+            })
 ->limit(5)->latest()->get();
 $users=App\Models\User::when(!Auth::user()->can('do:anything'),function($query){
     $query->where('business_id',Auth::user()->business_id);
 })
 ->limit(5)->latest()->get();
 $draftBlog=App\Models\Blog::when(!Auth::user()->can('do:anything'),function($query){
-    $query->where('business_id',Auth::user()->business_id);
-})->where('status',0)
+                $query= $query->where('business_id',Auth::user()->business_id);
+                if (!Auth::user()->is_owner) {
+                    $query->where('user_id',Auth::user()->id);
+                }
+
+            })->where('status',0)
 ->count();
 
 $publishBlog=App\Models\Blog::when(!Auth::user()->can('do:anything'),function($query){
-    $query->where('business_id',Auth::user()->business_id);
-})->where('status',1)
+                $query= $query->where('business_id',Auth::user()->business_id);
+                if (!Auth::user()->is_owner) {
+                    $query->where('user_id',Auth::user()->id);
+                }
+
+            })->where('status',1)
 ->count();
 $totalWard=App\Models\Business::query()->count();
 $totalBanner=App\Models\Banner::when(!Auth::user()->can('do:anything'),function($query){
@@ -71,7 +87,7 @@ $totalUser=App\Models\User::when(!Auth::user()->can('do:anything'),function($que
                         <div class="icon-circle mx-auto mb-3">
                             <i class="fas fa-copy fa-2x"></i>
                         </div>
-                        <small class="text-muted h5">Total Blogs</small>
+                        <small class="text-muted h5">Total Posts</small>
                         <h4 class="fw-bold mt-1 h3">{{$totalBlog}}</h4>
                     </div>
                 </a>
@@ -85,7 +101,7 @@ $totalUser=App\Models\User::when(!Auth::user()->can('do:anything'),function($que
                     <div class="icon-circle mx-auto mb-3">
                         <i class="fas fa-toolbox fa-2x"></i>
                     </div>
-                    <small class="text-muted h5">Draft Blogs</small>
+                    <small class="text-muted h5">Draft Posts</small>
                     <h4 class="fw-bold mt-1 h3">{{$draftBlog}}</h4>
                 </div>
                 </a>
@@ -99,7 +115,7 @@ $totalUser=App\Models\User::when(!Auth::user()->can('do:anything'),function($que
                     <div class="icon-circle mx-auto mb-3">
                         <i class="fas fa-cogs fa-2x"></i>
                     </div>
-                    <small class="text-muted h5">Publish Blogs</small>
+                    <small class="text-muted h5">Publish Posts</small>
                     <h4 class="fw-bold mt-1 h3">{{$publishBlog}}</h4>
                 </div>
                 </a>

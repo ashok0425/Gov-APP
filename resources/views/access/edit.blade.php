@@ -84,9 +84,9 @@
                                             <option value="0" {{ $user->status == 0 ? 'selected' : '' }}>Draft</option>
                                         </select>
                                     </div>
-                    {{-- <div class="form-group col-md-4 mb-3 mb-3">
-                        <label><input name="is_owner" type="checkbox" style="transform: scale(2)" {{$user->is_owner?'checked':''}}> &nbsp; Is Admin For ward</label>
-                    </div> --}}
+                    <div class="form-group col-md-4 mb-3 mb-3">
+                        <label><input name="is_owner" type="checkbox" value="1" style="transform: scale(2)" {{$user->is_owner?'checked':''}}> &nbsp; Is Admin For ward</label>
+                    </div>
                             </div>
                             @endcan
 

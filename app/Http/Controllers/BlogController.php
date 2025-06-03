@@ -17,7 +17,12 @@ class BlogController extends Controller
               ->with('business')
               ->when(
             !Auth::user()->can('do:anything'),function($query){
-               $query->where('business_id',Auth::user()->business_id);
+                if (!Auth::user()->is_owner) {
+                   $query->where('business_id',Auth::user()->business_id)->where('user_id',Auth::user()->id);
+                }else{
+                 $query->where('business_id',Auth::user()->business_id);
+                }
+
             })
             ->when($request->status!=''||$request->status,function($query) use ($request){
            $query->where('status',$request->status);
@@ -75,8 +80,9 @@ class BlogController extends Controller
         ]);
 
         $blog = new Blog;
+        $category=Category::find($request->category);
 
-        $thumbnail = $request->file('thumbnail')?->store('uploads', 'public') ?? null;
+        $thumbnail = $request->file('thumbnail')?->store('uploads', 'public') ?? $category->thumbnail;
         $cover = $request->file('cover')?->store('uploads', 'public') ?? null;
         $blog->title = $request->title;
         $blog->slug = Str::slug($request->title);
@@ -86,6 +92,7 @@ class BlogController extends Controller
         $blog->status = $request->status??$blog->status;
         $blog->thumbnail = $thumbnail;
         $blog->business_id = $request->business_id??Auth::user()->business_id;
+        $blog->user_id =Auth::user()->id;
         $blog->cover = $cover;
         $blog->save();
 
@@ -171,7 +178,6 @@ class BlogController extends Controller
             if($blog->business_id!=Auth::user()->business_id){
                 return redirect()->back()->with('error','You are not allowed to delete this blog');
                 }
-
         }
 
         $blog->delete();
