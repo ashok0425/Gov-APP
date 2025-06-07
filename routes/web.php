@@ -21,7 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('posts', \App\Http\Controllers\BlogController::class)->names('blogs');
     Route::resource('banners', \App\Http\Controllers\BannerController::class);
     Route::resource('attachments', \App\Http\Controllers\AttachmentController::class);
-    Route::resource('wards', \App\Http\Controllers\BusinessController::class)->names('business')->middleware('can:do anything');
+    Route::resource('wards', \App\Http\Controllers\BusinessController::class)->names('business');
     Route::get('business-reorder', [\App\Http\Controllers\BusinessController::class,'reorder'])->name('business.reorder')->middleware('can:do anything');
     Route::post('business-reorder', [\App\Http\Controllers\BusinessController::class,'reorderStore'])->name('business.reorder.store')->middleware('can:do anything');
 

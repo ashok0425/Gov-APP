@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Business;
 use App\Models\Category;
 use App\Models\User;
+use Auth;
 use Hash;
 use Illuminate\Http\Request;
 
@@ -15,6 +16,11 @@ class BusinessController extends Controller
     {
         $wards = Business::orderBy('business_order','asc')
         ->when($request->id,function($query) use ($request){
+            if ($request->id==22) {
+               if (!Auth::user()->can('palika:view')) {
+                abort(403);
+               }
+            }
             $query->where('id',$request->id);
         })
         ->when(!$request->id,function($query) use ($request){
@@ -76,6 +82,11 @@ $business->google_map_link = $request->google_map_link;
 
     public function edit(Business $ward)
     {
+          if ($ward->id==22) {
+               if (!Auth::user()->can('palika:edit')) {
+                abort(403);
+               }
+            }
         $categories=Category::all();
         return view('business.edit', compact('ward','categories'));
     }
@@ -137,6 +148,11 @@ $business->google_map_link = $request->google_map_link;
     }
 
     public function destroy(Business $ward) {
+        if ($ward->id==22) {
+               if (!Auth::user()->can('palika:delete')) {
+                abort(403);
+               }
+            }
           $ward->delete();
           $notification = [
             'alert-type' => 'success',

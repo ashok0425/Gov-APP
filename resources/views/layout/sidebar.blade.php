@@ -14,13 +14,17 @@
             </a>
         </li>
 
-        @can('do:anything')
-        <li class="sidebar-item">
+        @can('palika:view')
+              <li class="sidebar-item">
             <a class="sidebar-link {{Request::is('business','business/*')?'text-light':' '}}" href="{{ route('business.index',['id'=>22]) }}">
                 <i class="fas fa-home"></i>
                 <span class="align-middle">Palika</span>
             </a>
         </li>
+        @endcan
+
+        @can('do:anything')
+
         <li class="sidebar-item">
             <a class="sidebar-link {{Request::is('business','business/*')?'text-light':' '}}" href="{{ route('business.index') }}">
                 <i class="fas fa-home"></i>
