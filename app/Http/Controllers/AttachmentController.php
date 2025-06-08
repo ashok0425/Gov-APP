@@ -13,9 +13,14 @@ class AttachmentController extends Controller
     public function index()
     {
 
-        $attachments = Attachment::when(
-            !Auth::user()->can('do:anything'),function($query){
-               $query->where('business_id',Auth::user()->business_id);
+        $attachments = Attachment::when( !Auth::user()->can('do:anything'),function($query){
+                if (!Auth::user()->is_owner||!Auth::user()->business_id) {
+                }else if (!Auth::user()->is_owner){
+                     $query->where('business_id',Auth::user()->business_id)->where('user_id',Auth::user()->id);
+                }else{
+                 $query->where('business_id',Auth::user()->business_id);
+                }
+
             })->latest()->paginate(20);
 
         return view('attachment.index', compact('attachments'));
