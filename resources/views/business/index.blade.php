@@ -13,15 +13,20 @@
             <div>
                 @if (!request()->query('id'))
 
+                 @can ('ward:create')
                 <a href="{{ route('business.create') }}" class="btn btn-info btn-sm">
                     <i class="fas fa-plus"></i>
                     Add Ward
                 </a>
+                @endcan
 
+                 @can ('ward:reorder')
                 <a href="{{ route('business.reorder') }}" class="btn btn-primary btn-sm">
                     <i class="fas fa-sync"></i>
                     Reorder Ward
                 </a>
+                 @endcan
+
                 @endif
 
             </div>
@@ -60,18 +65,23 @@
 
                         <td>
 <div class="d-flex">
+     @can ('ward:category')
      <a
         class="btn btn-info mx-1"
         href="{{ route('business.categories.edit', $user->id) }}"
     >
         Category
     </a>
+    @endcan
+     @can ('ward:edit')
     <a
         class="btn btn-success"
         href="{{ route('business.edit', $user->id) }}"
     >
         <i class="fas fa-edit"></i>
     </a>
+    @endcan
+     @can ('ward:delete')
 @if ($user->id!==22)
 
     <a
@@ -80,7 +90,9 @@
 >
     <i class="fas fa-trash"></i>
 </a>
+
 @endif
+@endcan
 
 </div>
                         </td>

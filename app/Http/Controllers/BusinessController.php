@@ -24,6 +24,11 @@ class BusinessController extends Controller
             $query->where('id',$request->id);
         })
         ->when(!$request->id,function($query) use ($request){
+              if ($request->id!=22) {
+               if (!Auth::user()->can('ward:view')) {
+                abort(403);
+               }
+            }
             $query->where('id','!=',22);
         })
         ->paginate(10);
@@ -32,6 +37,9 @@ class BusinessController extends Controller
 
     public function create()
     {
+               if (!Auth::user()->can('ward:create')) {
+                abort(403);
+               }
         $categories=Category::all();
         return view('business.create',compact('categories'));
     }
@@ -87,6 +95,11 @@ $business->google_map_link = $request->google_map_link;
                 abort(403);
                }
             }
+              if ($ward->id!=22) {
+               if (!Auth::user()->can('ward:edit')) {
+                abort(403);
+               }
+            }
         $categories=Category::all();
         return view('business.edit', compact('ward','categories'));
     }
@@ -139,6 +152,9 @@ $business->google_map_link = $request->google_map_link;
     }
 
     public function reorderStore(Request $request){
+               if (!Auth::user()->can('ward:reorder')) {
+                abort(403);
+               }
         $orders=$request->order;
         foreach ($orders as $key => $order) {
             $business=Business::find($order['id']);
@@ -150,6 +166,11 @@ $business->google_map_link = $request->google_map_link;
     public function destroy(Business $ward) {
         if ($ward->id==22) {
                if (!Auth::user()->can('palika:delete')) {
+                abort(403);
+               }
+            }
+            if ($ward->id!=22) {
+               if (!Auth::user()->can('ward:delete')) {
                 abort(403);
                }
             }
@@ -165,6 +186,9 @@ $business->google_map_link = $request->google_map_link;
 
 public function editCategories($id)
 {
+     if (!Auth::user()->can('ward:category')) {
+                abort(403);
+               }
     $ward = Business::findOrFail($id);
     $assignedCategories = $ward->categories;
     $assigned = $assignedCategories->pluck('id')->toArray();

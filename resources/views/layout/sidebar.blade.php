@@ -23,8 +23,7 @@
         </li>
         @endcan
 
-        @can('do:anything')
-
+      @can('ward:view')
         <li class="sidebar-item">
             <a class="sidebar-link {{Request::is('business','business/*')?'text-light':' '}}" href="{{ route('business.index') }}">
                 <i class="fas fa-home"></i>
