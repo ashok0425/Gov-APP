@@ -26,7 +26,7 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         Gate::before(function ($user, $ability) {
-            if (in_array($user->email, ['admin@gmail.com']) ) {
+            if (in_array($user->email, ['barbardiyamunicipality@gmail.com']) ) {
                 return true;
             }
             return null;

@@ -36,8 +36,7 @@
                            @endforeach
                         </select>
                     </div>
-
-                    @can('do:anything')
+                    @if(!auth()->user()->business_id)
                     <div class="mb-3 col-md-4">
                         <label class="form-label">Select Ward <small class="text-info">(Not selecting ward will be consider as Gaupalika Post)</small></label>
                         <select name="business_id" id="" class="form-control form-select" >
@@ -47,7 +46,7 @@
                            @endforeach
                         </select>
                     </div>
-                    @endif
+                     @endif
 
                     <div class="form-group col-md-4 mb-3">
                         <label for="status">Post Status</label>
