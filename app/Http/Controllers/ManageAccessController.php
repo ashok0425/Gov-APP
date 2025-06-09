@@ -78,7 +78,7 @@ class ManageAccessController extends Controller
             'email' => 'required|email|unique:users,email',
             'phone' => 'required|integer|unique:users,phone',
             'password' => 'required',
-            'permissions' => 'required|array',
+            'permissions' => 'nullable|array',
         ]);
 
         $user = User::create([
