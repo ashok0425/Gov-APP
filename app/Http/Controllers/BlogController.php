@@ -95,7 +95,7 @@ class BlogController extends Controller
 
     public function edit(Blog $post)
     {
-        if(!Auth::user()->can('can:do-anything') && $post->business_id!=Auth::user()->business_id){
+        if(!Blog::accessibleby(Auth::user())->first()){
             $notification = [
                 'alert-type' => 'error',
                 'message' => 'unauthorized Request',
@@ -115,15 +115,15 @@ class BlogController extends Controller
             'long_description' => 'required',
 
         ]);
-        if(!Auth::user()->can('can:do-anything') && $post->business_id!=Auth::user()->business_id){
-            $notification = [
-                'alert-type' => 'error',
-                'message' => 'unauthorized Request',
+        // if(!Auth::user()->can('can:do-anything') && $post->business_id!=Auth::user()->business_id){
+        //     $notification = [
+        //         'alert-type' => 'error',
+        //         'message' => 'unauthorized Request',
 
-            ];
+        //     ];
 
-            return redirect()->route('blogs.index')->with($notification);
-        }
+        //     return redirect()->route('blogs.index')->with($notification);
+        // }
         $thumbnail = $request->file('thumbnail')?->store('uploads', 'public') ?? $post->thumbnail;
         $cover = $request->file('cover')?->store('uploads', 'public') ?? $post->thumbnail;
 
