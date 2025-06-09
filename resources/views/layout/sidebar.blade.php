@@ -3,7 +3,6 @@
         <a class="sidebar-brand" href="{{ route('dashboard') }}">
             <span class="align-middle">
                 <img src="{{ getImage(cms()->logo) }}" alt="" width="40" height="40" />
-
             </span>
         </a>
 
@@ -30,7 +29,6 @@
                 <span class="align-middle">Wards</span>
             </a>
         </li>
-
        @endcan
 
 @can('banners:view')

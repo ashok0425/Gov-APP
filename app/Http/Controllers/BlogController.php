@@ -15,16 +15,7 @@ class BlogController extends Controller
     {
         $posts = Blog::query()
               ->with('business')
-              ->when(
-            !Auth::user()->can('do:anything'),function($query){
-                if (!Auth::user()->is_owner||!Auth::user()->business_id) {
-                }else if (!Auth::user()->is_owner){
-                     $query->where('business_id',Auth::user()->business_id)->where('user_id',Auth::user()->id);
-                }else{
-                 $query->where('business_id',Auth::user()->business_id);
-                }
-
-            })
+              ->accessibleBy(Auth::user())
             ->when($request->status!=''||$request->status,function($query) use ($request){
            $query->where('status',$request->status);
             })
@@ -55,9 +46,7 @@ class BlogController extends Controller
             })
         ->orderBy('id', 'desc')->paginate(20);
 
-        $categories=Category::when(!Auth::user()->can('do:anything'),function($query){
-            $query->whereIn('id',Auth::user()->business->category_ids??[]);
-        })->get();
+        $categories=Category::accessibleBy(Auth::user())->get();
         $businesses=Business::all();
         // dd($request->all());
         return view('blog.index', compact('posts','categories','businesses'));
@@ -65,9 +54,7 @@ class BlogController extends Controller
 
     public function create()
     {
-        $categories=Category::when(!Auth::user()->can('do:anything'),function($query){
-        $query->whereIn('id',Auth::user()->business->category_ids??[]);
-    })->get();
+        $categories=Category::accessibleBy(Auth::user())->get();
     $businesses=Business::all();
         return view('blog.create',compact('categories','businesses'));
     }
@@ -116,9 +103,7 @@ class BlogController extends Controller
             ];
             return redirect()->route('blogs.index')->with($notification);
         }
-        $categories=Category::when(!Auth::user()->can('do:anything'),function($query){
-        $query->whereIn('id',Auth::user()->business->category_ids??[]);
-        })->get();
+        $categories=Category::accessibleBy(Auth::user())->get();
         $businesses=Business::all();
         return view('blog.edit', compact('post','businesses','categories'));
     }

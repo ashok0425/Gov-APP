@@ -88,7 +88,7 @@ class ManageAccessController extends Controller
             'phone' => $request->phone,
             'business_id'=>$request->business_id,
             'status'=>$request->status,
-            'is_owner'=>$request->is_owner
+            'role'=>$request->role??4
             ]);
 
             // if ($request->is_owner==1) {
@@ -172,7 +172,7 @@ class ManageAccessController extends Controller
             'phone' => $request->phone,
             'status'=>$request->status,
             'business_id'=>$request->business_id,
-            'is_owner'=>$request->is_owner
+           'role'=>$request->role??4
         ]);
 
         if($request->password){

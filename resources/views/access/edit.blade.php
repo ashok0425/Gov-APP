@@ -48,7 +48,7 @@
                                 <div class="form-group">
                                     <label class="col-form-label">Enter Phone <span class="text-danger">*</span></label>
                                     <div class="">
-                                        <input type="number" value="{{ old('phone',$user->phone) }}" class="form-control"
+                                        <input type="number" value="{{ old('phone', $user->phone) }}" class="form-control"
                                             name="phone">
 
                                         @error('phone')
@@ -58,80 +58,96 @@
                                 </div>
                             </div>
                             @can('do:anything')
-                            <div class="form-group col-md-4 mb-3">
-                            <label class="col-form-label">Enter password </label>
-                            <div class="">
-                                <input type="text" value="{{ old('password') }}" class="form-control" name="password">
+                                <div class="form-group col-md-4 mb-3">
+                                    <label class="col-form-label">Enter password </label>
+                                    <div class="">
+                                        <input type="text" value="{{ old('password') }}" class="form-control"
+                                            name="password">
 
-                                @error('password')
-                                    <span class="error-msg">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                                    <div class="form-group col-md-4 mb-3">
-                                        <label class="form-label">Ward</label>
-                                        <select name="business_id" id="" class="form-control form-select">
-                                            <option value="">Select Ward</option>
-                                            @foreach(App\Models\Business::all() as $location)
-                                            <option value="{{$location->id}}" {{$location->id==$user->business_id?'selected':''}}>{{$location->name}}</option>
-                                            @endforeach
-                                        </select>
+                                        @error('password')
+                                            <span class="error-msg">{{ $message }}</span>
+                                        @enderror
                                     </div>
-                                    <div class="form-group col-md-4 mb-3">
-                                        <label for="status">Status</label>
-                                        <select name="status" id="status" class="form-control form-select">
-                                            <option value="1" {{ $user->status == 1 ? 'selected' : '' }}>Publish</option>
-                                            <option value="0" {{ $user->status == 0 ? 'selected' : '' }}>Draft</option>
-                                        </select>
-                                    </div>
-                    <div class="form-group col-md-4 mb-3 mb-3">
-                        <label><input name="is_owner" type="checkbox" value="1" style="transform: scale(2)" {{$user->is_owner?'checked':''}}> &nbsp; Is Admin For ward</label>
+                                </div>
+                                <div class="form-group col-md-4 mb-3">
+                                    <label class="form-label">Ward</label>
+                                    <select name="business_id" id="" class="form-control form-select">
+                                        <option value="">Select Ward</option>
+                                        @foreach (App\Models\Business::all() as $location)
+                                            <option value="{{ $location->id }}"
+                                                {{ $location->id == $user->business_id ? 'selected' : '' }}>{{ $location->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4 mb-3">
+                                    <label for="status">Status</label>
+                                    <select name="status" id="status" class="form-control form-select">
+                                        <option value="1" {{ $user->status == 1 ? 'selected' : '' }}>Publish</option>
+                                        <option value="0" {{ $user->status == 0 ? 'selected' : '' }}>Draft</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3 mb-3 mb-3">
+                                    <label><input {{ $user->role == 1 ? 'checked' : '' }} name="role" type="radio"
+                                            style="transform: scale(2)" value="1"><span class="mx-3">Super
+                                            Admin</span></label>
+                                </div>
+
+                                <div class="form-group col-md-3 mb-3 mb-3">
+                                    <label><input {{ $user->role == 2 ? 'checked' : '' }} name="role" type="radio"
+                                            style="transform: scale(2)" value="2"><span class="mx-3">Admin</span></label>
+                                </div>
+
+                              <div class="form-group col-md-3 mb-3 mb-3">
+                        <label><input {{ $user->role == 3 ? 'checked' : '' }} name="role" type="radio" style="transform: scale(2)" value="3"><span class="mx-3">Ward Admin</span></label>
+                    </div>
+                      <div class="form-group col-md-3 mb-3 mb-3">
+                        <label><input {{ $user->role == 4 ? 'checked' : '' }} name="role" type="radio" style="transform: scale(2)" value="4"><span class="mx-3">Ward User</span></label>
                     </div>
                             </div>
-                            @endcan
+                        @endcan
 
 
-                                <div class="form-group">
-                                    <label class="col-form-label"><h3>Permissions <span class="text-danger">*</span></h3></label>
-                                        @foreach ($permissionMap as $key => $permission)
-                                        <h5 class="mt-3">{{Str::headline(Str::replace('_',' ',$key)) }}</h5>
+                        <div class="form-group">
+                            <label class="col-form-label">
+                                <h3>Permissions <span class="text-danger">*</span></h3>
+                            </label>
+                            @foreach ($permissionMap as $key => $permission)
+                                <h5 class="mt-3">{{ Str::headline(Str::replace('_', ' ', $key)) }}</h5>
 
-                                        <div class="row">
-                                            @foreach ($permission as $item)
-                                            <div class="col-md-4">
-                                                <label class="d-flex align-items-center">
-                                                    <input type="checkbox" value="{{ $item }}" name="permissions[]"
-                                                    @if (in_array($item, $user->permissions->pluck('name')->toArray())) checked @endif
-                                                    >
-                                                    <span class="pl-1">
-                                                        @if (str_contains($item,'others:'))
-                                                        {{Str::headline(Str::replace('others:',' ',$item)) }}
+                                <div class="row">
+                                    @foreach ($permission as $item)
+                                        <div class="col-md-4">
+                                            <label class="d-flex align-items-center">
+                                                <input type="checkbox" value="{{ $item }}" name="permissions[]"
+                                                    @if (in_array($item, $user->permissions->pluck('name')->toArray())) checked @endif>
+                                                <span class="pl-1">
+                                                    @if (str_contains($item, 'others:'))
+                                                        {{ Str::headline(Str::replace('others:', ' ', $item)) }}
+                                                    @else
+                                                        {{ Str::headline(Str::replace(':', ' ', $item)) }}
+                                                    @endif
 
-                                                        @else
-                                                        {{Str::headline(Str::replace(':',' ',$item)) }}
+                                                </span></label>
 
-                                                        @endif
-
-                                                    </span></label>
-
-                                            </div>
-                                            @endforeach
                                         </div>
-                                        @endforeach
-
+                                    @endforeach
                                 </div>
-                                <div>
-                                    <button class="btn btn-primary mt-3">save</button>
-                                </div>
+                            @endforeach
 
-
-                            </div>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary mt-3">save</button>
                         </div>
 
 
-                    </form>
                 </div>
             </div>
+
+
+            </form>
         </div>
+    </div>
+    </div>
     </div>
 @endsection

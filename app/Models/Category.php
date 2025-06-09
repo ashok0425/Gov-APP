@@ -15,6 +15,16 @@ class Category extends Model
         'status',
     ];
 
+    public function scopeAccessibleBy($query, $user)
+{
+    if ($user->role == 2||$user->role == 1) {
+        return $query;
+    }
+        return $query->whereIn('id', $user->business->categories()->get()->pluck('id')->toArray());
+
+}
+
+
     public function blogs(){
         return $this->hasMany(Blog::class);
     }

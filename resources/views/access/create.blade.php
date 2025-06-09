@@ -78,7 +78,7 @@
                         </select>
                     </div>
 
-                    <div class="mb-3 col-md-6">
+                    <div class="mb-3 col-md-3">
                         <label class="form-label">Status</label>
                         <select name="status" id="" class="form-control form-select">
                             <option value="1" {{old('status')==1?'selected':''}}>Publish</option>
@@ -86,8 +86,19 @@
                         </select>
                     </div>
 
-                    <div class="form-group col-md-4 mb-3 mb-3">
-                        <label><input name="is_owner" type="checkbox" style="transform: scale(2)" value="1"> &nbsp; Is Admin For ward</label>
+                       <div class="form-group col-md-3 mb-3 mb-3">
+                        <label><input  name="role" type="radio" style="transform: scale(2)" value="1"><span class="mx-3">Super Admin</span></label>
+                    </div>
+
+                       <div class="form-group col-md-3 mb-3 mb-3">
+                        <label><input name="role" type="radio" style="transform: scale(2)" value="2"><span class="mx-3">Admin</span></label>
+                    </div>
+
+                    <div class="form-group col-md-3 mb-3 mb-3">
+                        <label><input name="role" type="radio" style="transform: scale(2)" value="3"><span class="mx-3">Ward Admin</span></label>
+                    </div>
+                      <div class="form-group col-md-3 mb-3 mb-3">
+                        <label><input name="role" type="radio" style="transform: scale(2)" value="4"><span class="mx-3">Ward User</span></label>
                     </div>
                     @endcan
 
