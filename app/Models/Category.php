@@ -18,9 +18,9 @@ class Category extends Model
     public function scopeAccessibleBy($query, $user)
 {
     if ($user->role == 2||$user->role == 1) {
-        return $query;
+        return $query->where('status',1);
     }
-        return $query->whereIn('id', $user->business->categories()->get()->pluck('id')->toArray());
+        return $query->where('status',1)->whereIn('id', $user->business->categories()->get()->pluck('id')->toArray());
 
 }
 

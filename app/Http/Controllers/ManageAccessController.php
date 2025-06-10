@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -16,32 +16,29 @@ class ManageAccessController extends Controller
 {
     public function index()
     {
-        if (! auth()->user()->can('user:view')) {
+        if (!auth()->user()->can('user:view')) {
             $notification = [
                 'alert-type' => 'error',
                 'message' => 'You do not have sufficient permissions.',
-
             ];
             return redirect()->back()->with($notification);
         }
 
-        $users = User::whereNotIn('email', ['ashok@drebba.com','kartavya@drebba.com'])
-        ->when(
-            !Auth::user()->can('do:anything'),function($query){
-               $query->where('business_id',Auth::user()->business_id);
-            }
-        )->get();
+        $users = User::whereNotIn('email', ['ashok@drebba.com', 'kartavya@drebba.com'])
+            ->when(!Auth::user()->can('do:anything'), function ($query) {
+                $query->where('business_id', Auth::user()->business_id);
+            })
+            ->get();
 
         return view('access.index', compact('users'));
     }
 
     public function create()
     {
-        if (! auth()->user()->can('user:create')) {
+        if (!auth()->user()->can('user:create')) {
             $notification = [
                 'alert-type' => 'error',
                 'message' => 'You do not have sufficient permissions.',
-
             ];
             return redirect()->back()->with($notification);
         }
@@ -55,8 +52,7 @@ class ManageAccessController extends Controller
         foreach ($permissions as $permission) {
             if (str_contains($permission->name, ':')) {
                 $exploded = explode(':', $permission->name);
-                $permissionMap[$exploded[0]] = array_merge((isset($permissionMap[$exploded[0]])
-                    ? $permissionMap[$exploded[0]] : []), [$permission->name]);
+                $permissionMap[$exploded[0]] = array_merge(isset($permissionMap[$exploded[0]]) ? $permissionMap[$exploded[0]] : [], [$permission->name]);
             } else {
                 array_push($permissionMap['other'], $permission->name);
             }
@@ -68,57 +64,69 @@ class ManageAccessController extends Controller
 
     public function store(Request $request)
     {
-        if (! auth()->user()->can('user:create')) {
+        if (!auth()->user()->can('user:create')) {
             abort(403);
         }
         // dd($request->all());
 
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|integer|unique:users,phone',
-            'password' => 'required',
-            'permissions' => 'nullable|array',
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required',
+                'email' => 'required|email|unique:users,email',
+                'phone' => 'required|integer|unique:users,phone',
+                'password' => 'required',
+                'permissions' => 'nullable|array',
+                'role' => 'required|integer',
+                'business_id' => 'nullable',
+            ],
+            [
+                'business_id.required' => 'Ward field is required.',
+            ],
+        );
+
+        $validator->sometimes('business_id', 'required', function ($input) {
+            return in_array($input->role, [3, 4]);
+        });
+
+        $validator->validate();
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'phone' => $request->phone,
-            'business_id'=>$request->business_id,
-            'status'=>$request->status,
-            'role'=>$request->role??4
-            ]);
+            'business_id' => $request->business_id,
+            'status' => $request->status,
+            'role' => $request->role ?? 4,
+        ]);
 
-            // if ($request->is_owner==1) {
-            //  $user->business()->update([
-            //     'owner_id' => $user->id,
-            //  ]);
-            // }
+        // if ($request->is_owner==1) {
+        //  $user->business()->update([
+        //     'owner_id' => $user->id,
+        //  ]);
+        // }
 
         $user->syncPermissions($request->permissions);
 
         $notification = [
             'alert-type' => 'success',
             'message' => 'created successfully',
-
         ];
         return redirect()->route('access.index')->with($notification);
     }
 
     public function edit($id)
     {
-        if (! auth()->user()->can('user:edit')) {
+        if (!auth()->user()->can('user:edit')) {
             abort(403);
         }
 
-        $user = User::when(
-            !Auth::user()->can('do:anything'),function($query){
-               $query->where('business_id',Auth::user()->business_id);
-            }
-
-        )->where('id',$id)->firstOrFail();
+        $user = User::when(!Auth::user()->can('do:anything'), function ($query) {
+            $query->where('business_id', Auth::user()->business_id);
+        })
+            ->where('id', $id)
+            ->firstOrFail();
         $roles = Role::orderBy('name')->get();
 
         $permissions = Permission::orderBy('name')->get();
@@ -130,8 +138,7 @@ class ManageAccessController extends Controller
         foreach ($permissions as $permission) {
             if (str_contains($permission->name, ':')) {
                 $exploded = explode(':', $permission->name);
-                $permissionMap[$exploded[0]] = array_merge((isset($permissionMap[$exploded[0]])
-                    ? $permissionMap[$exploded[0]] : []), [$permission->name]);
+                $permissionMap[$exploded[0]] = array_merge(isset($permissionMap[$exploded[0]]) ? $permissionMap[$exploded[0]] : [], [$permission->name]);
             } else {
                 array_push($permissionMap['others'], $permission->name);
             }
@@ -146,70 +153,78 @@ class ManageAccessController extends Controller
 
     public function update(Request $request, $id)
     {
-
-        if (! auth()->user()->can('user:edit')) {
-           abort(403);
+        if (!auth()->user()->can('user:edit')) {
+            abort(403);
         }
 
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,'.$id,
-            'phone' => 'required|integer|unique:users,phone,'.$id,
-            'permissions' => 'nullable|array',
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required',
+                'email' => 'required|email',
+                'phone' => 'required|integer',
+                'permissions' => 'nullable|array',
+                'role' => 'required|integer',
+                'business_id' => 'nullable',
+            ],
+            [
+                'business_id.required' => 'Ward field is required.',
+            ],
+        );
 
-        ]);
+        $validator->sometimes('business_id', 'required', function ($input) {
+            return in_array($input->role, [3, 4]);
+        });
 
-        $user = User::when(
-            !Auth::user()->can('do:anything'),function($query){
-               $query->where('business_id',Auth::user()->business_id);
-            }
+        $validator->validate();
 
-        )->where('id',$id)->firstOrFail();
+        $user = User::when(!Auth::user()->can('do:anything'), function ($query) {
+            $query->where('business_id', Auth::user()->business_id);
+        })
+            ->where('id', $id)
+            ->firstOrFail();
 
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'status'=>$request->status,
-            'business_id'=>$request->business_id,
-           'role'=>$request->role??4
+            'status' => $request->status,
+            'business_id' => $request->business_id,
+            'role' => $request->role ?? 4,
         ]);
 
-        if($request->password){
+        if ($request->password) {
             $user->password = Hash::make($request->password);
             $user->save();
         }
 
         $user->syncPermissions($request->permissions);
 
-
         $notification = [
             'alert-type' => 'success',
             'message' => 'updated successfully',
-
         ];
         return redirect()->route('access.index')->with($notification);
     }
 
     public function destroy($id)
     {
-        if (! auth()->user()->can('user:delete')) {
+        if (!auth()->user()->can('user:delete')) {
             abort(403);
         }
 
-        $user = User::when(
-            !Auth::user()->can('do:anything'),function($query){
-               $query->where('business_id',Auth::user()->business_id);
-            }
-        )->where('id',$id)->firstOrFail();
+        $user = User::when(!Auth::user()->can('do:anything'), function ($query) {
+            $query->where('business_id', Auth::user()->business_id);
+        })
+            ->where('id', $id)
+            ->firstOrFail();
         $user->delete();
 
-          $notification = [
-                'alert-type' => 'success',
-                'message' => 'User Deleted',
-
-            ];
-            return redirect()->back()->with($notification);
+        $notification = [
+            'alert-type' => 'success',
+            'message' => 'User Deleted',
+        ];
+        return redirect()->back()->with($notification);
         return redirect()->route('access.index');
     }
 
@@ -236,20 +251,17 @@ class ManageAccessController extends Controller
         return redirect()->back()->with($notification);
     }
 
-
     public function users()
     {
-        if (! auth()->user()->can('can:do_anything')) {
+        if (!auth()->user()->can('can:do_anything')) {
             $notification = [
                 'alert-type' => 'error',
                 'message' => 'You do not have sufficient permissions.',
-
             ];
             return redirect()->back()->with($notification);
         }
 
-        $users=User::where('is_user',1)->latest()->paginate(20);
-        return view('user.index',compact('users'));
-
+        $users = User::where('is_user', 1)->latest()->paginate(20);
+        return view('user.index', compact('users'));
     }
 }
