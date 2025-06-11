@@ -95,7 +95,7 @@ class BlogController extends Controller
 
     public function edit(Blog $post)
     {
-        if(!Blog::accessibleby(Auth::user())->first()){
+        if(!Blog::accessibleby(Auth::user())->where('id',$post->id)->first()){
             $notification = [
                 'alert-type' => 'error',
                 'message' => 'unauthorized Request',
@@ -160,10 +160,13 @@ class BlogController extends Controller
 
     public function destroy(Blog $post)
     {
-        if(!Auth::user()->can('do:anything')){
-            if($post->business_id!=Auth::user()->business_id){
-                return redirect()->back()->with('error','You are not allowed to delete this blog');
-                }
+          if(!Blog::accessibleby(Auth::user())->where('id',$post->id)->first()){
+            $notification = [
+                'alert-type' => 'error',
+                'message' => 'unauthorized Request',
+
+            ];
+            return redirect()->route('blogs.index')->with($notification);
         }
 
         $post->delete();
