@@ -203,7 +203,7 @@
                 ['fontsize', ['fontsize']],
                 ['color', ['color']],
                 ['para', ['ul', 'ol', 'paragraph']],
-                ['insert', ['link', 'picture', 'video']],
+                ['insert', ['link', 'picture', 'video','table']],
                 ['view', ['fullscreen', 'codeview', 'help']]
             ],
             fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '24', '36', '48', '64', '82', '150']
