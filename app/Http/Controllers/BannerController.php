@@ -23,7 +23,7 @@ class BannerController extends Controller
 
                     $query->where('type',request()->query('type'));
             })
-            ->latest()->paginate();
+            ->latest()->paginate(10);
 
         return view('banner.index', compact('banners'));
     }

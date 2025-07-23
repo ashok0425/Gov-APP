@@ -67,5 +67,6 @@
                 </tbody>
             </table>
         </div>
+        {{$banners->withQueryString()->links()}}
     </div>
 @endsection
