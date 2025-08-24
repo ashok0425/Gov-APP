@@ -63,9 +63,10 @@
                         @endforeach
                     </tbody>
                 </table>
+        {{$attachments->links()}}
+
             </div>
         </div>
-        {{$attachments->links()}}
     </div>
 @endsection
 
