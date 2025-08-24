@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BusinessController;
+use App\Http\Controllers\SummernoteController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 Route::get('/login', [\App\Http\Controllers\AuthController::class, 'index'])->name('login');
@@ -57,3 +58,5 @@ Route::get('storages', function () {
     Artisan::call('migrate');
     return 'Storage link created';
 });
+
+Route::post('/summernote/upload', [SummernoteController::class, 'upload'])->name('summernote.upload');

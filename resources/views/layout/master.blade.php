@@ -192,7 +192,7 @@
         @stack('scripts')
 
         <script>
-        $(document).ready(function () {
+      $(document).ready(function () {
     if ($('#summernote').length) {
         $('#summernote').summernote({
             height: 300,
@@ -224,7 +224,33 @@
                             allowfullscreen></iframe>`;
                         $('#summernote').summernote('pasteHTML', embedHtml);
                     }
+                },
+
+                onImageUpload: function(files) {
+                    for(let i = 0; i < files.length; i++) {
+                        uploadImage(files[i]);
+                    }
                 }
+            }
+        });
+    }
+
+    function uploadImage(file) {
+        let data = new FormData();
+        data.append("file", file);
+        data.append("_token", $('meta[name="csrf-token"]').attr('content'));
+
+        $.ajax({
+            url: '/summernote/upload', // Laravel route
+            method: 'POST',
+            data: data,
+            contentType: false,
+            processData: false,
+            success: function(url) {
+                $('#summernote').summernote('insertImage', url);
+            },
+            error: function(err) {
+                console.error(err);
             }
         });
     }
