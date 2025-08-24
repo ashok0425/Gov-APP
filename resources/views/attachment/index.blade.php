@@ -65,6 +65,7 @@
                 </table>
             </div>
         </div>
+        {{$attachments->links()}}
     </div>
 @endsection
 
