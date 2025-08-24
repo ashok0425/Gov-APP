@@ -65,7 +65,7 @@
                                 type="file"
                                 class="file-upload-field"
                                 value=""
-                                required
+
                             />
                         </div>
                     </div>
