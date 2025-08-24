@@ -57,7 +57,7 @@
                     </div>
 
 
-                    {{-- <div class="mb-3 col-md-6">
+                     <div class="mb-3 col-md-6">
                         <label class="form-label">Thumbnail</label>
                         <div class="file-upload-wrapper" data-text="Select your file!">
                             <input
@@ -70,7 +70,7 @@
                         </div>
                     </div>
 
-                    <div class="mb-3 col-md-6">
+                    {{--<div class="mb-3 col-md-6">
                         <label class="form-label">Cover Photo (optional)</label>
                         <div class="file-upload-wrapper" data-text="Select your file!">
                             <input

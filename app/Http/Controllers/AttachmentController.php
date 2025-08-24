@@ -14,10 +14,7 @@ class AttachmentController extends Controller
     {
 
         $attachments = Attachment::when( !Auth::user()->can('do:anything'),function($query){
-                if (!Auth::user()->is_owner||!Auth::user()->business_id) {
-                }else if (!Auth::user()->is_owner){
-                     $query->where('business_id',Auth::user()->business_id)->where('user_id',Auth::user()->id);
-                }else{
+                if (Auth::user()->role!=1||Auth::user()->role!=2) {
                  $query->where('business_id',Auth::user()->business_id);
                 }
 

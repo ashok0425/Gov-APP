@@ -52,7 +52,7 @@
 @endcan
 
  <li class="sidebar-item">
-           <a class="sidebar-link {{Request::is('attachments','attachments/*')?'text-light':' '}}" href="{{ route('attachments.index') }}">
+           <a target="_blank" class="sidebar-link {{Request::is('attachments','attachments/*')?'text-light':' '}}" href="{{ route('attachments.index') }}">
                <i class="fas fa-copy"></i>
                <span class="align-middle">Attachment</span>
            </a>

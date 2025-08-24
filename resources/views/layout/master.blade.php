@@ -192,7 +192,7 @@
         @stack('scripts')
 
         <script>
-           $(document).ready(function () {
+        $(document).ready(function () {
     if ($('#summernote').length) {
         $('#summernote').summernote({
             height: 300,
@@ -206,10 +206,30 @@
                 ['insert', ['link', 'picture', 'video','table']],
                 ['view', ['fullscreen', 'codeview', 'help']]
             ],
-            fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '24', '36', '48', '64', '82', '150']
+            fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '24', '36', '48', '64', '82', '150'],
+
+            callbacks: {
+                onPaste: function(e) {
+                    var clipboardData = e.originalEvent.clipboardData || window.clipboardData;
+                    var pastedData = clipboardData.getData('Text');
+                    var youtubeRegex = /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^\s&]+)/;
+
+                    if (youtubeRegex.test(pastedData)) {
+                        e.preventDefault();
+                        var videoId = pastedData.match(youtubeRegex)[1];
+                        var embedHtml = `<iframe width="560" height="315"
+                            src="https://www.youtube.com/embed/${videoId}?rel=0"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen></iframe>`;
+                        $('#summernote').summernote('pasteHTML', embedHtml);
+                    }
+                }
+            }
         });
     }
 });
+
 
 
             @if (Session::has('message')) //toatser

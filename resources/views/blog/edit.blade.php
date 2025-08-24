@@ -50,7 +50,7 @@
                     </div>
                     @endif
 
-                    {{-- <div class="mb-3 col-md-6">
+                     <div class="mb-3 col-md-6">
                         <label class="form-label">Thumbnail</label>
                         <div class="file-upload-wrapper" data-text="Select your file!">
                             <input
@@ -63,7 +63,7 @@
                         <img src="{{getImage($post->thumbnail)}}" alt="" width="100">
                     </div>
 
-                    <div class="mb-3 col-md-6">
+                    {{--<div class="mb-3 col-md-6">
                         <label class="form-label">Cover Photo (optional)</label>
                         <div class="file-upload-wrapper" data-text="Select your file!">
                             <input
