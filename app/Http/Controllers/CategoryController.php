@@ -15,7 +15,7 @@ class CategoryController extends Controller
         if(!Auth::user()->can('category:view')){
             abort(403);
         }
-        $categories = Category::all();
+        $categories = Category::paginate(15);
 
         return view('category.index', compact('categories'));
     }

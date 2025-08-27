@@ -10,7 +10,7 @@
         </div>
         <div class="col-md-6">
             <h5>Assigned Categories</h5>
-            <ul id="assigned" class="list-group connected-sortable">
+            <ul id="assigned" class="list-group connected-sortable" style="min-height:200vh ">
                 @foreach ($assignedCategories as $category)
                     <li class="list-group-item" data-id="{{ $category->id }}">{{ $category->name }}</li>
                 @endforeach
