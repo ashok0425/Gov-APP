@@ -209,22 +209,54 @@
             fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '24', '36', '48', '64', '82', '150'],
 
             callbacks: {
-                onPaste: function(e) {
-                    var clipboardData = e.originalEvent.clipboardData || window.clipboardData;
-                    var pastedData = clipboardData.getData('Text');
-                    var youtubeRegex = /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^\s&]+)/;
+                onPaste: function (e) {
+    var clipboardData = (e.originalEvent || e).clipboardData || window.clipboardData;
+    var pastedData = clipboardData.getData('Text');
+    e.preventDefault();
 
-                    if (youtubeRegex.test(pastedData)) {
-                        e.preventDefault();
-                        var videoId = pastedData.match(youtubeRegex)[1];
-                        var embedHtml = `<iframe width="560" height="315"
-                            src="https://www.youtube.com/embed/${videoId}?rel=0"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen></iframe>`;
-                        $('#summernote').summernote('pasteHTML', embedHtml);
-                    }
-                },
+    let embedHtml = '';
+
+    // 🔴 YouTube
+    var ytRegex = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^\s&]+)/;
+    if (ytRegex.test(pastedData)) {
+        let videoId = pastedData.match(ytRegex)[1];
+        embedHtml = `
+            <iframe width="100%" height="400"
+                src="https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&showinfo=0"
+                frameborder="0"
+                allowfullscreen>
+            </iframe>`;
+    }
+
+    // 🔵 Facebook
+    else if (pastedData.includes('facebook.com') || pastedData.includes('fb.watch')) {
+        embedHtml = `
+            <iframe width="100%" height="400"
+                src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(pastedData)}&show_text=false"
+                frameborder="0"
+                allowfullscreen>
+            </iframe>`;
+    }
+
+    // 🟣 Instagram
+    else if (pastedData.includes('instagram.com')) {
+        embedHtml = `
+            <iframe width="100%" height="400"
+                src="https://www.instagram.com/p/${pastedData.split('/').filter(Boolean).pop()}/embed"
+                frameborder="0"
+                scrolling="no"
+                allowfullscreen>
+            </iframe>`;
+    }
+
+    // 👉 Paste result
+    if (embedHtml) {
+        $('#summernote').summernote('pasteHTML', embedHtml);
+    } else {
+        $('#summernote').summernote('pasteHTML', pastedData);
+    }
+},
+
 
                 onImageUpload: function(files) {
                     for(let i = 0; i < files.length; i++) {
