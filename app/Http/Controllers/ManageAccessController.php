@@ -54,7 +54,7 @@ class ManageAccessController extends Controller
                 $exploded = explode(':', $permission->name);
                 $permissionMap[$exploded[0]] = array_merge(isset($permissionMap[$exploded[0]]) ? $permissionMap[$exploded[0]] : [], [$permission->name]);
             } else {
-                array_push($permissionMap['other'], $permission->name);
+                array_push($permissionMap['others'], $permission->name);
             }
         }
         $roles = Role::orderBy('name')->get();

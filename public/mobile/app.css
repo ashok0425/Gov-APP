@@ -1,0 +1,850 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;500;600;700&display=swap');
+
+/* ---------------------------------------------------------------- tokens
+   Mirrors lib/core/app_constants/app_colors.dart                          */
+:root {
+    --green: #0e7f6b;
+    --green-90: rgba(14, 127, 107, 0.9);
+    --green-60: rgba(14, 127, 107, 0.6);
+    --green-20: rgba(76, 175, 80, 0.2);
+    --white: #ffffff;
+    --scaffold: #f3f3f3;
+    --matte-black: #343634;
+    --black: #323232;
+    --grey: #8f8f8f;
+    --light-grey: #e0e0e0;
+    --red: #f44336;
+    --blue: #2196f3;
+    --text-body: #252525;
+
+    --appbar-h: 110px;
+    --cover-h: 105px;
+    --navbar-h: 70px;
+    --shell: 480px;
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto Condensed', 'Segoe UI', system-ui, sans-serif;
+    background: #dfdfdf;
+    color: var(--black);
+    font-size: 16px;
+    line-height: 1.4;
+    overscroll-behavior-y: none;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    font: inherit;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    color: inherit;
+}
+
+/* ----------------------------------------------------------------- shell
+   The app is mobile-only: a phone-width column, centred on the desktop.   */
+/* Scaffold: the app bar and bottom bar stay put, only the body scrolls. */
+.shell {
+    position: relative;
+    max-width: var(--shell);
+    height: 100vh;
+    height: 100dvh;
+    margin: 0 auto;
+    background: var(--scaffold);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.12);
+}
+
+.scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Clear the FAB, which overlaps the body the same way it does in the app. */
+.has-nav .scroll-area {
+    padding-bottom: 36px;
+}
+
+/* --------------------------------------------------------------- appbars */
+
+/* Home / notifications: the animated banner strip. */
+.appbar-banner {
+    height: var(--appbar-h);
+    background: var(--scaffold);
+    overflow: hidden;
+    flex: none;
+    position: relative;
+}
+
+.appbar-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Ward / palika: the cover image behind a translucent green wash. */
+.appbar-cover {
+    height: var(--cover-h);
+    background: var(--green-90);
+    position: relative;
+    flex: none;
+    overflow: hidden;
+}
+
+.appbar-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Solid green bar with a centred title. */
+.appbar {
+    min-height: 56px;
+    background: var(--green);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    gap: 4px;
+    flex: none;
+}
+
+.appbar-title {
+    flex: 1;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--white);
+    padding: 12px 0;
+    overflow-wrap: anywhere;
+}
+
+.appbar-white {
+    background: var(--white);
+    color: var(--matte-black);
+}
+
+.appbar-white .appbar-title {
+    color: var(--matte-black);
+}
+
+.appbar-white .icon-btn {
+    color: var(--matte-black);
+}
+
+.icon-btn {
+    width: 40px;
+    height: 40px;
+    flex: none;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    color: var(--white);
+}
+
+.icon-btn:active {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+/* Back button floating over an image appbar. */
+.appbar-cover .icon-btn {
+    position: absolute;
+    top: 8px;
+    left: 6px;
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.25);
+}
+
+/* -------------------------------------------------------------- carousel
+   CustomSlider: 16 / 9, radius 10, autoplay 5s, dots at the bottom.       */
+.carousel {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    background: var(--light-grey);
+}
+
+.carousel-track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.carousel-track.no-anim {
+    transition: none;
+}
+
+.carousel-slide {
+    flex: 0 0 100%;
+    height: 100%;
+}
+
+.carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.carousel-dots {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--grey);
+    padding: 0;
+}
+
+.carousel-dot.is-active {
+    background: #4caf50;
+}
+
+/* Shimmer stand-in while an image is still loading. */
+.shimmer {
+    background: linear-gradient(90deg, #e0e0e0 25%, #f5f5f5 50%, #e0e0e0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+    from {
+        background-position: 200% 0;
+    }
+    to {
+        background-position: -200% 0;
+    }
+}
+
+/* --------------------------------------------------------------- section */
+.section {
+    padding: 10px 15px;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--matte-black);
+    padding: 10px 15px 0;
+    margin: 0;
+}
+
+/* ---------------------------------------------------------- ward circles */
+.ward-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 5px;
+    padding: 10px 15px;
+}
+
+.ward-circle {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: var(--white);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    flex: none;
+}
+
+.ward-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* --------------------------------------------------------------- blog row
+   Material elevation 1, white, 10px padding, 60px square thumbnail.       */
+.blog-list {
+    padding: 10px 15px 25px;
+}
+
+.blog-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--white);
+    padding: 10px;
+    margin: 0 12px 10px;
+    box-shadow:
+        0 2px 1px -1px rgba(0, 0, 0, 0.2),
+        0 1px 1px 0 rgba(0, 0, 0, 0.14),
+        0 1px 3px 0 rgba(0, 0, 0, 0.12);
+}
+
+.blog-row img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 1px;
+    flex: none;
+    background: var(--light-grey);
+}
+
+.blog-row-body {
+    display: block;
+    min-width: 0;
+    flex: 1;
+}
+
+.blog-row-title {
+    display: block;
+    font-weight: 600;
+    color: var(--black);
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.blog-row-desc {
+    margin: 4px 0 0;
+    color: var(--black);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+}
+
+/* --------------------------------------------------------------- buttons */
+.btn-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 48px;
+    background: var(--green);
+    border: 2px solid var(--green);
+    border-radius: 8px;
+    color: var(--white);
+    font-size: 16px;
+    font-weight: 500;
+    box-shadow:
+        0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14),
+        0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.btn-primary:active {
+    background: #0c6d5c;
+}
+
+/* ------------------------------------------------------------- bottom nav
+   BottomAppBar: green, 70px tall, 16px top radius, notched for the FAB.   */
+.bottom-nav {
+    height: var(--navbar-h);
+    background: var(--green);
+    border-radius: 16px 16px 0 0;
+    display: flex;
+    justify-content: space-between;
+    flex: none;
+    z-index: 10;
+}
+
+.nav-tab {
+    width: 50%;
+    padding-top: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    color: var(--white);
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.nav-tab .material-symbols-rounded {
+    font-size: 24px;
+}
+
+.nav-icon {
+    position: relative;
+    display: grid;
+    place-items: center;
+}
+
+.nav-badge {
+    position: absolute;
+    top: -10px;
+    right: -12px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border-radius: 9px;
+    background: var(--red);
+    color: var(--white);
+    font-size: 10px;
+    line-height: 18px;
+    text-align: center;
+}
+
+/* The notch + docked FAB. */
+.fab-dock {
+    position: absolute;
+    left: 50%;
+    bottom: calc(var(--navbar-h) - 28px);
+    transform: translateX(-50%);
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--scaffold);
+    display: grid;
+    place-items: center;
+    z-index: 11;
+    pointer-events: none;
+}
+
+.fab {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--green);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    pointer-events: auto;
+    box-shadow:
+        0 3px 5px -1px rgba(0, 0, 0, 0.2),
+        0 6px 10px 0 rgba(0, 0, 0, 0.14),
+        0 1px 18px 0 rgba(0, 0, 0, 0.12);
+}
+
+.fab img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
+
+/* ------------------------------------------------------------ menu sheet
+   showModalBottomSheet: scaffold-coloured, drag handle, 4 icon tiles.     */
+.sheet-scrim {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+    z-index: 40;
+}
+
+.sheet-scrim.is-open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.sheet {
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    width: 100%;
+    max-width: var(--shell);
+    transform: translate(-50%, 100%);
+    background: var(--scaffold);
+    border-radius: 28px 28px 0 0;
+    padding: 0 16px 12px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 41;
+}
+
+.sheet.is-open {
+    transform: translate(-50%, 0);
+}
+
+.sheet-handle {
+    width: 32px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--grey);
+    margin: 12px auto 16px;
+}
+
+.sheet-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-bottom: 24px;
+}
+
+.menu-item {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.menu-item-icon {
+    width: 100%;
+    aspect-ratio: 1;
+    background: var(--green);
+    border-radius: 8px;
+    padding: 12px;
+    display: grid;
+    place-items: center;
+}
+
+.menu-item-icon img {
+    max-height: 32px;
+    width: auto;
+    /* The Flutter tiles tint the glyph white. */
+    filter: brightness(0) invert(1);
+}
+
+.menu-item span {
+    text-align: center;
+    font-size: 14px;
+    color: var(--black);
+}
+
+/* -------------------------------------------------------------- grids */
+.grid {
+    display: grid;
+    padding: 12px;
+}
+
+/* minmax(0, 1fr) keeps wide thumbnails from pushing the tracks past the shell. */
+.grid-categories {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px 10px;
+}
+
+.grid-wards {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px 10px;
+}
+
+.grid > a {
+    min-width: 0;
+}
+
+.grid-categories > a {
+    aspect-ratio: 1;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #eeeeee;
+    display: grid;
+    place-items: center;
+}
+
+.grid-categories img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.grid-wards > a {
+    aspect-ratio: 1;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+}
+
+.grid-wards img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* -------------------------------------------------------- contact cards
+   hello_ward.dart: white, radius 20, 2px grey border, stacked rows.       */
+.contact-card {
+    background: var(--white);
+    border: 2px solid var(--grey);
+    border-radius: 20px;
+    padding: 10px;
+    margin-bottom: 12px;
+}
+
+.contact-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.contact-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--white);
+    flex: none;
+}
+
+.contact-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.contact-name {
+    flex: 1;
+    background: var(--green-20);
+    padding: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--black);
+    overflow-wrap: anywhere;
+}
+
+.contact-owner {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--black);
+}
+
+.contact-address {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin-top: 10px;
+    font-size: 15px;
+    color: var(--black);
+}
+
+.contact-address .material-symbols-rounded {
+    color: var(--red);
+    font-size: 22px;
+}
+
+/* Bordered pill rows: email, phone, socials, website. */
+.contact-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--white);
+    border: 2px solid var(--grey);
+    border-radius: 15px;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 15px;
+    color: var(--black);
+    overflow-wrap: anywhere;
+}
+
+.contact-row .grow {
+    flex: 1;
+    min-width: 0;
+    font-size: 16px;
+}
+
+.contact-row img {
+    width: 25px;
+    height: 25px;
+    flex: none;
+}
+
+.contact-row .material-symbols-rounded {
+    flex: none;
+}
+
+.contact-row .split {
+    width: 2px;
+    height: 40px;
+    background: var(--grey);
+    flex: none;
+}
+
+.contact-row .half {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.contact-row .half span.label {
+    min-width: 0;
+}
+
+.is-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+/* ------------------------------------------------------------- settings */
+.tile {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px;
+}
+
+.tile .material-symbols-rounded {
+    color: var(--green);
+    font-size: 24px;
+}
+
+.tile-title {
+    color: var(--green);
+    font-weight: 700;
+}
+
+.tile-sub {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+}
+
+/* ---------------------------------------------------------- html content
+   Matches the customStylesBuilder rules from news_details_screen.dart.    */
+.rich {
+    padding: 10px 15px;
+    color: var(--black);
+    overflow-wrap: anywhere;
+}
+
+.rich img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+}
+
+.rich table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0;
+}
+
+.rich thead {
+    font-weight: 600;
+}
+
+.rich th {
+    padding: 8px;
+    border: 1px solid #ccc;
+    background: #f6f6f6;
+}
+
+.rich td {
+    padding: 8px;
+    border: 1px solid #ccc;
+}
+
+/* Tables stay inside their own scroller so the page never pans sideways. */
+.rich .table-scroll {
+    overflow-x: auto;
+}
+
+.rich a {
+    color: var(--blue);
+    text-decoration: underline;
+}
+
+.rich iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    border: 0;
+}
+
+.rich .video-embed {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    margin: 8px 0;
+}
+
+.rich .video-embed iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* -------------------------------------------------------- empty / states */
+.state {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--black);
+}
+
+.state p {
+    margin: 0 0 4px;
+}
+
+.spinner {
+    width: 36px;
+    height: 36px;
+    margin: 24px auto;
+    border: 3px solid var(--light-grey);
+    border-top-color: var(--green);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ---------------------------------------------------------------- splash */
+.splash {
+    position: fixed;
+    inset: 0;
+    background: var(--green-60);
+    display: grid;
+    place-items: center;
+    z-index: 100;
+    animation: splash-out 0.35s ease 1s forwards;
+}
+
+.splash img {
+    width: 50vw;
+    max-width: 240px;
+}
+
+@keyframes splash-out {
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+/* Material Symbols fallback sizing */
+.material-symbols-rounded {
+    font-variation-settings:
+        'FILL' 1,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24;
+    user-select: none;
+}

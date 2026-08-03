@@ -4,8 +4,8 @@ use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\SummernoteController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+// Admin sign-in. The public face of the site lives at "/" — see the group below.
 Route::get('/login', [\App\Http\Controllers\AuthController::class, 'index'])->name('login');
-Route::get('/', [\App\Http\Controllers\AuthController::class, 'index']);
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'store']);
 //admin guard middleware
 Route::middleware('auth')->group(function () {
@@ -45,18 +45,26 @@ Route::post('/business/{id}/categories', [BusinessController::class, 'updateCate
 
 });
 
-Route::get('page/{slug}', function ($slug) {
-    return view('page', ['slug' => $slug]);
-});
-
-
-Route::get('blog/{id}', function ($slug) {
-    return view('page', ['slug' => $slug]);
-});
-
 Route::get('storages', function () {
     Artisan::call('migrate');
     return 'Storage link created';
 });
 
 Route::post('/summernote/upload', [SummernoteController::class, 'upload'])->name('summernote.upload');
+
+// Public mobile web app — the browser version of the Nagarpalika Flutter app.
+// Registered last so it never shadows an admin route. "/my-ward" rather than
+// "/wards", which the admin business resource already owns.
+Route::name('m.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\MobileAppController::class, 'home'])->name('home');
+    Route::get('/notifications', [\App\Http\Controllers\MobileAppController::class, 'notifications'])->name('notifications');
+    Route::get('/my-ward', [\App\Http\Controllers\MobileAppController::class, 'wards'])->name('wards');
+    Route::get('/palika', [\App\Http\Controllers\MobileAppController::class, 'palika'])->name('palika');
+    Route::get('/hello', [\App\Http\Controllers\MobileAppController::class, 'hello'])->name('hello');
+    Route::get('/settings', [\App\Http\Controllers\MobileAppController::class, 'settings'])->name('settings');
+    Route::get('/ward/{id}', [\App\Http\Controllers\MobileAppController::class, 'ward'])->name('ward');
+    Route::get('/ward/{id}/categories', [\App\Http\Controllers\MobileAppController::class, 'categories'])->name('categories');
+    Route::get('/ward/{id}/category/{category}', [\App\Http\Controllers\MobileAppController::class, 'categoryNews'])->name('category.news');
+    Route::get('/blog/{id}', [\App\Http\Controllers\MobileAppController::class, 'blog'])->name('blog');
+    Route::get('/page/{slug}', [\App\Http\Controllers\MobileAppController::class, 'page'])->name('page');
+});
