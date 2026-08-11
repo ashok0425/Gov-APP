@@ -21,7 +21,7 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Ward</th>
+                                <th>Palika</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>

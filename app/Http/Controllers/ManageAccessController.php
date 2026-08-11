@@ -81,7 +81,7 @@ class ManageAccessController extends Controller
                 'business_id' => 'nullable',
             ],
             [
-                'business_id.required' => 'Ward field is required.',
+                'business_id.required' => 'Palika field is required.',
             ],
         );
 
@@ -168,7 +168,7 @@ class ManageAccessController extends Controller
                 'business_id' => 'nullable',
             ],
             [
-                'business_id.required' => 'Ward field is required.',
+                'business_id.required' => 'Palika field is required.',
             ],
         );
 

@@ -14,22 +14,13 @@
         </li>
 
         @can('palika:view')
-              <li class="sidebar-item">
-            <a class="sidebar-link {{Request::is('business','business/*')?'text-light':' '}}" href="{{ route('business.index',['id'=>22]) }}">
+        <li class="sidebar-item">
+            <a class="sidebar-link {{Request::is('palikas','palikas/*','palika-reorder')?'text-light':' '}}" href="{{ route('palika.index') }}">
                 <i class="fas fa-home"></i>
                 <span class="align-middle">Palika</span>
             </a>
         </li>
         @endcan
-
-      @can('ward:view')
-        <li class="sidebar-item">
-            <a class="sidebar-link {{Request::is('business','business/*')?'text-light':' '}}" href="{{ route('business.index') }}">
-                <i class="fas fa-home"></i>
-                <span class="align-middle">Wards</span>
-            </a>
-        </li>
-       @endcan
 
 @can('banners:view')
 <li class="sidebar-item">
@@ -84,6 +75,13 @@
             <a class="sidebar-link {{Request::is('categories','categories/*')?'text-light':' '}}" href="{{ route('categories.index') }}">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="align-middle">Category</span>
+            </a>
+        </li>
+
+        <li class="sidebar-item">
+            <a class="sidebar-link {{Request::is('subcategories','subcategories/*')?'text-light':' '}}" href="{{ route('subcategories.index') }}">
+                <i class="fas fa-sitemap"></i>
+                <span class="align-middle">Subcategory</span>
             </a>
         </li>
         @endcan

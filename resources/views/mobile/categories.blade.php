@@ -4,7 +4,7 @@
 
 @section('appbar')
     <header class="appbar">
-        @include('mobile.partials.back-button', ['fallback' => route('m.ward', $ward->id)])
+        @include('mobile.partials.back-button', ['fallback' => route('m.palika', $palika->id)])
         <span class="appbar-title">Categories</span>
         <span class="icon-btn"></span>
     </header>
@@ -14,17 +14,10 @@
     @if ($categories->isNotEmpty())
         <div class="grid grid-categories">
             @foreach ($categories as $category)
-                <a href="{{ route('m.category.news', [$ward->id, $category->id]) }}"
-                   aria-label="{{ $category->name }}">
-                    @if (filled($category->thumbnail))
-                        <img src="{{ asset('storage/' . $category->thumbnail) }}"
-                             alt=""
-                             loading="lazy"
-                             data-fallback="{{ asset('mobile/img/placeholder-thumb.jpeg') }}">
-                    @else
-                        <span class="material-symbols-rounded">category</span>
-                    @endif
-                </a>
+                @include('mobile.partials.category-tile', [
+                    'category' => $category,
+                    'href' => route('m.category.news', [$palika->id, $category->id]),
+                ])
             @endforeach
         </div>
     @else

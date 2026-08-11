@@ -14,6 +14,13 @@
                    @endforeach
                 </select>
                 </div>
+                <div class="col-md-3 mb-2">
+                <select name="subcategory[]" id="" class="form-control select-subcategory" multiple>
+                   @foreach ($subcategories as $subcategory)
+                       <option value="{{$subcategory->id}}" {{in_array($subcategory->id,request()->query('subcategory')??[])?'selected':''}}>{{$subcategory->parent?->name}} › {{$subcategory->name}}</option>
+                   @endforeach
+                </select>
+                </div>
                 <div class="col-md-2 mb-2">
                         <select name="status" id="status" class="form-control form-select">
                             <option value="" selected>All</option>
@@ -79,6 +86,10 @@
                                     @else
                                         <a class="badge bg-danger">Draft</a>
                                     @endif
+
+                                    @if ($post->is_breaking)
+                                        <a class="badge bg-warning text-dark">Breaking</a>
+                                    @endif
                                 </td>
                                 <td>
                                     <a
@@ -129,7 +140,10 @@
 
 $(document).ready(function() {
     $('.select').select2({
-        placeholder:'select wards'
+        placeholder:'select palika'
+    });
+    $('.select-subcategory').select2({
+        placeholder:'select subcategory'
     });
 });
 

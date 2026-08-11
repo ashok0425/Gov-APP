@@ -23,8 +23,30 @@
                             name="name"
                             class="form-control"
                             placeholder="Category"
-                            value="{{ $category->name }}"
+                            value="{{ old('name', $category->name) }}"
                         />
+                    </div>
+
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label">Parent Category</label>
+                        @if ($canHaveParent)
+                            <select name="parent_id" class="form-control form-select">
+                                <option value="">— None (main category) —</option>
+                                @foreach ($parents as $parent)
+                                    <option
+                                        value="{{ $parent->id }}"
+                                        {{ (string) old('parent_id', $category->parent_id) === (string) $parent->id ? 'selected' : '' }}
+                                    >
+                                        {{ $parent->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        @else
+                            <input type="text" class="form-control" value="— None (main category) —" disabled />
+                            <small class="text-info">
+                                This category has subcategories of its own, so it has to stay at the top level.
+                            </small>
+                        @endif
                     </div>
 
                     <div class="mb-3 col-md-4">

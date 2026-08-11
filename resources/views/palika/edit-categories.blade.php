@@ -2,12 +2,20 @@
 @section('main-content')
     <div class="row">
         <div class="col-md-2 offset-md-10">
-              <form method="POST" action="{{ route('business.categories.update', $ward->id) }}">
+              <form method="POST" action="{{ route('palika.categories.update', $palika->id) }}">
         @csrf
         <input type="hidden" name="categories" id="category_ids">
         <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
     </form>
         </div>
+        <div class="col-md-12">
+            <h5 class="mt-3">{{ $palika->name }} — menu categories</h5>
+            <p class="text-muted mb-0">
+                Drag categories across to pick what "See More Menu" shows for this palika, and drag
+                within the list to order them. Subcategories follow their parent automatically.
+            </p>
+        </div>
+
         <div class="col-md-6">
             <h5>Assigned Categories</h5>
             <ul id="assigned" class="list-group connected-sortable" style="min-height:200vh ">

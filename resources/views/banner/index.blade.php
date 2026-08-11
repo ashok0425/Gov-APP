@@ -25,7 +25,7 @@
 
                         <th>Banner Image</th>
                         <th>Title</th>
-                        <th>Ward</th>
+                        <th>Palika</th>
 
                         <th>Status</th>
                         <th>Action</th>

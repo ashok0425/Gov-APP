@@ -22,6 +22,9 @@ class BlogController extends Controller
             ->when($request->category,function($query) use ($request){
                 $query->whereIn('category_id',$request->category);
             })
+            ->when($request->subcategory,function($query) use ($request){
+                $query->whereIn('subcategory_id',$request->subcategory);
+            })
             ->when($request->business,function($query) use ($request){
                 $query->whereIn('business_id',$request->business);
             })
@@ -46,17 +49,19 @@ class BlogController extends Controller
             })
         ->orderBy('id', 'desc')->paginate(20);
 
-        $categories=Category::accessibleBy(Auth::user())->get();
-        $businesses=Business::all();
+        $categories=Category::accessibleBy(Auth::user())->parents()->get();
+        $subcategories=$this->subcategoriesOf($categories);
+        $businesses=Business::orderBy('business_order')->get();
         // dd($request->all());
-        return view('blog.index', compact('posts','categories','businesses'));
+        return view('blog.index', compact('posts','categories','subcategories','businesses'));
     }
 
     public function create()
     {
-        $categories=Category::accessibleBy(Auth::user())->get();
-    $businesses=Business::all();
-        return view('blog.create',compact('categories','businesses'));
+        $categories=Category::accessibleBy(Auth::user())->parents()->get();
+        $subcategoryMap=$this->subcategoryMap($categories);
+        $businesses=Business::orderBy('business_order')->get();
+        return view('blog.create',compact('categories','subcategoryMap','businesses'));
     }
 
     public function store(Request $request)
@@ -64,7 +69,8 @@ class BlogController extends Controller
         $request->validate([
             'title' => 'required',
             'long_description' => 'required',
-
+            'category' => 'required|exists:categories,id',
+            'subcategory' => 'nullable|exists:categories,id',
         ]);
 
         $post = new Blog;
@@ -77,6 +83,8 @@ class BlogController extends Controller
         $post->short_description = $request->short_description;
         $post->long_description = $request->long_description;
         $post->category_id = $request->category;
+        $post->subcategory_id = $this->subcategoryFor($request->category, $request->subcategory);
+        $post->is_breaking = $request->boolean('is_breaking');
         $post->status = $request->status??$post->status;
         $post->thumbnail = $thumbnail;
         $post->business_id = $request->business_id??Auth::user()->business_id;
@@ -103,9 +111,10 @@ class BlogController extends Controller
             ];
             return redirect()->route('blogs.index')->with($notification);
         }
-        $categories=Category::accessibleBy(Auth::user())->get();
-        $businesses=Business::all();
-        return view('blog.edit', compact('post','businesses','categories'));
+        $categories=Category::accessibleBy(Auth::user())->parents()->get();
+        $subcategoryMap=$this->subcategoryMap($categories);
+        $businesses=Business::orderBy('business_order')->get();
+        return view('blog.edit', compact('post','businesses','categories','subcategoryMap'));
     }
 
     public function update(Request $request, Blog $post)
@@ -113,7 +122,8 @@ class BlogController extends Controller
         $request->validate([
             'title' => 'required',
             'long_description' => 'required',
-
+            'category' => 'required|exists:categories,id',
+            'subcategory' => 'nullable|exists:categories,id',
         ]);
         // if(!Auth::user()->can('can:do-anything') && $post->business_id!=Auth::user()->business_id){
         //     $notification = [
@@ -134,6 +144,8 @@ class BlogController extends Controller
         $post->thumbnail = $thumbnail;
         $post->status = $request->status??$post->status;
         $post->category_id = $request->category;
+        $post->subcategory_id = $this->subcategoryFor($request->category, $request->subcategory);
+        $post->is_breaking = $request->boolean('is_breaking');
         $post->business_id = $request->business_id??Auth::user()->business_id;
         $post->cover = $cover;
 
@@ -176,5 +188,43 @@ class BlogController extends Controller
         ];
 
         return redirect()->route('blogs.index')->with($notification);
+    }
+
+    /** Every subcategory belonging to the given categories, as a flat list. */
+    protected function subcategoriesOf($categories)
+    {
+        return Category::where('status', 1)
+            ->with('parent')
+            ->whereIn('parent_id', $categories->pluck('id'))
+            ->orderBy('name')
+            ->get();
+    }
+
+    /**
+     * Subcategories keyed by parent id, so the form can swap the second
+     * dropdown without a round trip.
+     */
+    protected function subcategoryMap($categories)
+    {
+        return $this->subcategoriesOf($categories)
+            ->groupBy('parent_id')
+            // String keys keep json_encode emitting an object, never a list.
+            ->mapWithKeys(fn ($group, $parentId) => [
+                (string) $parentId => $group->map(fn ($c) => ['id' => $c->id, 'name' => $c->name])->values(),
+            ]);
+    }
+
+    /** Ignore a subcategory that does not belong to the chosen category. */
+    protected function subcategoryFor($categoryId, $subcategoryId)
+    {
+        if (! $subcategoryId) {
+            return null;
+        }
+
+        $belongs = Category::where('id', $subcategoryId)
+            ->where('parent_id', $categoryId)
+            ->exists();
+
+        return $belongs ? $subcategoryId : null;
     }
 }

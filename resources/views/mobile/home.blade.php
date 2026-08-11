@@ -20,20 +20,13 @@
         @include('mobile.partials.carousel', ['banners' => $banners, 'autoplay' => true])
     </div>
 
-    <div class="ward-strip">
-        @foreach ($wards as $ward)
-            <a class="ward-circle" href="{{ route('m.ward', $ward->id) }}" aria-label="{{ $ward->name }}">
-                @if (filled($ward->thumbnail))
-                    <img src="{{ asset('storage/' . $ward->thumbnail) }}"
-                         alt=""
-                         loading="lazy"
-                         data-fallback="{{ asset('mobile/img/placeholder-thumb.jpeg') }}">
-                @else
-                    <span class="material-symbols-rounded">location_city</span>
-                @endif
-            </a>
-        @endforeach
-    </div>
+    @if ($breaking->isNotEmpty())
+        <h2 class="section-title">Breaking News</h2>
+
+        <div class="section" style="padding-top:8px">
+            @include('mobile.partials.news-carousel', ['posts' => $breaking])
+        </div>
+    @endif
 
     <h2 class="section-title">सूचना तथा जनकारी</h2>
 

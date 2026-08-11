@@ -60,6 +60,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Public Frontend Host
+    |--------------------------------------------------------------------------
+    |
+    | In production the public mobile web app answers on this host only; a
+    | request for it through any other host (the admin domain, a bare IP)
+    | gets a 404. Outside production the host is not checked, so local and
+    | staging setups keep working on whatever hostname they use.
+    |
+    */
+
+    'frontend_host' => env('FRONTEND_HOST', 'appfront.ymhosting.com'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |

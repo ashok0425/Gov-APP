@@ -3,7 +3,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between bg-dark">
             <div>
-                <h5 class="card-title text-white">Ward List</h5>
+                <h5 class="card-title text-white">Reorder Palika</h5>
             </div>
 
         </div>
@@ -15,10 +15,10 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($wards as $user)
-                    <tr data-id="{{$user->id}}">
+                @foreach ($palikas as $palika)
+                    <tr data-id="{{$palika->id}}">
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $user->name }}</td>
+                        <td>{{ $palika->name }}</td>
 
 
                     </tr>

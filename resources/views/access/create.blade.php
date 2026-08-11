@@ -69,9 +69,9 @@
 
                         @can('do:anything')
                     <div class="form-group col-md-4 mb-3 mb-3">
-                        <label class="form-label">Ward</label>
+                        <label class="form-label">Palika</label>
                         <select name="business_id" id="" class="form-control form-select" >
-                            <option value="">Select Ward</option>
+                            <option value="">Select Palika</option>
                             @foreach(App\Models\Business::all() as $business)
                             <option value="{{$business->id}}">{{$business->name}}</option>
                             @endforeach
@@ -95,10 +95,10 @@
                     </div>
 
                     <div class="form-group col-md-3 mb-3 mb-3">
-                        <label><input name="role" type="radio" style="transform: scale(2)" value="3"><span class="mx-3">Ward Admin</span></label>
+                        <label><input name="role" type="radio" style="transform: scale(2)" value="3"><span class="mx-3">Palika Admin</span></label>
                     </div>
                       <div class="form-group col-md-3 mb-3 mb-3">
-                        <label><input name="role" type="radio" style="transform: scale(2)" value="4"><span class="mx-3">Ward User</span></label>
+                        <label><input name="role" type="radio" style="transform: scale(2)" value="4"><span class="mx-3">Palika User</span></label>
                     </div>
                     @endcan
 

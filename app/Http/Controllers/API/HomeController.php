@@ -16,25 +16,19 @@ use App\Models\Website;
 
 class HomeController extends Controller
 {
+    /**
+     * Wards no longer exist — every published record is a palika, so both of
+     * these return the same list. The endpoint names stay put for the apps
+     * already shipped against them.
+     */
     public function wards(Request $request)
     {
-        if ($request->palika) {
-            $business = Business::orderBy('business_order', 'asc')->where('status', 1)->where('id', 22)->where('status', 1)->paginate(25);
-        } else {
-            $business = Business::orderBy('business_order', 'asc')->where('id', '!=', 22)->where('status', 1)->paginate(25);
-        }
-
-        return response()->json(
-            [
-                'success' => true,
-                'data' => $business,
-            ],
-            200,
-        );
+        return $this->palika();
     }
+
     public function palika()
     {
-        $business = Business::orderBy('business_order', 'asc')->where('id', 22)->where('status', 1)->paginate(25);
+        $business = Business::orderBy('business_order', 'asc')->where('status', 1)->paginate(25);
         return response()->json(
             [
                 'success' => true,
@@ -51,10 +45,14 @@ class HomeController extends Controller
 
         $categories = $business?->categories()
             ->where('status', 1)
+            ->whereNull('parent_id')
             ->orderBy('pivot_position') // if you track order in pivot
             ->get() ?? collect([]);
+    } elseif ($request->parent_id) {
+        // Subcategories of one category.
+        $categories = Category::where('status', 1)->where('parent_id', $request->parent_id)->get();
     } else {
-        $categories = Category::where('status', 1)->get();
+        $categories = Category::where('status', 1)->whereNull('parent_id')->get();
     }
 
         return response()->json(
@@ -142,6 +140,9 @@ class HomeController extends Controller
                 $query->where('business_id', $request->ward_id);
             })
             ->where('category_id', $id)
+            ->when($request->subcategory_id, function ($query) use ($request) {
+                $query->where('subcategory_id', $request->subcategory_id);
+            })
             ->select('id', 'title', 'thumbnail', 'slug', 'short_description')
             ->paginate(25);
         return response()->json(

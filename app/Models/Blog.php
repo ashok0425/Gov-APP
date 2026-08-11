@@ -53,4 +53,12 @@ public function scopeAccessibleBy($query, $user)
         return $this->belongsTo(Business::class);
     }
 
+    public function category(){
+        return $this->belongsTo(Category::class);
+    }
+
+    public function subcategory(){
+        return $this->belongsTo(Category::class, 'subcategory_id');
+    }
+
 }

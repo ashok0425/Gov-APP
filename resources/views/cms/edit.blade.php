@@ -192,6 +192,23 @@
                   value="{{ $cms->linkedin }}"
                 />
               </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="mb-3">
+                <label class="d-flex align-items-center">
+                  <input type="hidden" name="show_palika" value="0">
+                  <input type="checkbox" name="show_palika" value="1" style="transform: scale(1.5)"
+                    {{ $cms->show_palika ? 'checked' : '' }}>
+                  <span class="mx-3">
+                    Show Palika section in the app
+                    <small class="text-info d-block">
+                      When off, the Palika list is hidden from the mobile app. When on, it appears
+                      on the app's Settings screen.
+                    </small>
+                  </span>
+                </label>
+              </div>
 
                             <input type="submit" value="update" class="btn btn-block btn-info" />
                         </div>

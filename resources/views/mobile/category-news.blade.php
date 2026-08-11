@@ -1,11 +1,11 @@
 @extends('mobile.layout')
 
-@section('title', $category->name)
+@section('title', $title)
 
 @section('appbar')
     <header class="appbar appbar-white">
-        @include('mobile.partials.back-button', ['fallback' => route('m.categories', $ward->id)])
-        <span class="appbar-title">{{ $category->name }}</span>
+        @include('mobile.partials.back-button', ['fallback' => $backRoute])
+        <span class="appbar-title">{{ $title }}</span>
         <span class="icon-btn"></span>
     </header>
 @endsection
@@ -14,7 +14,7 @@
     @if ($blogs->isNotEmpty())
         <div class="blog-list"
              id="infinite-list"
-             data-url="{{ route('m.category.news', [$ward->id, $category->id]) }}"
+             data-url="{{ $listUrl }}"
              data-page="{{ $blogs->currentPage() }}"
              data-has-more="{{ $blogs->hasMorePages() ? 'true' : 'false' }}">
             @include('mobile.partials.blog-rows', ['blogs' => $blogs])

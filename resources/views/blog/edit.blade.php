@@ -30,19 +30,26 @@
 
                     <div class="mb-3 col-md-4">
                         <label class="form-label">Select Category</label>
-                        <select name="category" id="" class="form-control form-select" required>
+                        <select name="category" id="category-select" class="form-control form-select" required>
                            <option value="">select category</option>
                            @foreach ($categories as $category)
-                           <option value="{{$category->id}}" {{$category->id==$post->category_id?'selected':''}}>{{$category->name}}</option>
+                           <option value="{{$category->id}}" {{old('category',$post->category_id)==$category->id?'selected':''}}>{{$category->name}}</option>
                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label">Select Subcategory <small class="text-info">(optional)</small></label>
+                        <select name="subcategory" id="subcategory-select" class="form-control form-select" data-selected="{{ old('subcategory', $post->subcategory_id) }}">
+                           <option value="">select subcategory</option>
                         </select>
                     </div>
 
                    @if(!auth()->user()->business_id)
                     <div class="mb-3 col-md-4">
-                        <label class="form-label">Select Ward  <small class="text-info">(Not selecting ward will be consider as Gaupalika Post)</small></label>
+                        <label class="form-label">Select Palika</label>
                         <select name="business_id" id="" class="form-control form-select">
-                           <option value="">select Ward</option>
+                           <option value="">select Palika</option>
                            @foreach ($businesses as $business)
                            <option value="{{$business->id}}" {{$business->id==$post->business_id?'selected':''}}>{{$business->name}}</option>
                            @endforeach
@@ -77,12 +84,24 @@
 
                     </div> --}}
 
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-3 mb-3">
                         <label for="status">Status</label>
                         <select name="status" id="status" class="form-control form-select">
                             <option value="1" {{ $post->status == 1 ? 'selected' : '' }}>Publish</option>
                             <option value="0" {{ $post->status == 0 ? 'selected' : '' }}>Draft</option>
                         </select>
+                    </div>
+
+                    <div class="col-md-3 mb-3 d-flex align-items-end">
+                        <label class="d-flex align-items-center">
+                            <input type="hidden" name="is_breaking" value="0">
+                            <input type="checkbox" name="is_breaking" value="1" style="transform: scale(1.5)"
+                                {{ old('is_breaking', $post->is_breaking) ? 'checked' : '' }}>
+                            <span class="mx-3">
+                                Breaking news
+                                <small class="text-info d-block">(show in the home page carousel)</small>
+                            </span>
+                        </label>
                     </div>
 
 
@@ -124,3 +143,7 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    @include('blog.partials.subcategory-script', ['subcategoryMap' => $subcategoryMap])
+@endpush

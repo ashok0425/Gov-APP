@@ -44,10 +44,10 @@
                     </div>
 
                     @can('do:anything')
-                    <div class="mb-3 col-md-6" id="ward_selection_wrapper">
-                        <label class="form-label">Select Ward</label>
+                    <div class="mb-3 col-md-6" id="palika_selection_wrapper">
+                        <label class="form-label">Select Palika</label>
                         <select name="business_id" class="form-control form-select" id="business_id">
-                            <option value="">select Ward</option>
+                            <option value="">select Palika</option>
                             @foreach ($businesses as $business)
                                 <option value="{{ $business->id }}" {{ $business->id == $banner->business_id ? 'selected' : '' }}>
                                     {{ $business->name }}
@@ -76,22 +76,22 @@
 
 @push('scripts')
 <script>
-    function toggleWardDropdown() {
+    function togglePalikaDropdown() {
         const isHomepage = document.getElementById('is_homepage_banner').value;
-        const wardWrapper = document.getElementById('ward_selection_wrapper');
+        const palikaWrapper = document.getElementById('palika_selection_wrapper');
 
         if (isHomepage === '1') {
-            wardWrapper.style.display = 'none';
+            palikaWrapper.style.display = 'none';
         } else {
-            wardWrapper.style.display = 'block';
+            palikaWrapper.style.display = 'block';
         }
     }
 
     document.addEventListener('DOMContentLoaded', function () {
         const isHomepageSelect = document.getElementById('is_homepage_banner');
         if (isHomepageSelect) {
-            isHomepageSelect.addEventListener('change', toggleWardDropdown);
-            toggleWardDropdown(); // run once on load
+            isHomepageSelect.addEventListener('change', togglePalikaDropdown);
+            togglePalikaDropdown(); // run once on load
         }
     });
 </script>

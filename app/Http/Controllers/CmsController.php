@@ -46,6 +46,7 @@ class CmsController extends Controller
         $cms->twitter = $request->twitter;
         $cms->instagram = $request->instagram;
         $cms->linkedin = $request->linkedin;
+        $cms->show_palika = $request->boolean('show_palika');
         $cms->logo = $request->file('logo')?->store('uploads', 'public') ?? $cms->logo;
         $cms->fevicon = $request->file('fevicon')?->store('uploads','public') ?? $cms->fevicon;
         $cms->save();

@@ -10,6 +10,7 @@ class Category extends Model
     use HasFactory;
 
     protected $fillable = [
+        'parent_id',
         'name',
         'thumbnail',
         'status',
@@ -24,6 +25,21 @@ class Category extends Model
 
 }
 
+    /** Top-level categories — the ones a palika's "See More Menu" lists. */
+    public function scopeParents($query)
+    {
+        return $query->whereNull('parent_id');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Category::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(Category::class, 'parent_id')->orderBy('name');
+    }
 
     public function blogs(){
         return $this->hasMany(Blog::class);

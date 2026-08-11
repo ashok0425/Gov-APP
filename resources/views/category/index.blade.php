@@ -1,9 +1,5 @@
 @extends('layout.master')
 @section('main-content')
-    @php
-        define('PAGE', 'device');
-    @endphp
-
     <div class="container">
         <div class="card">
             <div class="card-header d-flex justify-content-between bg-dark">
@@ -51,6 +47,13 @@
                                 </td>
                                 <td>
                                     <a
+                                        href="{{ route('categories.create', ['parent' => $category->id]) }}"
+                                        class="btn btn-info"
+                                        title="Add a subcategory under {{ $category->name }}"
+                                    >
+                                        <i class="fas fa-plus"></i> Subcategory
+                                    </a>
+                                    <a
                                         href="{{ route('categories.edit', $category) }}"
                                         class="btn btn-primary"
                                     >
@@ -64,6 +67,46 @@
                                 </a>
                                 </td>
                             </tr>
+
+                            {{-- Subcategories sit under their parent rather than in a list of their own. --}}
+                            @foreach ($category->children as $child)
+                                <tr class="table-light">
+                                    <td></td>
+                                    <td>
+                                        <span class="text-muted">&#8627;</span>
+                                        {{ $child->name }}
+                                        <span class="badge bg-secondary">Subcategory</span>
+                                    </td>
+                                    <td>
+                                        <img
+                                            src="{{ getImage($child->thumbnail) }}"
+                                            width="60"
+                                            alt=""
+                                        />
+                                    </td>
+                                    <td>
+                                        @if ($child->status == 1)
+                                            <a class="badge bg-success">Publish</a>
+                                        @else
+                                            <a class="badge bg-danger">Draft</a>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <a
+                                            href="{{ route('categories.edit', $child) }}"
+                                            class="btn btn-primary"
+                                        >
+                                            <i class="far fa-edit"></i>
+                                        </a>
+                                        <a
+                                            href="{{ route('categories.destroy',$child->id) }}"
+                                            class="btn btn-danger delete_btn"
+                                        >
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
                         @endforeach
                     </tbody>
                 </table>

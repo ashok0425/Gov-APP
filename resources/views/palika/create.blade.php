@@ -3,16 +3,11 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between bg-dark">
             <div>
-             @if (request()->query('id'))
                 <h5 class="card-title text-white">Add Palika</h5>
-                @else
-                <h5 class="card-title text-white">Add Ward</h5>
-
-                @endif
             </div>
         </div>
         <div class="card-body">
-            <form action="{{ route('business.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('palika.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
                     <div class="mb-3 col-md-6">
