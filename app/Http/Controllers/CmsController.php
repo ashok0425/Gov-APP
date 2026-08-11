@@ -32,6 +32,14 @@ class CmsController extends Controller
 
     public function update(Request $request, Cms $cms)
     {
+        // These land in public storage, so keep them to real images. GIF is
+        // spelled out because the header banner is usually animated.
+        $request->validate([
+            'logo' => 'nullable|mimes:jpg,jpeg,png,webp,gif|max:2048',
+            'fevicon' => 'nullable|mimes:jpg,jpeg,png,webp,gif,ico|max:1024',
+            'header_banner' => 'nullable|mimes:jpg,jpeg,png,webp,gif|max:4096',
+        ]);
+
         $cms=Cms::find(1);
         $cms->meta_title = $request->meta_title;
         $cms->meta_keyword = $request->meta_keyword;
@@ -49,6 +57,7 @@ class CmsController extends Controller
         $cms->show_palika = $request->boolean('show_palika');
         $cms->logo = $request->file('logo')?->store('uploads', 'public') ?? $cms->logo;
         $cms->fevicon = $request->file('fevicon')?->store('uploads','public') ?? $cms->fevicon;
+        $cms->header_banner = $request->file('header_banner')?->store('uploads', 'public') ?? $cms->header_banner;
         $cms->save();
 
 

@@ -85,6 +85,22 @@
               <br />
               <img src="{{ getImage($cms->fevicon) }}" width="70" alt="" />
             </div>
+            <div class="mb-3 col-md-12">
+              <label class="form-label">App Header Banner</label>
+              <div class="file-upload-wrapper" data-text="Select your file!">
+                <input name="header_banner" type="file" class="file-upload-field"
+                       accept=".jpg,.jpeg,.png,.webp,.gif" />
+              </div>
+              <small class="text-info d-block">
+                The strip across the top of the app's Home, Notices and Hello screens.
+                Wide and short works best — around 960&times;220. Animated GIF is fine.
+                Leave empty to keep the current one.
+              </small>
+              <br />
+              <img src="{{ $cms->header_banner ? getImage($cms->header_banner) : asset('mobile/img/mainbanner.gif') }}"
+                   style="max-width:100%;width:320px" alt="" />
+            </div>
+
             <div class="col-md-6">
               <div class="mb-3">
                 <label class="form-label">Address</label>

@@ -10,9 +10,7 @@
 @endsection
 
 @section('appbar')
-    <header class="appbar-banner">
-        <img src="{{ asset('mobile/img/mainbanner.gif') }}" alt="">
-    </header>
+    @include('mobile.partials.app-banner')
 @endsection
 
 @section('content')

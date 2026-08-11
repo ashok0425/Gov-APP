@@ -41,7 +41,13 @@ class AppServiceProvider extends ServiceProvider
         // Palika is behind a switch in Cms, and both the nav and the app's
         // Settings screen have to agree on it.
         View::composer(['mobile.partials.bottom-nav', 'mobile.settings'], function ($view) {
-            $view->with('showPalika', (bool) optional(Cms::first())->show_palika);
+            $view->with('showPalika', (bool) optional(Cms::settings())->show_palika);
+        });
+
+        // The header banner is a Cms upload, shown on every screen that opens
+        // with the banner strip.
+        View::composer('mobile.partials.app-banner', function ($view) {
+            $view->with('headerBanner', optional(Cms::settings())->header_banner);
         });
     }
 }
