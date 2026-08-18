@@ -31,7 +31,6 @@ class MobileAppController extends Controller
             'banners' => $this->banners(1, 1),
             'breaking' => $this->breakingBlogs(),
             'categories' => $this->menuCategories(),
-            'locationText' => optional(Cms::settings())->location_text,
             'blogs' => Blog::latest()
                 ->where('status', 1)
                 ->select('id', 'title', 'thumbnail', 'slug', 'short_description')

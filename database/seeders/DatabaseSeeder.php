@@ -24,8 +24,6 @@ class DatabaseSeeder extends Seeder
         $cms->email1 = $cms->email1 ?: 'info@barbardiyamun.gov.np';
         $cms->email2 = $cms->email2 ?: 'ito@barbardiyamun.gov.np';
         $cms->address = $cms->address ?: 'बारबर्दिया, बर्दिया, लुम्बिनी प्रदेश';
-        // The line under the app's header banner.
-        $cms->location_text = $cms->location_text ?: 'बारबर्दिया नगरपालिका, बर्दिया';
         $cms->facebook = $cms->facebook ?: 'https://facebook.com/barbardiyamun';
         // The Palika tab stays off: the app is the menu tree now, so the demo
         // ships without palikas. Tick "Show Palika" in Cms to bring it back.

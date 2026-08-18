@@ -8,15 +8,6 @@
 @endsection
 
 @section('content')
-    {{-- Where this build of the app is standing. Set in admin under Cms;
-         blank hides the bar rather than leaving an empty strip. --}}
-    @if (filled($locationText))
-        <div class="location-bar">
-            <span class="material-symbols-rounded">location_on</span>
-            <span>{{ $locationText }}</span>
-        </div>
-    @endif
-
     <div class="section">
         @include('mobile.partials.carousel', ['banners' => $banners, 'autoplay' => true])
     </div>
