@@ -22,7 +22,7 @@
         {{-- custom css --}}
         <link href="{{ asset('admin/css/app.css') }}" rel="stylesheet" />
         {{-- brand palette, after the theme so it wins --}}
-        <link href="{{ asset('admin/css/brand.css') }}?v=1" rel="stylesheet" />
+        <link href="{{ asset('admin/css/brand.css') }}?v=4" rel="stylesheet" />
         {{-- summernote css --}}
         <link
             href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css"
@@ -47,7 +47,7 @@
             position: relative;
             width: 100%;
             height: 40px;
-            border: 1px solid #17e67e;
+            border: 1px solid #b9d2f7;
         }
 
         .file-upload-wrapper:after {
@@ -76,7 +76,7 @@
             right: 0;
             display: inline-block;
             height: 40px;
-            background: #4daf7c;
+            background: #0842ad;
             color: #fff;
             font-weight: 700;
             z-index: 25;
@@ -89,7 +89,7 @@
         }
 
         .file-upload-wrapper:hover:before {
-            background: #17e67e;
+            background: #2f7de1;
         }
 
         .file-upload-wrapper input {
@@ -117,7 +117,7 @@
         }
 
         .card {
-            border-top: 5px solid rgb(5, 24, 199);
+            border-top: 5px solid #0842ad;
         }
 
         .card-header {

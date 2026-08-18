@@ -42,8 +42,8 @@
         @include('mobile.partials.carousel', ['banners' => $banners, 'autoplay' => true])
     </div>
 
-    {{-- The breaking headlines run as one scrolling line here rather than as a
-         second picture slider — they are the same posts either way. --}}
+    {{-- सूचना runs as one scrolling line here rather than as a second picture
+         slider — they are the same posts either way. --}}
     @include('mobile.partials.news-ticker', ['posts' => $breaking])
 
     {{-- The menu itself, in the order the admin arranged it. --}}

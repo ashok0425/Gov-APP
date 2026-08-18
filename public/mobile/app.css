@@ -162,10 +162,6 @@ button {
     color: var(--matte-black);
 }
 
-.appbar-white .icon-btn {
-    color: var(--matte-black);
-}
-
 .icon-btn {
     width: 40px;
     height: 40px;
@@ -173,20 +169,27 @@ button {
     display: grid;
     place-items: center;
     border-radius: 50%;
-    color: var(--white);
+    /* The appbars are white, so the back arrow is ink like everything else. */
+    color: var(--matte-black);
 }
 
 .icon-btn:active {
-    background: rgba(255, 255, 255, 0.16);
+    background: rgba(0, 0, 0, 0.08);
 }
 
-/* Back button floating over an image appbar. */
+/* Back button floating over an image appbar — white there, because it sits on
+   a dark disc over the photograph rather than on paper. */
 .appbar-cover .icon-btn {
     position: absolute;
     top: 8px;
     left: 6px;
     z-index: 2;
+    color: var(--white);
     background: rgba(0, 0, 0, 0.25);
+}
+
+.appbar-cover .icon-btn:active {
+    background: rgba(0, 0, 0, 0.45);
 }
 
 /* -------------------------------------------------------------- carousel
@@ -287,7 +290,7 @@ button {
     font-size: 13px;
 }
 
-/* ----------------------------------------------------- taja khabar ticker
+/* ---------------------------------------------------------- सूचना ticker
    One line under the banner: a fixed red label, then the breaking headlines
    sliding past it. The track carries the same run twice and travels exactly
    half its own width, so the loop never shows a gap. */
@@ -574,7 +577,9 @@ button {
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    background: var(--green);
+    /* White, because the logo inside carries its own colour. */
+    background: var(--white);
+    border: 1px solid var(--line);
     display: grid;
     place-items: center;
     overflow: hidden;
@@ -585,13 +590,20 @@ button {
         0 1px 18px 0 rgba(0, 0, 0, 0.12);
 }
 
-.fab .material-symbols-rounded {
-    font-size: 30px;
-    color: var(--white);
+.fab.is-active {
+    /* On home the ring darkens; the logo itself stays as it is. */
+    border-color: var(--matte-black);
+}
+
+.fab-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
 }
 
 .fab:active {
-    background: #0c6d5c;
+    background: var(--light-grey);
 }
 
 .nav-tab .material-symbols-rounded {
@@ -681,111 +693,6 @@ button {
     color: var(--grey);
     font-size: 14px;
     margin-top: 8px;
-}
-
-/* -------------------------------------------------------- nepali keyboard
-   An on-screen Devanagari layout for phones with no Nepali input method.
-   Lives in the shell's flex column above the nav, so it never covers the
-   results the way a fixed overlay would.                                   */
-.kb-toggle {
-    flex: none;
-    display: grid;
-    place-items: center;
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    border-radius: 16px;
-    background: var(--light-grey);
-    color: var(--matte-black);
-    font-size: 15px;
-    font-weight: 600;
-    line-height: 1;
-}
-
-.kb-toggle[aria-pressed='true'] {
-    background: var(--green);
-    color: var(--white);
-}
-
-.nep-kb {
-    flex: none;
-    background: #d8dbdd;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0px));
-    z-index: 10;
-}
-
-.nep-kb[hidden] {
-    display: none;
-}
-
-.nep-kb-keys {
-    /* Short screens scroll the letters; the action row below stays put. */
-    max-height: 42vh;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-.nep-kb-row {
-    display: flex;
-    justify-content: center;
-    gap: 4px;
-    margin-bottom: 5px;
-}
-
-.nep-key {
-    flex: 1 1 0;
-    /* Matches the ten-key rows, so short rows keep the same key width. */
-    max-width: 44px;
-    min-width: 0;
-    height: 40px;
-    display: grid;
-    place-items: center;
-    padding: 0;
-    border-radius: 6px;
-    background: var(--white);
-    color: var(--text-body);
-    font-size: 18px;
-    line-height: 1;
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.22);
-}
-
-.nep-key:active {
-    background: var(--light-grey);
-    box-shadow: none;
-    transform: translateY(1px);
-}
-
-.nep-kb-actions {
-    margin: 2px 0 0;
-}
-
-.nep-kb-actions .nep-key {
-    font-size: 15px;
-}
-
-.nep-key-space {
-    flex: 4 1 0;
-    max-width: none;
-    color: var(--grey);
-}
-
-.nep-key-wide {
-    flex: 1.4 1 0;
-    max-width: 64px;
-    background: #c3c8cc;
-}
-
-.nep-key-wide .material-symbols-rounded {
-    font-size: 20px;
-}
-
-.nep-key-go {
-    flex: 2.2 1 0;
-    max-width: 110px;
-    background: var(--green);
-    color: var(--white);
-    font-weight: 600;
 }
 
 /* ------------------------------------------------- floating contact button

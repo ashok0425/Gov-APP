@@ -1,27 +1,58 @@
 /* ------------------------------------------------------------------ brand
-   Nepal Connect, straight off the logo: blue #0842ad, red #f2131c, gold
-   #ffd608 on white. Loaded after the AdminKit stylesheet so these win
-   without anyone having to edit 280KB of vendor CSS.                      */
+   Nepal Connect, straight off the logo: a red #f2131c sidebar, blue #0842ad
+   and a lighter #2f7de1 for the cards, buttons and links on white. Loaded
+   after the AdminKit stylesheet so these win without anyone having to edit
+   280KB of vendor CSS.                                                    */
 :root {
     --brand-blue: #0842ad;
     --brand-blue-dark: #062f7a;
-    --brand-blue-deep: #041f56;
+    --brand-blue-deep: #0a4fc4;
+    --brand-blue-light: #2f7de1;
+    --brand-blue-tint: #e8f1ff;
+    --brand-blue-pale: #a9c9ff;
     --brand-red: #f2131c;
     --brand-red-dark: #c40f16;
-    --brand-gold: #ffd608;
-    --brand-gold-dark: #e6c007;
+    --brand-red-deep: #9d0b11;
+    --brand-red-pale: #ffd0d2;
     --brand-ink: #16233d;
+
+    /* Bootstrap's own palette, retuned at the source so anything reaching for
+       var(--bs-success) / var(--bs-warning) lands in the blue range too. */
+    --bs-primary: #0842ad;
+    --bs-success: #0842ad;
+    --bs-info: #2f7de1;
+    --bs-warning: #2f7de1;
+    --bs-green: #0842ad;
+    --bs-yellow: #2f7de1;
+    --bs-teal: #2f7de1;
+    --bs-cyan: #2f7de1;
+    --bs-blue: #0842ad;
 }
 
-/* ----------------------------------------------------------------- sidebar */
+/* ----------------------------------------------------------------- sidebar
+   The logo's red. AdminKit paints #222e3c on .sidebar-link as well as on the
+   container, so the links have to be repainted or the charcoal shows through
+   and the whole sidebar reads black. Deep red for the panel, the logo's own
+   #f2131c for whatever you are touching. */
 .sidebar,
 .sidebar-content,
+.sidebar-brand,
+.sidebar-nav,
+.sidebar-link,
+a.sidebar-link,
+.sidebar-item,
+.sidebar-cta-content {
+    background: var(--brand-red-dark) !important;
+}
+
 .sidebar-brand {
-    background: var(--brand-blue-deep);
+    background: var(--brand-red-deep) !important;
+    color: #fff;
 }
 
 .sidebar-header {
-    color: var(--brand-gold);
+    background: transparent !important;
+    color: var(--brand-red-pale);
     letter-spacing: 0.04em;
     text-transform: uppercase;
     font-size: 11px;
@@ -29,21 +60,23 @@
 
 .sidebar-link,
 a.sidebar-link {
-    color: rgba(255, 255, 255, 0.75);
+    color: rgba(255, 255, 255, 0.85) !important;
     border-left: 3px solid transparent;
 }
 
 .sidebar-link:hover,
 a.sidebar-link:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.08);
+    color: #fff !important;
+    background: var(--brand-red) !important;
+    border-left-color: #fff;
 }
 
 /* The open tab: the blade marks it with text-light. */
 .sidebar-link.text-light,
+a.sidebar-link.text-light,
 .sidebar-item.active > .sidebar-link {
-    background: var(--brand-blue);
-    border-left-color: var(--brand-gold);
+    background: var(--brand-red) !important;
+    border-left-color: #fff;
     color: #fff !important;
 }
 
@@ -52,16 +85,42 @@ a.sidebar-link:hover {
     color: inherit;
 }
 
+/* Submenus sit a shade deeper so the nesting reads. */
+.submenu,
+.submenu .sidebar-item,
+.submenu .sidebar-link,
+.submenu a.sidebar-link {
+    background: var(--brand-red-deep) !important;
+}
+
 .submenu .sidebar-link {
     padding-left: 2.5rem;
     font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.78) !important;
+}
+
+.submenu .sidebar-link:hover {
+    background: var(--brand-red) !important;
+    color: #fff !important;
 }
 
 /* ------------------------------------------------------------------- chrome
-   The red hairline under the top bar is the logo's third colour, used
-   sparingly so the admin does not turn into the flag. */
-.navbar {
-    border-bottom: 3px solid var(--brand-red);
+   The sidebar carries the red now, so the hairline under the top bar goes
+   blue and ties to the cards and buttons. The page itself sits on a light
+   blue so the white cards lift off it. */
+.navbar,
+.navbar-bg {
+    background: #fff !important;
+    border-bottom: 3px solid var(--brand-blue);
+}
+
+main.content,
+.main {
+    background: var(--brand-blue-tint);
+}
+
+.card {
+    border: 1px solid #d6e4fb;
 }
 
 .card-header.bg-dark,
@@ -84,20 +143,58 @@ a.sidebar-link:hover {
     border-color: var(--brand-blue-dark) !important;
 }
 
-/* "Add" buttons across the admin are btn-info — gold, with dark text on it. */
+/* "Add" buttons across the admin are btn-info — light blue against the deeper
+   blue of btn-primary, so the two read apart without a second hue. */
 .btn-info,
 .btn-info:disabled {
-    background-color: var(--brand-gold);
-    border-color: var(--brand-gold);
-    color: var(--brand-ink);
+    background-color: var(--brand-blue-light);
+    border-color: var(--brand-blue-light);
+    color: #fff;
 }
 
 .btn-info:hover,
 .btn-info:focus,
 .btn-info:active {
-    background-color: var(--brand-gold-dark) !important;
-    border-color: var(--brand-gold-dark) !important;
-    color: var(--brand-ink) !important;
+    background-color: var(--brand-blue) !important;
+    border-color: var(--brand-blue) !important;
+    color: #fff !important;
+}
+
+/* Bootstrap's green and yellow, both pulled into the blue range. Red is left
+   alone: delete and alerts still have to shout. */
+.btn-success,
+.btn-success:disabled,
+.bg-success,
+.badge.bg-success,
+.alert-success {
+    background-color: var(--brand-blue) !important;
+    border-color: var(--brand-blue) !important;
+    color: #fff !important;
+}
+
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active {
+    background-color: var(--brand-blue-dark) !important;
+    border-color: var(--brand-blue-dark) !important;
+}
+
+.text-success {
+    color: var(--brand-blue) !important;
+}
+
+.btn-warning,
+.btn-warning:disabled,
+.bg-warning,
+.badge.bg-warning,
+.badge.bg-warning.text-dark {
+    background-color: var(--brand-blue-light) !important;
+    border-color: var(--brand-blue-light) !important;
+    color: #fff !important;
+}
+
+.text-warning {
+    color: var(--brand-blue-light) !important;
 }
 
 .btn-danger,
@@ -139,12 +236,13 @@ a:hover {
 }
 
 .badge.bg-info {
-    background-color: var(--brand-gold) !important;
-    color: var(--brand-ink);
+    background-color: var(--brand-blue-light) !important;
+    color: #fff;
 }
 
 .badge.bg-secondary {
-    background-color: #51618a !important;
+    background-color: var(--brand-blue-light) !important;
+    color: #fff;
 }
 
 .badge.bg-danger {
@@ -175,4 +273,101 @@ a:hover {
 
 .card-header .card-title {
     letter-spacing: 0.01em;
+}
+
+
+/* ------------------------------------------------------- green/yellow sweep
+   AdminKit ships the stock Bootstrap green and yellow across links, borders,
+   outline buttons, alerts and the form validation states. Everything below
+   pulls those onto the blue scale; the danger red is deliberately untouched. */
+.link-success,
+.link-warning,
+a.text-success,
+a.text-warning {
+    color: var(--brand-blue) !important;
+}
+
+.border-success,
+.border-warning,
+.border-info {
+    border-color: var(--brand-blue) !important;
+}
+
+.btn-outline-success,
+.btn-outline-warning,
+.btn-outline-info {
+    color: var(--brand-blue);
+    border-color: var(--brand-blue);
+}
+
+.btn-outline-success:hover,
+.btn-outline-warning:hover,
+.btn-outline-info:hover,
+.btn-outline-success:active,
+.btn-outline-warning:active,
+.btn-outline-info:active {
+    color: #fff !important;
+    background-color: var(--brand-blue) !important;
+    border-color: var(--brand-blue) !important;
+}
+
+.alert-warning,
+.alert-info {
+    background-color: var(--brand-blue-tint) !important;
+    border-color: #b9d2f7 !important;
+    color: var(--brand-ink) !important;
+}
+
+.alert-success .alert-icon,
+.alert-warning .alert-icon,
+.alert-success .alert-message,
+.alert-warning .alert-message {
+    border-color: var(--brand-blue) !important;
+}
+
+/* Valid-state form feedback: green ticks become blue ones. */
+.valid-feedback,
+.form-check-input.is-valid ~ .form-check-label,
+.was-validated .form-check-input:valid ~ .form-check-label {
+    color: var(--brand-blue) !important;
+}
+
+.form-control.is-valid,
+.was-validated .form-control:valid,
+.form-select.is-valid,
+.was-validated .form-select:valid,
+.form-check-input.is-valid,
+.was-validated .form-check-input:valid,
+.form-file-input.is-valid ~ .form-file-label,
+.was-validated .form-file-input:valid ~ .form-file-label {
+    border-color: #6f9be8 !important;
+}
+
+.form-control.is-valid:focus,
+.was-validated .form-control:valid:focus,
+.form-select.is-valid:focus,
+.was-validated .form-select:valid:focus {
+    box-shadow: 0 0 0 0.2rem rgba(8, 66, 173, 0.2) !important;
+}
+
+.form-check-input.is-valid:checked,
+.was-validated .form-check-input:valid:checked {
+    background-color: var(--brand-blue) !important;
+}
+
+.modal-success .modal-content,
+.modal-warning .modal-content {
+    background: var(--brand-blue) !important;
+    color: #fff !important;
+}
+
+/* Toastr's success/info toasts, which are green and teal out of the box. */
+.toast-success,
+#toast-container > .toast-success {
+    background-color: var(--brand-blue) !important;
+}
+
+.toast-info,
+#toast-container > .toast-info {
+    background-color: var(--brand-blue-light) !important;
 }

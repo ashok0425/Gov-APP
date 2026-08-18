@@ -22,14 +22,6 @@
                     <span class="material-symbols-rounded">close</span>
                 </a>
             @endif
-
-            {{-- Opens the on-screen Devanagari keyboard for phones with no Nepali layout. --}}
-            <button type="button"
-                    class="kb-toggle"
-                    id="nep-kb-toggle"
-                    aria-controls="nep-kb"
-                    aria-pressed="false"
-                    aria-label="नेपाली किबोर्ड">ने</button>
         </form>
     </header>
 @endsection
@@ -38,22 +30,16 @@
     @if ($blogs === null)
         <div class="state">
             <p>Type at least two letters to search.</p>
-            <p class="state-hint">
-                Nepali and English both work — typing <b>sifaris</b> also finds <b>सिफारिस</b>.
-                Tap <b>ने</b> to type in Devanagari.
-            </p>
+            <p class="state-hint">Search by title or description.</p>
         </div>
     @elseif ($blogs->isEmpty())
         <div class="state">
-            <p>“{{ $term }}” सँग मिल्ने कुनै नतिजा भेटिएन।</p>
+            <p>No results for “{{ $term }}”.</p>
             <p class="state-hint">Try a shorter word or a different spelling.</p>
         </div>
     @else
         <p class="search-count">
             {{ $blogs->total() }} {{ Str::plural('result', $blogs->total()) }} for “{{ $term }}”
-            @if ($matchedNepali)
-                <span class="search-hint">· including Nepali spellings</span>
-            @endif
         </p>
 
         <div class="blog-list"
@@ -71,8 +57,5 @@
 @endsection
 
 @section('bottom')
-    {{-- Sits above the nav inside the shell's flex column, so it shortens the
-         results list instead of covering it. --}}
-    @include('mobile.partials.nepali-keyboard')
     @include('mobile.partials.bottom-nav')
 @endsection

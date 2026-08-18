@@ -5,7 +5,7 @@
     <a href="{{ route('m.home') }}"
        class="fab {{ request()->routeIs('m.home') ? 'is-active' : '' }}"
        aria-label="गृह">
-        <span class="material-symbols-rounded">home</span>
+        <img src="{{ asset('mobile/img/thumb-icon.png') }}" alt="" class="fab-logo">
     </a>
 </div>
 

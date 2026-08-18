@@ -237,119 +237,6 @@
         });
     }
 
-    /* ----------------------------------------------------- nepali keyboard
-       An on-screen Devanagari layout for the search box, for phones with no
-       Nepali input method installed. While it is open the field asks for no
-       native keyboard, so the two never fight over the bottom of the screen. */
-    function initNepaliKeyboard() {
-        var panel = document.getElementById('nep-kb');
-        var toggle = document.getElementById('nep-kb-toggle');
-        var input = document.getElementById('search-input');
-        var form = document.getElementById('search-form');
-        if (!panel || !toggle || !input) return;
-
-        var STORE = 'nepali-keyboard';
-
-        function caretToEnd() {
-            var end = input.value.length;
-            try {
-                input.setSelectionRange(end, end);
-            } catch (e) {
-                // Some browsers refuse selection on type="search"; harmless.
-            }
-        }
-
-        function open(on, remember) {
-            panel.hidden = !on;
-            toggle.setAttribute('aria-pressed', on ? 'true' : 'false');
-
-            if (on) {
-                input.setAttribute('inputmode', 'none');
-            } else {
-                input.removeAttribute('inputmode');
-            }
-
-            // Re-focus so the native keyboard re-reads inputmode: it stays down
-            // while ours is open, and comes back when ours closes.
-            input.blur();
-            input.focus();
-            caretToEnd();
-
-            if (remember) {
-                try {
-                    on ? localStorage.setItem(STORE, '1') : localStorage.removeItem(STORE);
-                } catch (e) {
-                    // Private mode: the panel simply won't survive a reload.
-                }
-            }
-        }
-
-        function insert(text) {
-            var start = input.selectionStart;
-            var end = input.selectionEnd;
-
-            if (start === null || start === undefined) {
-                input.value += text;
-            } else {
-                input.value = input.value.slice(0, start) + text + input.value.slice(end);
-                var pos = start + text.length;
-                input.setSelectionRange(pos, pos);
-            }
-
-            input.dispatchEvent(new Event('input', { bubbles: true }));
-        }
-
-        function backspace() {
-            var start = input.selectionStart;
-            var end = input.selectionEnd;
-
-            if (start === null || start === undefined) {
-                input.value = input.value.slice(0, -1);
-            } else if (start !== end) {
-                input.value = input.value.slice(0, start) + input.value.slice(end);
-                input.setSelectionRange(start, start);
-            } else if (start > 0) {
-                input.value = input.value.slice(0, start - 1) + input.value.slice(start);
-                input.setSelectionRange(start - 1, start - 1);
-            }
-
-            input.dispatchEvent(new Event('input', { bubbles: true }));
-        }
-
-        toggle.addEventListener('click', function () {
-            open(panel.hidden, true);
-        });
-
-        // Tapping a key must not pull focus out of the field, or the caret —
-        // and with it the insert position — is lost.
-        panel.addEventListener('mousedown', function (e) {
-            if (e.target.closest('.nep-key')) e.preventDefault();
-        });
-
-        panel.addEventListener('click', function (e) {
-            var key = e.target.closest('.nep-key');
-            if (!key) return;
-
-            if (key.dataset.action === 'backspace') {
-                backspace();
-            } else if (key.dataset.action === 'search') {
-                if (form) form.submit();
-            } else if (key.dataset.key) {
-                insert(key.dataset.key);
-            }
-        });
-
-        // A search reloads the page, so the panel has to remember it was open.
-        var wasOpen = false;
-        try {
-            wasOpen = localStorage.getItem(STORE) === '1';
-        } catch (e) {
-            wasOpen = false;
-        }
-
-        if (wasOpen) open(true, false);
-    }
-
     /* --------------------------------------------------------------- toast */
     function toast(message) {
         var el = document.createElement('div');
@@ -398,7 +285,6 @@
         document.querySelectorAll('.carousel').forEach(initCarousel);
         initSheet('contact-sheet', 'contact-scrim', 'contact-open');
         initInfiniteList();
-        initNepaliKeyboard();
         initShare();
         initImageFallbacks();
         initEmbeds();

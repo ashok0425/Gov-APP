@@ -1,4 +1,4 @@
-{{-- ताजा खबर: the one-line ticker under the banner, fed by the posts the
+{{-- सूचना: the one-line ticker under the banner, fed by the posts the
      admin ticks as breaking. The track holds the same run twice and slides by
      exactly half its width, so the loop has no seam. It is CSS, not a
      <marquee> tag: that element is deprecated and cannot be paused. --}}
@@ -11,8 +11,8 @@
 @if ($items->isNotEmpty())
     <div class="news-ticker">
         <span class="ticker-label">
-            <span class="material-symbols-rounded">bolt</span>
-            ताजा खबर
+            <span class="material-symbols-rounded">campaign</span>
+            सूचना
         </span>
 
         <div class="ticker-window">
