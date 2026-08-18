@@ -65,17 +65,29 @@ public function scopeAccessibleBy($query, $user)
         return $this->belongsTo(Category::class, 'child_category_id');
     }
 
+    public function grandchildCategory(){
+        return $this->belongsTo(Category::class, 'grandchild_category_id');
+    }
+
+    /** The four columns a post's filing trail is written across. */
+    public const TRAIL_COLUMNS = [
+        'category_id',
+        'subcategory_id',
+        'child_category_id',
+        'grandchild_category_id',
+    ];
+
     /**
      * Posts filed anywhere at or under the given category. A post records the
-     * whole trail it was filed under, so matching any of the three columns
+     * whole trail it was filed under, so matching any of the four columns
      * catches a category's own posts and everything beneath it.
      */
     public function scopeInCategory($query, $categoryId)
     {
         return $query->where(function ($q) use ($categoryId) {
-            $q->where('category_id', $categoryId)
-                ->orWhere('subcategory_id', $categoryId)
-                ->orWhere('child_category_id', $categoryId);
+            foreach (self::TRAIL_COLUMNS as $column) {
+                $q->orWhere($column, $categoryId);
+            }
         });
     }
 

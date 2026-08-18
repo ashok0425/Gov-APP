@@ -48,6 +48,7 @@ class BlogSeeder extends Seeder
                 'category_id' => $trail->get(0)?->id,
                 'subcategory_id' => $trail->get(1)?->id,
                 'child_category_id' => $trail->get(2)?->id,
+                'grandchild_category_id' => $trail->get(3)?->id,
                 'title' => $post['title'],
                 'slug' => $post['slug'],
                 'short_description' => $post['short'],
@@ -322,6 +323,20 @@ class BlogSeeder extends Seeder
                 'title' => 'कृषि सहकारीमार्फत बीउ तथा मल अनुदान',
                 'short' => 'कृषि सहकारी संस्थामार्फत किसानलाई अनुदानमा बीउ तथा मल वितरण गरिने भएको छ।',
                 'days' => 31,
+            ],
+            [
+                'category' => 'banshaj-nagarikta',
+                'slug' => 'banshaj-nagarikta-sifaris-prakriya',
+                'title' => 'वंशजको आधारमा नागरिकता सिफारिस प्रक्रिया',
+                'short' => 'बाबु वा आमाको नागरिकताको प्रतिलिपि तथा जन्म दर्ता अनिवार्य रहेको जानकारी।',
+                'days' => 32,
+            ],
+            [
+                'category' => 'pratilipi-nagarikta',
+                'slug' => 'pratilipi-nagarikta-suchana',
+                'title' => 'प्रतिलिपि नागरिकताका लागि आवश्यक कागजात',
+                'short' => 'हराएको वा बिग्रेको नागरिकताको प्रतिलिपिका लागि निवेदनसाथ पेस गर्नुपर्ने कागजात।',
+                'days' => 33,
             ],
         ];
     }

@@ -27,22 +27,11 @@
                         />
                     </div>
 
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">Select Category</label>
-                        <select name="category" id="category-select" class="form-control form-select" required>
-                           <option value="">select category</option>
-                           @foreach ($categories as $category)
-                           <option value="{{$category->id}}" {{ old('category') == $category->id ? 'selected' : '' }}>{{$category->name}}</option>
-                           @endforeach
-                        </select>
-                    </div>
-
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">Select Subcategory <small class="text-info">(optional)</small></label>
-                        <select name="subcategory" id="subcategory-select" class="form-control form-select" data-selected="{{ old('subcategory') }}">
-                           <option value="">select subcategory</option>
-                        </select>
-                    </div>
+                    @include('blog.partials.category-cascade', [
+                        'categoryTree' => $categoryTree,
+                        'required' => true,
+                        'columns' => 3,
+                    ])
 
                     <div class="form-group col-md-4 mb-3">
                         <label for="status">Post Status</label>
@@ -129,5 +118,6 @@
 @endsection
 
 @push('scripts')
-    @include('blog.partials.subcategory-script', ['subcategoryMap' => $subcategoryMap])
+    @include('blog.partials.select2-assets')
+    @include('blog.partials.category-cascade-script')
 @endpush

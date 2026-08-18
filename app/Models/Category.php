@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * The menu tree, three levels deep: category → subcategory → child category.
- * Every level is a row here; parent_id is what separates them.
+ * The menu tree, four levels deep: category → subcategory → child category
+ * → grandchild category. Every level is a row here; parent_id is what
+ * separates them.
  *
  * A category can also carry its own contact details, which the app shows
  * behind a floating button when "show_contact" is on.
@@ -17,13 +18,14 @@ class Category extends Model
     use HasFactory;
 
     /** How deep the tree is allowed to get. */
-    public const MAX_DEPTH = 3;
+    public const MAX_DEPTH = 4;
 
     /** What each level is called in the admin. */
     public const LEVEL_NAMES = [
         1 => 'Category',
         2 => 'Subcategory',
         3 => 'Child Category',
+        4 => 'Grandchild Category',
     ];
 
     protected $fillable = [
@@ -63,16 +65,37 @@ class Category extends Model
         return $query->whereNull('parent_id');
     }
 
+    /**
+     * Everything sitting at one level of the tree. A row is at level N when it
+     * has a chain of N-1 parents and the last of them has none of its own.
+     */
+    public function scopeAtLevel($query, $level)
+    {
+        if ($level <= 1) {
+            return $query->whereNull('parent_id');
+        }
+
+        $chain = implode('.', array_fill(0, $level - 1, 'parent'));
+
+        return $query->whereHas($chain, fn ($q) => $q->whereNull('parent_id'));
+    }
+
     /** Level 2: a subcategory's parent is itself top-level. */
     public function scopeSubcategories($query)
     {
-        return $query->whereHas('parent', fn ($q) => $q->whereNull('parent_id'));
+        return $query->atLevel(2);
     }
 
     /** Level 3: a child category's grandparent is top-level. */
     public function scopeChildCategories($query)
     {
-        return $query->whereHas('parent.parent', fn ($q) => $q->whereNull('parent_id'));
+        return $query->atLevel(3);
+    }
+
+    /** Level 4: the deepest the menu goes. */
+    public function scopeGrandchildCategories($query)
+    {
+        return $query->atLevel(4);
     }
 
     /** Menu order: whatever position the admin gave, then alphabetical. */

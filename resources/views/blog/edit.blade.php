@@ -28,22 +28,12 @@
                         />
                     </div>
 
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">Select Category</label>
-                        <select name="category" id="category-select" class="form-control form-select" required>
-                           <option value="">select category</option>
-                           @foreach ($categories as $category)
-                           <option value="{{$category->id}}" {{old('category',$post->category_id)==$category->id?'selected':''}}>{{$category->name}}</option>
-                           @endforeach
-                        </select>
-                    </div>
-
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">Select Subcategory <small class="text-info">(optional)</small></label>
-                        <select name="subcategory" id="subcategory-select" class="form-control form-select" data-selected="{{ old('subcategory', $post->subcategory_id) }}">
-                           <option value="">select subcategory</option>
-                        </select>
-                    </div>
+                    @include('blog.partials.category-cascade', [
+                        'categoryTree' => $categoryTree,
+                        'selected' => $selectedTrail,
+                        'required' => true,
+                        'columns' => 3,
+                    ])
 
                      <div class="mb-3 col-md-6">
                         <label class="form-label">Thumbnail</label>
@@ -133,5 +123,6 @@
 @endsection
 
 @push('scripts')
-    @include('blog.partials.subcategory-script', ['subcategoryMap' => $subcategoryMap])
+    @include('blog.partials.select2-assets')
+    @include('blog.partials.category-cascade-script')
 @endpush

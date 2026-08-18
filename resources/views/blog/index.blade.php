@@ -6,21 +6,11 @@
                 <div class="col-md-3 mb-2">
                     <input type="search" name="keyword" value="{{request()->query('keyword')}}" class="form-control" placeholder="search...">
                 </div>
-                <div class="col-md-3 mb-2">
-
-                <select name="category[]" id="" class="form-control select2" multiple placeholder="category">
-                   @foreach ($categories as $category)
-                       <option value="{{$category->id}}" {{in_array($category->id,request()->query('category')??[])?'selected':''}}>{{$category->name}}</option>
-                   @endforeach
-                </select>
-                </div>
-                <div class="col-md-3 mb-2">
-                <select name="subcategory[]" id="" class="form-control select-subcategory" multiple>
-                   @foreach ($subcategories as $subcategory)
-                       <option value="{{$subcategory->id}}" {{in_array($subcategory->id,request()->query('subcategory')??[])?'selected':''}}>{{$subcategory->parent?->name}} › {{$subcategory->name}}</option>
-                   @endforeach
-                </select>
-                </div>
+                @include('blog.partials.category-cascade', [
+                    'categoryTree' => $categoryTree,
+                    'selected' => $selectedTrail,
+                    'columns' => 3,
+                ])
                 <div class="col-md-2 mb-2">
                         <select name="status" id="status" class="form-control form-select">
                             <option value="" selected>All</option>
@@ -122,20 +112,9 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+@include('blog.partials.category-cascade-script')
+
 <script>
-    $(document).ready(function() {
-    $('.select2').select2({
-        placeholder:'select category'
-    });
-});
-
-$(document).ready(function() {
-    $('.select-subcategory').select2({
-        placeholder:'select subcategory'
-    });
-});
-
-$('input[name="dates"]').daterangepicker();
-
+    $('input[name="dates"]').daterangepicker();
 </script>
 @endpush

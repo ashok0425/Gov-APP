@@ -82,6 +82,13 @@
                 <span class="align-middle">Child Category</span>
             </a>
         </li>
+
+        <li class="sidebar-item">
+            <a class="sidebar-link {{Request::is('grandchild-categories','grandchild-categories/*')?'text-light':' '}}" href="{{ route('grandchildcategories.index') }}">
+                <i class="fas fa-code-branch"></i>
+                <span class="align-middle">Grandchild Category</span>
+            </a>
+        </li>
         @endcan
 
 

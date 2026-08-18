@@ -122,6 +122,9 @@ class CategorySeeder extends Seeder
             'sewa-tatha-sifaris' => 'document',
             'sifaris-sewa' => 'document',
             'nagarikta-sifaris' => 'id-card',
+            'banshaj-nagarikta' => 'id-card',
+            'angikrit-nagarikta' => 'id-card',
+            'pratilipi-nagarikta' => 'document',
             'nata-pramanit' => 'document',
             'gharjagga-namsari' => 'house',
             'darta-sewa' => 'clipboard',
@@ -267,6 +270,12 @@ class CategorySeeder extends Seeder
                                 'name' => 'नागरिकता सिफारिस',
                                 'slug' => 'nagarikta-sifaris',
                                 'contact' => $this->contact('राम बहादुर चौधरी', '9848012301', 'नगरपालिका कार्यालय, कोठा नं. १०१'),
+                                // The fourth level: one kind of certificate per row.
+                                'children' => [
+                                    ['name' => 'वंशजको आधारमा', 'slug' => 'banshaj-nagarikta'],
+                                    ['name' => 'अंगीकृत नागरिकता', 'slug' => 'angikrit-nagarikta'],
+                                    ['name' => 'प्रतिलिपि नागरिकता', 'slug' => 'pratilipi-nagarikta'],
+                                ],
                             ],
                             [
                                 'name' => 'नाता प्रमाणित',

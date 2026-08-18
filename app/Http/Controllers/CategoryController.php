@@ -16,15 +16,21 @@ use Illuminate\Validation\Rule;
  */
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         if (! Auth::user()->can('category:view')) {
             abort(403);
         }
 
-        // Paginate the top level only, so a category never gets separated
-        // from its subcategories by a page break.
-        $categories = Category::parents()->withCount('children')->paginate(15);
+        $categories = Category::parents()
+            ->withCount('children')
+            ->when($request->keyword, function ($query) use ($request) {
+                $query->where('name', 'LIKE', '%'.$request->keyword.'%');
+            })
+            ->orderBy('position')
+            ->orderBy('name')
+            ->paginate(15)
+            ->withQueryString();
 
         return view('category.index', compact('categories'));
     }
@@ -32,46 +38,57 @@ class CategoryController extends Controller
     /** Level 2: everything whose parent is a top-level category. */
     public function subcategories(Request $request)
     {
-        if (! Auth::user()->can('category:view')) {
-            abort(403);
-        }
-
-        $subcategories = Category::subcategories()
-            ->with('parent')
-            ->when($request->parent, function ($query) use ($request) {
-                $query->where('parent_id', $request->parent);
-            })
-            ->orderBy('parent_id')
-            ->orderBy('name')
-            ->paginate(15)
-            ->withQueryString();
-
-        $parents = Category::parents()->orderBy('name')->get();
-
-        return view('category.subcategories', compact('subcategories', 'parents'));
+        return $this->levelList($request, 2);
     }
 
     /** Level 3: everything whose grandparent is a top-level category. */
     public function childCategories(Request $request)
     {
+        return $this->levelList($request, 3);
+    }
+
+    /** Level 4, the deepest the menu goes. */
+    public function grandchildCategories(Request $request)
+    {
+        return $this->levelList($request, 4);
+    }
+
+    /**
+     * One list for every level below the top. They differ only in what they
+     * hang off and what they can hold, so they share a screen and a query.
+     */
+    protected function levelList(Request $request, $level)
+    {
         if (! Auth::user()->can('category:view')) {
             abort(403);
         }
 
-        $childCategories = Category::childCategories()
-            ->with('parent.parent')
+        $rows = Category::atLevel($level)
+            ->with('parent.parent.parent')
+            ->withCount('children')
             ->when($request->parent, function ($query) use ($request) {
                 $query->where('parent_id', $request->parent);
+            })
+            ->when($request->keyword, function ($query) use ($request) {
+                $query->where('name', 'LIKE', '%'.$request->keyword.'%');
             })
             ->orderBy('parent_id')
             ->orderBy('name')
             ->paginate(15)
             ->withQueryString();
 
-        // The filter lists subcategories — those are what a child hangs off.
-        $parents = Category::subcategories()->with('parent')->orderBy('name')->get();
+        // The filter lists whatever this level hangs off.
+        $parents = Category::atLevel($level - 1)
+            ->with('parent.parent')
+            ->orderBy('name')
+            ->get();
 
-        return view('category.child-categories', compact('childCategories', 'parents'));
+        return view('category.level-list', [
+            'rows' => $rows,
+            'parents' => $parents,
+            'level' => $level,
+            'childRoute' => $this->listRoute($level + 1),
+        ]);
     }
 
     public function create(Request $request)
@@ -231,10 +248,17 @@ class CategoryController extends Controller
     /** Land back on the list this record actually belongs to. */
     protected function listRouteFor(Category $category)
     {
+        return $this->listRoute($category->level());
+    }
+
+    /** The admin screen that lists one level of the tree. */
+    protected function listRoute($level)
+    {
         return [
             1 => 'categories.index',
             2 => 'subcategories.index',
             3 => 'childcategories.index',
-        ][$category->level()] ?? 'categories.index';
+            4 => 'grandchildcategories.index',
+        ][$level] ?? 'categories.index';
     }
 }

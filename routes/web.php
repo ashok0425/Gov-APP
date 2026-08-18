@@ -18,6 +18,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('subcategories', [\App\Http\Controllers\CategoryController::class, 'subcategories'])->name('subcategories.index')->middleware('can:do anything');
     Route::get('child-categories', [\App\Http\Controllers\CategoryController::class, 'childCategories'])->name('childcategories.index')->middleware('can:do anything');
+    Route::get('grandchild-categories', [\App\Http\Controllers\CategoryController::class, 'grandchildCategories'])->name('grandchildcategories.index')->middleware('can:do anything');
     Route::resource('categories', \App\Http\Controllers\CategoryController::class)->middleware('can:do anything');
 
     Route::resource('posts', \App\Http\Controllers\BlogController::class)->names('blogs');
