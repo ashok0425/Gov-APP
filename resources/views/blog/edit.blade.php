@@ -31,7 +31,7 @@
                         />
                     </div>
 
-                    @include('blog.partials.category-cascade', [
+                    @include('partials.category-cascade', [
                         'categoryTree' => $categoryTree,
                         'selected' => $selectedTrail,
                         'required' => true,
@@ -126,6 +126,6 @@
 @endsection
 
 @push('scripts')
-    @include('blog.partials.select2-assets')
-    @include('blog.partials.category-cascade-script')
+    @include('partials.select2-assets')
+    @include('partials.category-cascade-script')
 @endpush

@@ -27,7 +27,7 @@
                         />
                     </div>
 
-                    @include('blog.partials.category-cascade', [
+                    @include('partials.category-cascade', [
                         'categoryTree' => $categoryTree,
                         'required' => true,
                         'columns' => 3,
@@ -118,6 +118,6 @@
 @endsection
 
 @push('scripts')
-    @include('blog.partials.select2-assets')
-    @include('blog.partials.category-cascade-script')
+    @include('partials.select2-assets')
+    @include('partials.category-cascade-script')
 @endpush

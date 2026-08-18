@@ -21,25 +21,6 @@
                                value="{{ old('name') }}" required>
                     </div>
 
-                    {{-- Whichever parent is picked decides the level: none makes a
-                         main category, a category makes a subcategory, and a
-                         subcategory makes a child category. --}}
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">
-                            Parent
-                            <small class="text-info">(leave empty to create a main category)</small>
-                        </label>
-                        <select name="parent_id" class="form-control form-select">
-                            <option value="">— None (main category) —</option>
-                            @foreach ($parents as $parent)
-                                <option value="{{ $parent->id }}"
-                                    {{ (string) old('parent_id', $parentId) === (string) $parent->id ? 'selected' : '' }}>
-                                    {{ $parent->pathName() }} → {{ \App\Models\Category::LEVEL_NAMES[$parent->level() + 1] }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
                     <div class="mb-3 col-md-4">
                         <label class="form-label">Status</label>
                         <select name="status" class="form-control form-select">
@@ -56,10 +37,17 @@
                     </div>
                 </div>
 
+                @include('category.partials.parent-cascade')
+
                 @include('category.partials.contact-fields', ['category' => null])
 
                 <button type="submit" class="btn btn-primary">Add</button>
             </form>
         </div>
     </div>
+
+    @push('scripts')
+        @include('partials.select2-assets')
+        @include('partials.category-cascade-script')
+    @endpush
 @endsection

@@ -129,7 +129,7 @@
     </div>
 
     @push('scripts')
-        @include('blog.partials.select2-assets')
+        @include('partials.select2-assets')
         <script>
             $(function () {
                 $('.searchable').select2({ width: '100%' });

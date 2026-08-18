@@ -6,7 +6,7 @@
                 <div class="col-md-3 mb-2">
                     <input type="search" name="keyword" value="{{request()->query('keyword')}}" class="form-control" placeholder="search...">
                 </div>
-                @include('blog.partials.category-cascade', [
+                @include('partials.category-cascade', [
                     'categoryTree' => $categoryTree,
                     'selected' => $selectedTrail,
                     'columns' => 3,
@@ -112,7 +112,7 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-@include('blog.partials.category-cascade-script')
+@include('partials.category-cascade-script')
 
 <script>
     $('input[name="dates"]').daterangepicker();

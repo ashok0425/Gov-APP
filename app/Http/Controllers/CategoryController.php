@@ -100,12 +100,15 @@ class CategoryController extends Controller
             abort(403);
         }
 
-        $parents = $this->parentOptions();
         // "Add Subcategory" / "Add Child Category" land here with the parent
-        // already chosen.
-        $parentId = $request->query('parent');
+        // already chosen, so the cascade opens on that branch.
+        $parent = Category::find($request->query('parent'));
 
-        return view('category.create', compact('parents', 'parentId'));
+        return view('category.create', [
+            'categoryTree' => $this->parentTree(),
+            'parentTrail' => $this->trailOf($parent),
+            'levels' => Category::MAX_DEPTH - 1,
+        ]);
     }
 
     public function store(Request $request)
@@ -117,7 +120,7 @@ class CategoryController extends Controller
         $request->validate($this->rules($request));
 
         $category = new Category;
-        $category->parent_id = $request->parent_id ?: null;
+        $category->parent_id = $this->parentFrom($request);
         $category->name = $request->name;
         $category->slug = Str::slug($request->name);
         $category->thumbnail = $request->file('thumbnail')?->store('uploads/category', 'public');
@@ -139,9 +142,16 @@ class CategoryController extends Controller
             abort(403);
         }
 
-        $parents = $this->parentOptions($category);
+        // However many levels this one spans, that many are unavailable at the
+        // bottom of the tree — it has to fit underneath whatever it moves to.
+        $levels = Category::MAX_DEPTH - $category->height();
 
-        return view('category.edit', compact('category', 'parents'));
+        return view('category.edit', [
+            'category' => $category,
+            'categoryTree' => $this->parentTree($category),
+            'parentTrail' => $this->trailOf($category->parent),
+            'levels' => $levels,
+        ]);
     }
 
     public function update(Request $request, Category $category)
@@ -152,7 +162,7 @@ class CategoryController extends Controller
 
         $request->validate($this->rules($request, $category));
 
-        $category->parent_id = $request->parent_id ?: null;
+        $category->parent_id = $this->parentFrom($request);
         $category->name = $request->name;
         $category->slug = Str::slug($request->name);
         $category->status = $request->status;
@@ -218,10 +228,10 @@ class CategoryController extends Controller
      */
     protected function rules(Request $request, ?Category $category = null)
     {
-        $parentId = $request->parent_id ?: null;
-        $allowed = $this->parentOptions($category)->pluck('id');
+        $parentId = $this->parentFrom($request);
+        $allowed = $this->parentOptions($category)->pluck('id')->all();
 
-        return [
+        $rules = [
             'name' => [
                 'required',
                 'max:255',
@@ -229,13 +239,71 @@ class CategoryController extends Controller
                     ->ignore($category?->id)
                     ->where(fn ($q) => $q->where('parent_id', $parentId)),
             ],
-            'parent_id' => ['nullable', Rule::in($allowed->all())],
             'thumbnail' => ['nullable', 'image'],
             'email' => ['nullable', 'email', 'max:255'],
             'google_map_link' => ['nullable', 'url', 'max:255'],
             'facebook' => ['nullable', 'url', 'max:255'],
             'messanger' => ['nullable', 'url', 'max:255'],
         ];
+
+        // Every level of the cascade has to name a category that may hold this
+        // one; anything else is a browser posting its own ideas.
+        foreach ($this->cascadeFields() as $field) {
+            $rules[$field] = ['nullable', Rule::in($allowed)];
+        }
+
+        return $rules;
+    }
+
+    /** One form field per level of the parent cascade, top first. */
+    protected function cascadeFields()
+    {
+        return array_slice(['category', 'subcategory', 'child', 'grandchild'], 0, Category::MAX_DEPTH - 1);
+    }
+
+    /** The parent is the deepest level the cascade has a pick for. */
+    protected function parentFrom(Request $request)
+    {
+        foreach (array_reverse($this->cascadeFields()) as $field) {
+            if (filled($request->input($field))) {
+                return (int) $request->input($field);
+            }
+        }
+
+        return null;
+    }
+
+    /** A category and its ancestors, top first — what the cascade opens on. */
+    protected function trailOf(?Category $category)
+    {
+        if (! $category) {
+            return [];
+        }
+
+        return $category->ancestors()->push($category)->pluck('id')->all();
+    }
+
+    /**
+     * The menu as nested arrays for the cascade, holding only the categories
+     * this record may be filed under — see parentOptions().
+     */
+    protected function parentTree(?Category $category = null)
+    {
+        $allowed = $this->parentOptions($category)->keyBy('id');
+
+        $build = function ($parentId) use (&$build, $allowed) {
+            return $allowed
+                ->where('parent_id', $parentId)
+                ->sortBy('name')
+                ->map(fn ($option) => [
+                    'id' => $option->id,
+                    'name' => $option->name,
+                    'children' => $build($option->id),
+                ])
+                ->values();
+        };
+
+        return $build(null);
     }
 
     /** The contact card the app floats behind the phone button. */
