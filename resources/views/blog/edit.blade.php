@@ -45,18 +45,6 @@
                         </select>
                     </div>
 
-                   @if(!auth()->user()->business_id)
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">Select Palika</label>
-                        <select name="business_id" id="" class="form-control form-select">
-                           <option value="">select Palika</option>
-                           @foreach ($businesses as $business)
-                           <option value="{{$business->id}}" {{$business->id==$post->business_id?'selected':''}}>{{$business->name}}</option>
-                           @endforeach
-                        </select>
-                    </div>
-                    @endif
-
                      <div class="mb-3 col-md-6">
                         <label class="form-label">Thumbnail</label>
                         <div class="file-upload-wrapper" data-text="Select your file!">

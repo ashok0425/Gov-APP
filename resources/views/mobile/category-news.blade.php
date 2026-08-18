@@ -16,7 +16,24 @@
         <div class="breadcrumb">{{ $category->pathName() }}</div>
     @endif
 
+    {{-- What sits under this category, if anything does. --}}
+    @if (($subcategories ?? collect())->isNotEmpty())
+        <div class="grid grid-categories">
+            @foreach ($subcategories as $subcategory)
+                @include('mobile.partials.category-tile', [
+                    'category' => $subcategory,
+                    'href' => route('m.category', $subcategory->id),
+                ])
+            @endforeach
+        </div>
+    @endif
+
+    {{-- Then the posts, which for a parent means everything filed below it. --}}
     @if ($blogs->isNotEmpty())
+        @if (($subcategories ?? collect())->isNotEmpty())
+            <h2 class="section-title">सूचना तथा समाचार</h2>
+        @endif
+
         <div class="blog-list"
              id="infinite-list"
              data-url="{{ $listUrl }}"
@@ -28,7 +45,7 @@
         @if ($blogs->hasMorePages())
             <div id="infinite-sentinel"><div class="spinner"></div></div>
         @endif
-    @else
+    @elseif (($subcategories ?? collect())->isEmpty())
         <div class="state"><p>कुनै विवरण भेटिएन</p></div>
     @endif
 

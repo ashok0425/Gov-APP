@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Blog;
-use App\Models\Business;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +13,6 @@ class BlogController extends Controller
     public function index(Request $request)
     {
         $posts = Blog::query()
-              ->with('business')
               ->accessibleBy(Auth::user())
             ->when($request->status!=''||$request->status,function($query) use ($request){
            $query->where('status',$request->status);
@@ -24,9 +22,6 @@ class BlogController extends Controller
             })
             ->when($request->subcategory,function($query) use ($request){
                 $query->whereIn('subcategory_id',$request->subcategory);
-            })
-            ->when($request->business,function($query) use ($request){
-                $query->whereIn('business_id',$request->business);
             })
             ->when($request->keyword,function($query) use ($request){
                 $query->where(function($q) use ( $request){
@@ -51,17 +46,14 @@ class BlogController extends Controller
 
         $categories=Category::accessibleBy(Auth::user())->parents()->get();
         $subcategories=$this->subcategoriesOf($categories);
-        $businesses=Business::orderBy('business_order')->get();
-        // dd($request->all());
-        return view('blog.index', compact('posts','categories','subcategories','businesses'));
+        return view('blog.index', compact('posts','categories','subcategories'));
     }
 
     public function create()
     {
         $categories=Category::accessibleBy(Auth::user())->parents()->get();
         $subcategoryMap=$this->subcategoryMap($categories);
-        $businesses=Business::orderBy('business_order')->get();
-        return view('blog.create',compact('categories','subcategoryMap','businesses'));
+        return view('blog.create',compact('categories','subcategoryMap'));
     }
 
     public function store(Request $request)
@@ -87,7 +79,7 @@ class BlogController extends Controller
         $post->is_breaking = $request->boolean('is_breaking');
         $post->status = $request->status??$post->status;
         $post->thumbnail = $thumbnail;
-        $post->business_id = $request->business_id??Auth::user()->business_id;
+        $post->business_id = Auth::user()->business_id ?? 0;
         $post->user_id =Auth::user()->id;
         $post->cover = $cover;
         $post->save();
@@ -113,8 +105,7 @@ class BlogController extends Controller
         }
         $categories=Category::accessibleBy(Auth::user())->parents()->get();
         $subcategoryMap=$this->subcategoryMap($categories);
-        $businesses=Business::orderBy('business_order')->get();
-        return view('blog.edit', compact('post','businesses','categories','subcategoryMap'));
+        return view('blog.edit', compact('post','categories','subcategoryMap'));
     }
 
     public function update(Request $request, Blog $post)
@@ -146,7 +137,7 @@ class BlogController extends Controller
         $post->category_id = $request->category;
         $post->subcategory_id = $this->subcategoryFor($request->category, $request->subcategory);
         $post->is_breaking = $request->boolean('is_breaking');
-        $post->business_id = $request->business_id??Auth::user()->business_id;
+        $post->business_id = Auth::user()->business_id ?? 0;
         $post->cover = $cover;
 
         $post->save();

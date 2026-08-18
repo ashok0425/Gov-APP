@@ -7,6 +7,7 @@ use App\Models\Blog;
 use App\Models\Business;
 use App\Models\Category;
 use App\Models\Cms;
+use App\Models\Notice;
 use App\Models\Page;
 use App\Services\NepaliTransliterator;
 use Illuminate\Http\Request;
@@ -37,13 +38,25 @@ class MobileAppController extends Controller
                 ->take(10)
                 ->get(),
             'noticeCount' => $this->noticeCount(),
+            'locationText' => optional(Cms::settings())->location_text,
         ]);
     }
 
     public function notifications()
     {
         return view('mobile.notifications', [
-            'blogs' => $this->todaysBlogs(),
+            'notices' => Notice::published()->latestFirst()->take(50)->get(),
+            'noticeCount' => $this->noticeCount(),
+        ]);
+    }
+
+    public function notice($id)
+    {
+        $notice = Notice::published()->findOrFail($id);
+
+        return view('mobile.notice', [
+            'notice' => $notice,
+            'body' => $this->prepareHtml($notice->description),
             'noticeCount' => $this->noticeCount(),
         ]);
     }
@@ -90,20 +103,16 @@ class MobileAppController extends Controller
     {
         $category = Category::where('status', 1)->findOrFail($categoryId);
 
-        $children = $category->children()->where('status', 1)->get();
-
-        if ($children->isNotEmpty()) {
-            return view('mobile.subcategories', [
-                'category' => $category,
-                'subcategories' => $children,
-                'backRoute' => $this->categoryBackRoute($category),
-            ]);
-        }
+        // One screen for every level: whatever sits under this category, and
+        // then the posts filed anywhere beneath it. A leaf simply has no grid
+        // to draw, and a category nobody has posted under has no list.
+        $children = $category->children()->where('status', 1)->ordered()->get();
 
         $blogs = $this->categoryBlogQuery($category->id)->paginate(25);
 
         return $this->newsResponse($request, $blogs, [
             'category' => $category,
+            'subcategories' => $children,
             'backRoute' => $this->categoryBackRoute($category),
             'title' => $category->name,
             'listUrl' => route('m.category', $category->id),
@@ -284,15 +293,13 @@ class MobileAppController extends Controller
             ->get();
     }
 
-    /** Today's posts — the badge on the notifications tab counts these. */
-    protected function todaysBlogs()
-    {
-        return Blog::whereDate('created_at', today())->latest()->get();
-    }
-
+    /**
+     * The number on the सूचना tab: notifications sent in the last 24 hours.
+     * Anything older has been seen, and a badge that never clears is noise.
+     */
     protected function noticeCount()
     {
-        return Blog::whereDate('created_at', today())->count();
+        return Notice::published()->recent()->count();
     }
 
     /**

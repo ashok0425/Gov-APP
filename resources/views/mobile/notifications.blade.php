@@ -1,6 +1,6 @@
 @extends('mobile.layout')
 
-@section('title', 'Notifications')
+@section('title', 'सूचना')
 @section('shell-class', 'has-nav')
 
 @section('appbar')
@@ -9,8 +9,8 @@
 
 @section('content')
     <div class="blog-list">
-        @if ($blogs->isNotEmpty())
-            @include('mobile.partials.blog-rows', ['blogs' => $blogs])
+        @if ($notices->isNotEmpty())
+            @include('mobile.partials.notice-rows', ['notices' => $notices])
         @else
             <div class="state"><p>कुनै नयाँ सूचना छैन</p></div>
         @endif

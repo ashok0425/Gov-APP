@@ -87,6 +87,15 @@
         </li>
           @endcanAny
 
+        @can('do:anything')
+        <li class="sidebar-item">
+            <a class="sidebar-link {{Request::is('notices','notices/*')?'text-light':' '}}" href="{{ route('notices.index') }}">
+                <i class="fas fa-bell"></i>
+                <span class="align-middle">Notification</span>
+            </a>
+        </li>
+        @endcan
+
             @can('do:anything')
           <li class="sidebar-header">General</li>
 

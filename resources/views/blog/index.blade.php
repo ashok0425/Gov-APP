@@ -28,15 +28,6 @@
                             <option value="0" {{ request()->query('status')!=''&&request()->query('status')==0 ? 'selected' : '' }}>Draft</option>
                         </select>
                     </div>
-                    @can('do:anything')
-                    <div class="col-md-3 mb-2">
-                        <select name="business[]" id="" class="form-control select" multiple>
-                           @foreach ($businesses as $business)
-                               <option value="{{$business->id}}" {{in_array($business->id,request()->query('business')??[])?'selected':''}}>{{$business->name}}</option>
-                           @endforeach
-                        </select>
-                        </div>
-                    @endcan
                     {{-- <div class="col-md-2 mb-2">
                         <input type="text" name="dates" id="" class="form-control" value="{{request()->query('dates')}}">
                     </div> --}}
@@ -139,9 +130,6 @@
 });
 
 $(document).ready(function() {
-    $('.select').select2({
-        placeholder:'select palika'
-    });
     $('.select-subcategory').select2({
         placeholder:'select subcategory'
     });

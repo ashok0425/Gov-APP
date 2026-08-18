@@ -44,18 +44,6 @@
                         </select>
                     </div>
 
-                    @if(!auth()->user()->business_id)
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">Select Palika</label>
-                        <select name="business_id" id="" class="form-control form-select" >
-                           <option value="">select Palika</option>
-                           @foreach ($businesses as $business)
-                           <option value="{{$business->id}}" {{ old('business_id') == $business->id ? 'selected' : '' }}>{{$business->name}}</option>
-                           @endforeach
-                        </select>
-                    </div>
-                     @endif
-
                     <div class="form-group col-md-4 mb-3">
                         <label for="status">Post Status</label>
                         <select name="status" id="status" class="form-control">

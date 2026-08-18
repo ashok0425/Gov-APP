@@ -251,6 +251,32 @@ button {
 
 /* ---------------------------------------------------------- location bar
    The line under home's banner, e.g. "लुम्बिनी प्रदेश › बर्दिया › बारबर्दिया". */
+.blog-row-meta {
+    color: var(--grey);
+    font-size: 12px;
+}
+
+/* Stands in for the picture on a notification that has none. */
+.notice-mark {
+    flex: none;
+    width: 74px;
+    height: 74px;
+    border-radius: 8px;
+    background: var(--green-20);
+    display: grid;
+    place-items: center;
+}
+
+.notice-mark .material-symbols-rounded {
+    font-size: 32px;
+    color: var(--green);
+}
+
+.notice-date {
+    color: var(--grey);
+    font-size: 13px;
+}
+
 /* ----------------------------------------------------- taja khabar ticker
    One line under the banner: a fixed red label, then the breaking headlines
    sliding past it. The track carries the same run twice and travels exactly
@@ -335,6 +361,24 @@ button {
     .ticker-track {
         animation: none;
     }
+}
+
+.location-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 15px;
+    background: var(--green);
+    color: var(--white);
+    font-size: 15px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.location-bar .material-symbols-rounded {
+    font-size: 18px;
+    flex: none;
 }
 
 /* The trail above a category screen, when it sits below the top level. */

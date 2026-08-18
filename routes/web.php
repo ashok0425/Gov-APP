@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('banners', \App\Http\Controllers\BannerController::class);
     Route::resource('attachments', \App\Http\Controllers\AttachmentController::class);
 
+    Route::resource('notices', \App\Http\Controllers\NoticeController::class)->middleware('can:do anything');
     Route::resource('pages', \App\Http\Controllers\PageController::class)->middleware('can:do anything');
     Route::resource('cms', \App\Http\Controllers\CmsController::class)->middleware('can:do anything');
     Route::get('users/index', [\App\Http\Controllers\ManageAccessController::class,'users'])->middleware('can:do anything')->name('users');
@@ -60,6 +61,7 @@ Route::name('m.')->middleware('frontend.host')->group(function () {
     Route::get('/settings', [\App\Http\Controllers\MobileAppController::class, 'settings'])->name('settings');
     Route::get('/palika/{id}', [\App\Http\Controllers\MobileAppController::class, 'palika'])->name('palika');
     Route::get('/blog/{id}', [\App\Http\Controllers\MobileAppController::class, 'blog'])->name('blog');
+    Route::get('/notice/{id}', [\App\Http\Controllers\MobileAppController::class, 'notice'])->name('notice');
     Route::get('/page/{slug}', [\App\Http\Controllers\MobileAppController::class, 'page'])->name('page');
 
     // The menu belongs to the app, not to a palika. One route serves every
