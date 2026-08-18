@@ -376,6 +376,19 @@ button {
     text-align: center;
 }
 
+/* The place trail wraps as one line of parts, arrows and all. */
+.location-trail {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.location-arrow {
+    opacity: 0.75;
+}
+
 .location-bar .material-symbols-rounded {
     font-size: 18px;
     flex: none;

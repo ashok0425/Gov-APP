@@ -9,11 +9,27 @@
 
 @section('content')
     {{-- Where this build of the app is standing. Set in admin under Cms;
-         blank hides the bar rather than leaving an empty strip. --}}
-    @if (filled($locationText))
+         blank hides the bar rather than leaving an empty strip. Whatever the
+         admin separates with commas is shown as a trail, broad to narrow. --}}
+    @php
+        $placeTrail = collect(preg_split('/[,→›>]+/u', (string) $locationText))
+            ->map(fn ($part) => trim($part))
+            ->filter()
+            ->values();
+    @endphp
+
+    @if ($placeTrail->isNotEmpty())
         <div class="location-bar">
             <span class="material-symbols-rounded">location_on</span>
-            <span>{{ $locationText }}</span>
+
+            <span class="location-trail">
+                @foreach ($placeTrail as $place)
+                    <span>{{ $place }}</span>
+                    @if (! $loop->last)
+                        <span class="location-arrow" aria-hidden="true">→</span>
+                    @endif
+                @endforeach
+            </span>
         </div>
     @endif
 

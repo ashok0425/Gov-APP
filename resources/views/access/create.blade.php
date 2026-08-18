@@ -68,16 +68,6 @@
                         </div>
 
                         @can('do:anything')
-                    <div class="form-group col-md-4 mb-3 mb-3">
-                        <label class="form-label">Palika</label>
-                        <select name="business_id" id="" class="form-control form-select" >
-                            <option value="">Select Palika</option>
-                            @foreach(App\Models\Business::all() as $business)
-                            <option value="{{$business->id}}">{{$business->name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
                     <div class="mb-3 col-md-3">
                         <label class="form-label">Status</label>
                         <select name="status" id="" class="form-control form-select">
@@ -92,13 +82,6 @@
 
                        <div class="form-group col-md-3 mb-3 mb-3">
                         <label><input name="role" type="radio" style="transform: scale(2)" value="2"><span class="mx-3">Admin</span></label>
-                    </div>
-
-                    <div class="form-group col-md-3 mb-3 mb-3">
-                        <label><input name="role" type="radio" style="transform: scale(2)" value="3"><span class="mx-3">Palika Admin</span></label>
-                    </div>
-                      <div class="form-group col-md-3 mb-3 mb-3">
-                        <label><input name="role" type="radio" style="transform: scale(2)" value="4"><span class="mx-3">Palika User</span></label>
                     </div>
                     @endcan
 

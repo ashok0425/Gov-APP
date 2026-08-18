@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0&display=swap">
-    <link rel="stylesheet" href="{{ asset('mobile/app.css') }}?v=15">
+    <link rel="stylesheet" href="{{ asset('mobile/app.css') }}?v=16">
 </head>
 <body>
     <div class="shell @yield('shell-class')">
