@@ -3,83 +3,63 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between bg-dark">
             <div>
-                <h5 class="card-title text-white">Edit category</h5>
+                <h5 class="card-title text-white">Edit {{ $category->levelName() }} — {{ $category->pathName() }}</h5>
             </div>
         </div>
 
         <div class="card-body">
-            <form
-                action="{{ route('categories.update', $category) }}"
-                method="POST"
-                enctype="multipart/form-data"
-            >
+            <form action="{{ route('categories.update', $category) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PATCH')
+
                 <div class="row">
                     <div class="mb-3 col-md-4">
-                        <label class="form-label">Category</label>
-                        <input
-                            type="text"
-                            name="name"
-                            class="form-control"
-                            placeholder="Category"
-                            value="{{ old('name', $category->name) }}"
-                        />
+                        <label class="form-label">Name</label>
+                        <input type="text" name="name" class="form-control" placeholder="Category"
+                               value="{{ old('name', $category->name) }}" required>
                     </div>
 
                     <div class="mb-3 col-md-4">
-                        <label class="form-label">Parent Category</label>
-                        @if ($canHaveParent)
-                            <select name="parent_id" class="form-control form-select">
-                                <option value="">— None (main category) —</option>
-                                @foreach ($parents as $parent)
-                                    <option
-                                        value="{{ $parent->id }}"
-                                        {{ (string) old('parent_id', $category->parent_id) === (string) $parent->id ? 'selected' : '' }}
-                                    >
-                                        {{ $parent->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        @else
-                            <input type="text" class="form-control" value="— None (main category) —" disabled />
+                        <label class="form-label">Parent</label>
+                        <select name="parent_id" class="form-control form-select">
+                            <option value="">— None (main category) —</option>
+                            @foreach ($parents as $parent)
+                                <option value="{{ $parent->id }}"
+                                    {{ (string) old('parent_id', $category->parent_id) === (string) $parent->id ? 'selected' : '' }}>
+                                    {{ $parent->pathName() }} → {{ \App\Models\Category::LEVEL_NAMES[$parent->level() + 1] }}
+                                </option>
+                            @endforeach
+                        </select>
+                        {{-- Anything deep enough already has nowhere left to move to. --}}
+                        @if ($parents->isEmpty())
                             <small class="text-info">
-                                This category has subcategories of its own, so it has to stay at the top level.
+                                Nothing can hold this one without pushing the menu past
+                                {{ \App\Models\Category::MAX_DEPTH }} levels, so it stays where it is.
                             </small>
                         @endif
                     </div>
 
                     <div class="mb-3 col-md-4">
                         <label class="form-label">Status</label>
-                        <select name="status" id="" class="form-control form-select" required>
-                            <option value="">select status</option>
-                            <option value="1" {{ $category->status ? 'selected' : '' }}>
-                                Publish
-                            </option>
-                            <option value="0" {{ ! $category->status ? 'selected' : '' }}>
-                                Draft
-                            </option>
+                        <select name="status" class="form-control form-select" required>
+                            <option value="1" {{ old('status', (int) $category->status) == 1 ? 'selected' : '' }}>Publish</option>
+                            <option value="0" {{ old('status', (int) $category->status) == 0 ? 'selected' : '' }}>Draft</option>
                         </select>
                     </div>
-                    <div class="mb-3 col-md-4">
+
+                    <div class="mb-3 col-md-6">
                         <label class="form-label">Thumbnail</label>
                         <div class="file-upload-wrapper" data-text="Select your file!">
-                            <input
-                                name="thumbnail"
-                                type="file"
-                                class="file-upload-field"
-                                value=""
-                            />
+                            <input name="thumbnail" type="file" class="file-upload-field">
                         </div>
-                        <br />
-                        <img
-                            src="{{ getImage($category->thumbnail) }}"
-                            alt="{{ $category->name }}"
-                            width="100"
-                        />
+                        <br>
+                        <img src="{{ getImage($category->thumbnail) }}" alt="{{ $category->name }}" width="100">
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">update</button>
+
+                @include('category.partials.contact-fields', ['category' => $category])
+
+                <button type="submit" class="btn btn-primary">Update</button>
             </form>
         </div>
     </div>

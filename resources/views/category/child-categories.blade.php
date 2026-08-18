@@ -3,13 +3,13 @@
     <div class="container">
         <form action="" class="mb-3 card">
             <div class="row card-body">
-                <div class="col-md-4 mb-2">
+                <div class="col-md-5 mb-2">
                     <select name="parent" class="form-control form-select" onchange="this.form.submit()">
-                        <option value="">All categories</option>
+                        <option value="">All subcategories</option>
                         @foreach ($parents as $parent)
                             <option value="{{ $parent->id }}"
                                 {{ request()->query('parent') == $parent->id ? 'selected' : '' }}>
-                                {{ $parent->name }}
+                                {{ $parent->pathName() }}
                             </option>
                         @endforeach
                     </select>
@@ -23,13 +23,13 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between bg-dark">
                 <div>
-                    <h5 class="card-title text-white">Subcategory List</h5>
+                    <h5 class="card-title text-white">Child Category List</h5>
                 </div>
                 <div>
                     <a href="{{ route('categories.create', ['parent' => request()->query('parent')]) }}"
                        class="btn btn-info btn-sm">
-                        <o class="fas fa-plus"></o>
-                        Add Subcategory
+                        <i class="fas fa-plus"></i>
+                        Add Child Category
                     </a>
                 </div>
             </div>
@@ -39,43 +39,42 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Subcategory</th>
-                            <th>Parent Category</th>
-                            <th>Child Categories</th>
+                            <th>Child Category</th>
+                            <th>Sits under</th>
                             <th>Thumbnail</th>
+                            <th>Contact</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($subcategories as $subcategory)
+                        @forelse ($childCategories as $child)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $subcategory->name }}</td>
-                                <td>{{ $subcategory->parent?->name }}</td>
+                                <td>{{ $child->name }}</td>
+                                <td>{{ $child->parent?->pathName() }}</td>
                                 <td>
-                                    <a href="{{ route('childcategories.index', ['parent' => $subcategory->id]) }}"
-                                       class="badge bg-secondary text-decoration-none">
-                                        {{ $subcategory->children()->count() }}
-                                    </a>
-                                    <a href="{{ route('categories.create', ['parent' => $subcategory->id]) }}"
-                                       class="badge bg-info text-decoration-none">+ add</a>
+                                    <img src="{{ getImage($child->thumbnail) }}" width="80" alt="">
                                 </td>
                                 <td>
-                                    <img src="{{ getImage($subcategory->thumbnail) }}" width="80" alt="" />
+                                    @if ($child->hasContact())
+                                        <span class="badge bg-success">{{ $child->phone ?: 'on' }}</span>
+                                    @else
+                                        <span class="badge bg-secondary">—</span>
+                                    @endif
                                 </td>
                                 <td>
-                                    @if ($subcategory->status == 1)
+                                    @if ($child->status == 1)
                                         <a class="badge bg-success">Publish</a>
                                     @else
                                         <a class="badge bg-danger">Draft</a>
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('categories.edit', $subcategory) }}" class="btn btn-primary">
+                                    <a href="{{ route('categories.edit', $child) }}" class="btn btn-primary">
                                         <i class="far fa-edit"></i>
                                     </a>
-                                    <a href="{{ route('categories.destroy', $subcategory->id) }}"
+                                    <a href="{{ route('categories.destroy', $child->id) }}"
                                        class="btn btn-danger delete_btn">
                                         <i class="fas fa-trash"></i>
                                     </a>
@@ -84,7 +83,7 @@
                         @empty
                             <tr>
                                 <td colspan="7" class="text-center">
-                                    No subcategory yet — use <b>Add Subcategory</b> to create one.
+                                    No child category yet — use <b>Add Child Category</b> to create one.
                                 </td>
                             </tr>
                         @endforelse
@@ -92,6 +91,6 @@
                 </table>
             </div>
         </div>
-        {{ $subcategories->links() }}
+        {{ $childCategories->links() }}
     </div>
 @endsection

@@ -75,6 +75,13 @@
                 <span class="align-middle">Subcategory</span>
             </a>
         </li>
+
+        <li class="sidebar-item">
+            <a class="sidebar-link {{Request::is('child-categories','child-categories/*')?'text-light':' '}}" href="{{ route('childcategories.index') }}">
+                <i class="fas fa-stream"></i>
+                <span class="align-middle">Child Category</span>
+            </a>
+        </li>
         @endcan
 
 
