@@ -21,6 +21,8 @@
         />
         {{-- custom css --}}
         <link href="{{ asset('admin/css/app.css') }}" rel="stylesheet" />
+        {{-- brand palette, after the theme so it wins --}}
+        <link href="{{ asset('admin/css/brand.css') }}?v=1" rel="stylesheet" />
         {{-- summernote css --}}
         <link
             href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css"

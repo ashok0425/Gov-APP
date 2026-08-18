@@ -1,0 +1,178 @@
+/* ------------------------------------------------------------------ brand
+   Nepal Connect, straight off the logo: blue #0842ad, red #f2131c, gold
+   #ffd608 on white. Loaded after the AdminKit stylesheet so these win
+   without anyone having to edit 280KB of vendor CSS.                      */
+:root {
+    --brand-blue: #0842ad;
+    --brand-blue-dark: #062f7a;
+    --brand-blue-deep: #041f56;
+    --brand-red: #f2131c;
+    --brand-red-dark: #c40f16;
+    --brand-gold: #ffd608;
+    --brand-gold-dark: #e6c007;
+    --brand-ink: #16233d;
+}
+
+/* ----------------------------------------------------------------- sidebar */
+.sidebar,
+.sidebar-content,
+.sidebar-brand {
+    background: var(--brand-blue-deep);
+}
+
+.sidebar-header {
+    color: var(--brand-gold);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 11px;
+}
+
+.sidebar-link,
+a.sidebar-link {
+    color: rgba(255, 255, 255, 0.75);
+    border-left: 3px solid transparent;
+}
+
+.sidebar-link:hover,
+a.sidebar-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* The open tab: the blade marks it with text-light. */
+.sidebar-link.text-light,
+.sidebar-item.active > .sidebar-link {
+    background: var(--brand-blue);
+    border-left-color: var(--brand-gold);
+    color: #fff !important;
+}
+
+.sidebar-link i,
+.sidebar-link svg {
+    color: inherit;
+}
+
+.submenu .sidebar-link {
+    padding-left: 2.5rem;
+    font-size: 0.9rem;
+}
+
+/* ------------------------------------------------------------------- chrome
+   The red hairline under the top bar is the logo's third colour, used
+   sparingly so the admin does not turn into the flag. */
+.navbar {
+    border-bottom: 3px solid var(--brand-red);
+}
+
+.card-header.bg-dark,
+.bg-dark {
+    background-color: var(--brand-blue) !important;
+}
+
+/* ------------------------------------------------------------------ buttons */
+.btn-primary,
+.btn-primary:disabled {
+    background-color: var(--brand-blue);
+    border-color: var(--brand-blue);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.show > .btn-primary.dropdown-toggle {
+    background-color: var(--brand-blue-dark) !important;
+    border-color: var(--brand-blue-dark) !important;
+}
+
+/* "Add" buttons across the admin are btn-info — gold, with dark text on it. */
+.btn-info,
+.btn-info:disabled {
+    background-color: var(--brand-gold);
+    border-color: var(--brand-gold);
+    color: var(--brand-ink);
+}
+
+.btn-info:hover,
+.btn-info:focus,
+.btn-info:active {
+    background-color: var(--brand-gold-dark) !important;
+    border-color: var(--brand-gold-dark) !important;
+    color: var(--brand-ink) !important;
+}
+
+.btn-danger,
+.btn-danger:disabled {
+    background-color: var(--brand-red);
+    border-color: var(--brand-red);
+}
+
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active {
+    background-color: var(--brand-red-dark) !important;
+    border-color: var(--brand-red-dark) !important;
+}
+
+.btn-outline-primary {
+    color: var(--brand-blue);
+    border-color: var(--brand-blue);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--brand-blue);
+    border-color: var(--brand-blue);
+}
+
+/* -------------------------------------------------------- links and badges */
+a,
+.page-link {
+    color: var(--brand-blue);
+}
+
+a:hover {
+    color: var(--brand-blue-dark);
+}
+
+.page-item.active .page-link {
+    background-color: var(--brand-blue);
+    border-color: var(--brand-blue);
+}
+
+.badge.bg-info {
+    background-color: var(--brand-gold) !important;
+    color: var(--brand-ink);
+}
+
+.badge.bg-secondary {
+    background-color: #51618a !important;
+}
+
+.badge.bg-danger {
+    background-color: var(--brand-red) !important;
+}
+
+/* --------------------------------------------------------------- form focus */
+.form-control:focus,
+.form-select:focus,
+.select2-container--default.select2-container--focus .select2-selection--single {
+    border-color: #6f9be8;
+    box-shadow: 0 0 0 0.2rem rgba(8, 66, 173, 0.15);
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: var(--brand-blue);
+}
+
+.form-check-input:checked {
+    background-color: var(--brand-blue);
+    border-color: var(--brand-blue);
+}
+
+/* ------------------------------------------------------------------ tables */
+.table thead th {
+    color: var(--brand-ink);
+}
+
+.card-header .card-title {
+    letter-spacing: 0.01em;
+}

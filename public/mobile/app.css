@@ -1,20 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;500;600;700&display=swap');
 
 /* ---------------------------------------------------------------- tokens
-   Mirrors lib/core/app_constants/app_colors.dart                          */
+   The app is white: paper, ink, and a hairline to separate them. What used
+   to be green is ink now, so anything that was picked out in colour — the
+   open tab, the buttons, the badges — is picked out in weight instead.
+   Photographs and category artwork keep their own colours.                */
 :root {
-    --green: #0e7f6b;
-    --green-90: rgba(14, 127, 107, 0.9);
-    --green-60: rgba(14, 127, 107, 0.6);
-    --green-20: rgba(76, 175, 80, 0.2);
+    --green: #1f1f1f;
+    --green-90: rgba(31, 31, 31, 0.9);
+    --green-60: rgba(31, 31, 31, 0.55);
+    --green-20: #f2f2f2;
     --white: #ffffff;
-    --scaffold: #f3f3f3;
+    --scaffold: #ffffff;
+    --line: #e6e6e6;
     --matte-black: #343634;
     --black: #323232;
     --grey: #8f8f8f;
     --light-grey: #e0e0e0;
-    --red: #f44336;
-    --blue: #2196f3;
+    --red: #1f1f1f;
+    --blue: #1f1f1f;
+    /* The one colour left in the app: an unread count has to catch the eye,
+       and this is the red from the Nepal Connect logo. */
+    --alert: #f2131c;
     --text-body: #252525;
 
     --appbar-h: 110px;
@@ -75,6 +82,8 @@ button {
     flex-direction: column;
     overflow: hidden;
     box-shadow: 0 0 24px rgba(0, 0, 0, 0.12);
+    border-left: 1px solid var(--line);
+    border-right: 1px solid var(--line);
 }
 
 .scroll-area {
@@ -121,11 +130,12 @@ button {
     object-fit: cover;
 }
 
-/* Solid green bar with a centred title. */
+/* A white bar with a centred title, held apart from the page by a line. */
 .appbar {
     min-height: 56px;
-    background: var(--green);
-    color: var(--white);
+    background: var(--white);
+    color: var(--black);
+    border-bottom: 1px solid var(--line);
     display: flex;
     align-items: center;
     padding: 0 8px;
@@ -288,8 +298,8 @@ button {
     margin: 0 12px 10px;
     padding: 6px 10px 6px 6px;
     background: var(--white);
+    border: 1px solid var(--line);
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     overflow: hidden;
 }
 
@@ -430,10 +440,8 @@ button {
     background: var(--white);
     padding: 10px;
     margin: 0 12px 10px;
-    box-shadow:
-        0 2px 1px -1px rgba(0, 0, 0, 0.2),
-        0 1px 1px 0 rgba(0, 0, 0, 0.14),
-        0 1px 3px 0 rgba(0, 0, 0, 0.12);
+    border: 1px solid var(--line);
+    border-radius: 8px;
 }
 
 .blog-row img {
@@ -498,12 +506,12 @@ button {
 .bottom-nav {
     height: var(--navbar-h);
     background: var(--white);
+    border-top: 1px solid var(--line);
     border-radius: 16px 16px 0 0;
     display: flex;
     align-items: stretch;
     flex: none;
     z-index: 10;
-    box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.1);
 }
 
 .nav-tab {
@@ -604,7 +612,7 @@ button {
     height: 18px;
     padding: 0 4px;
     border-radius: 9px;
-    background: var(--red);
+    background: var(--alert);
     color: var(--white);
     font-size: 10px;
     line-height: 18px;
@@ -879,8 +887,8 @@ button {
     margin: 12px;
     padding: 16px 8px;
     background: var(--white);
+    border: 1px solid var(--line);
     border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .grid-palikas {
