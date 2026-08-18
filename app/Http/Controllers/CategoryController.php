@@ -24,7 +24,7 @@ class CategoryController extends Controller
 
         // Paginate the top level only, so a category never gets separated
         // from its subcategories by a page break.
-        $categories = Category::parents()->with('children')->paginate(15);
+        $categories = Category::parents()->withCount('children')->paginate(15);
 
         return view('category.index', compact('categories'));
     }
