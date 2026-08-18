@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Blog;
 use App\Models\Cms;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -28,6 +29,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Paginator::useBootstrap();
+
+        // Belt and braces alongside the InnoDB engine in config/database.php:
+        // 191 characters is the longest a utf8mb4 column can be and still fit
+        // an index on an older MySQL. Nothing here loses room — the long
+        // fields (title, slug, short_description) are text columns already.
+        Schema::defaultStringLength(191);
 
         // The bottom nav rides on several mobile screens; rather than thread
         // the badge count through each controller action, fill it in here when
