@@ -482,6 +482,53 @@ button {
     background: var(--green);
 }
 
+/* Keeps the two inner tabs clear of the docked Home button. */
+.nav-notch {
+    flex: 0 0 72px;
+}
+
+/* The dock is a circle in the bar's own white, so the bump reads as part of
+   the bar rather than as a disc sitting on top of it. */
+.fab-dock {
+    position: absolute;
+    left: 50%;
+    bottom: calc(var(--navbar-h) - 28px);
+    transform: translateX(-50%);
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--white);
+    display: grid;
+    place-items: center;
+    z-index: 11;
+    /* Only the button inside takes the tap. */
+    pointer-events: none;
+}
+
+.fab {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--green);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    pointer-events: auto;
+    box-shadow:
+        0 3px 5px -1px rgba(0, 0, 0, 0.2),
+        0 6px 10px 0 rgba(0, 0, 0, 0.14),
+        0 1px 18px 0 rgba(0, 0, 0, 0.12);
+}
+
+.fab .material-symbols-rounded {
+    font-size: 30px;
+    color: var(--white);
+}
+
+.fab:active {
+    background: #0c6d5c;
+}
+
 .nav-tab .material-symbols-rounded {
     font-size: 24px;
 }

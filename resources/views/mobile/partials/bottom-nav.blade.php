@@ -1,5 +1,14 @@
-{{-- Five equal tabs on a white bar, the active one green under a short
-     indicator. Home sits in the middle as an ordinary tab — no docked FAB. --}}
+{{-- Four tabs on a white bar around a centre-docked Home button. The FAB is
+     absolutely placed against the shell, so the notch below keeps the two
+     inner tabs clear of it. --}}
+<div class="fab-dock">
+    <a href="{{ route('m.home') }}"
+       class="fab {{ request()->routeIs('m.home') ? 'is-active' : '' }}"
+       aria-label="गृह">
+        <span class="material-symbols-rounded">home</span>
+    </a>
+</div>
+
 <nav class="bottom-nav">
     <a href="{{ route('m.search') }}"
        class="nav-tab {{ request()->routeIs('m.search') ? 'is-active' : '' }}">
@@ -17,13 +26,8 @@
         <span>मेनु</span>
     </a>
 
-    <a href="{{ route('m.home') }}"
-       class="nav-tab {{ request()->routeIs('m.home') ? 'is-active' : '' }}">
-        <span class="nav-icon">
-            <span class="material-symbols-rounded">home</span>
-        </span>
-        <span>गृह</span>
-    </a>
+    {{-- Spacer under the docked FAB. --}}
+    <span class="nav-notch" aria-hidden="true"></span>
 
     <a href="{{ route('m.notifications') }}"
        class="nav-tab {{ request()->routeIs('m.notifications') ? 'is-active' : '' }}">
