@@ -43,7 +43,7 @@
                     <h5 class="card-title text-white">{{ $levelName }} List</h5>
                 </div>
                 <div>
-                    <a href="{{ route('categories.create', ['parent' => request()->query('parent')]) }}"
+                    <a href="{{ route('categories.create', ['parent' => request()->query('parent'), 'back' => request()->fullUrl()]) }}"
                        class="btn btn-info btn-sm">
                         <i class="fas fa-plus"></i>
                         Add {{ $levelName }}
@@ -80,7 +80,7 @@
                                            class="badge bg-secondary text-decoration-none">
                                             {{ $row->children_count }}
                                         </a>
-                                        <a href="{{ route('categories.create', ['parent' => $row->id]) }}"
+                                        <a href="{{ route('categories.create', ['parent' => $row->id, 'back' => request()->fullUrl()]) }}"
                                            class="badge bg-info text-decoration-none"
                                            title="Add a {{ Str::lower($childName) }} under {{ $row->name }}">+ add</a>
                                     </td>
@@ -104,7 +104,7 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('categories.edit', $row) }}" class="btn btn-primary">
+                                    <a href="{{ route('categories.edit', ['category' => $row, 'back' => request()->fullUrl()]) }}" class="btn btn-primary">
                                         <i class="far fa-edit"></i>
                                     </a>
                                     <a href="{{ route('categories.destroy', $row->id) }}"

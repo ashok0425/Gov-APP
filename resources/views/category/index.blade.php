@@ -49,7 +49,7 @@
                                        class="badge bg-secondary text-decoration-none">
                                         {{ $category->children_count }}
                                     </a>
-                                    <a href="{{ route('categories.create', ['parent' => $category->id]) }}"
+                                    <a href="{{ route('categories.create', ['parent' => $category->id, 'back' => request()->fullUrl()]) }}"
                                        class="badge bg-info text-decoration-none"
                                        title="Add a subcategory under {{ $category->name }}">+ add</a>
                                 </td>
@@ -70,7 +70,7 @@
                                 </td>
                                 <td>
                                     <a
-                                        href="{{ route('categories.edit', $category) }}"
+                                        href="{{ route('categories.edit', ['category' => $category, 'back' => request()->fullUrl()]) }}"
                                         class="btn btn-primary"
                                     >
                                         <i class="far fa-edit"></i>

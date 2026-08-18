@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Controllers\Concerns\ReturnsToList;
 use App\Models\Blog;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -10,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 class BlogController extends Controller
 {
+    use ReturnsToList;
+
     public function index(Request $request)
     {
         $posts = Blog::query()
@@ -151,7 +154,7 @@ class BlogController extends Controller
 
         ];
 
-        return redirect()->route('blogs.index')->with($notification);
+        return redirect()->to($this->returnUrl($request, 'blogs.index'))->with($notification);
     }
 
     public function show(Blog $post) {

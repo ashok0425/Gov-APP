@@ -10,6 +10,9 @@
         <div class="card-body">
             <form action="{{ route('categories.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                {{-- Where the list said we came from, so saving lands back on
+                     that page with its filters rather than at the top. --}}
+                <input type="hidden" name="redirect_to" value="{{ request('back', url()->previous()) }}">
 
                 <div class="row">
                     <div class="mb-3 col-md-4">

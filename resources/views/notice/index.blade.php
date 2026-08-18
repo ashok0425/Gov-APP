@@ -54,7 +54,7 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('notices.edit', $notice) }}" class="btn btn-primary">
+                                    <a href="{{ route('notices.edit', ['notice' => $notice, 'back' => request()->fullUrl()]) }}" class="btn btn-primary">
                                         <i class="far fa-edit"></i>
                                     </a>
                                     <a href="{{ route('notices.destroy', $notice) }}" class="btn btn-danger delete_btn">

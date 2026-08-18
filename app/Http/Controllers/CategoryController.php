@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\ReturnsToList;
 use App\Models\Category;
 use Auth;
 use Illuminate\Http\Request;
@@ -16,6 +17,8 @@ use Illuminate\Validation\Rule;
  */
 class CategoryController extends Controller
 {
+    use ReturnsToList;
+
     public function index(Request $request)
     {
         if (! Auth::user()->can('category:view')) {
@@ -123,7 +126,7 @@ class CategoryController extends Controller
         $category->save();
 
         return redirect()
-            ->route($this->listRouteFor($category))
+            ->to($this->returnUrl($request, $this->listRouteFor($category)))
             ->with([
                 'alert-type' => 'success',
                 'message' => $category->levelName().' Added',
@@ -162,7 +165,7 @@ class CategoryController extends Controller
         $category->save();
 
         return redirect()
-            ->route($this->listRouteFor($category))
+            ->to($this->returnUrl($request, $this->listRouteFor($category)))
             ->with([
                 'alert-type' => 'success',
                 'message' => $category->levelName().' updated',

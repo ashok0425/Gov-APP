@@ -74,7 +74,7 @@
                                 </td>
                                 <td>
                                     <a
-                                        href="{{ route('blogs.edit', $post) }}"
+                                        href="{{ route('blogs.edit', ['post' => $post, 'back' => request()->fullUrl()]) }}"
                                         class="btn btn-primary"
                                     >
                                         <i class="far fa-edit"></i>

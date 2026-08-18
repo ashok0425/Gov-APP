@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\ReturnsToList;
 use App\Models\Notice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -12,6 +13,8 @@ use Illuminate\Support\Facades\Storage;
  */
 class NoticeController extends Controller
 {
+    use ReturnsToList;
+
     public function index()
     {
         $notices = Notice::latestFirst()->paginate(20);
@@ -58,7 +61,7 @@ class NoticeController extends Controller
 
         $notice->save();
 
-        return redirect()->route('notices.index')->with([
+        return redirect()->to($this->returnUrl($request, 'notices.index'))->with([
             'alert-type' => 'success',
             'message' => 'Notification updated',
         ]);
