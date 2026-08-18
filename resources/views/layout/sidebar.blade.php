@@ -13,15 +13,6 @@
             </a>
         </li>
 
-        @can('palika:view')
-        <li class="sidebar-item">
-            <a class="sidebar-link {{Request::is('palikas','palikas/*','palika-reorder')?'text-light':' '}}" href="{{ route('palika.index') }}">
-                <i class="fas fa-home"></i>
-                <span class="align-middle">Palika</span>
-            </a>
-        </li>
-        @endcan
-
 @can('banners:view')
 <li class="sidebar-item">
     <a href="javascript:void(0);" class="sidebar-link d-flex justify-between align-items-center {{Request::is('banners','banners/*')?'text-light':' '}}" data-toggle="banner-dropdown">

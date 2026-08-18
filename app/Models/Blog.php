@@ -61,4 +61,22 @@ public function scopeAccessibleBy($query, $user)
         return $this->belongsTo(Category::class, 'subcategory_id');
     }
 
+    public function childCategory(){
+        return $this->belongsTo(Category::class, 'child_category_id');
+    }
+
+    /**
+     * Posts filed anywhere at or under the given category. A post records the
+     * whole trail it was filed under, so matching any of the three columns
+     * catches a category's own posts and everything beneath it.
+     */
+    public function scopeInCategory($query, $categoryId)
+    {
+        return $query->where(function ($q) use ($categoryId) {
+            $q->where('category_id', $categoryId)
+                ->orWhere('subcategory_id', $categoryId)
+                ->orWhere('child_category_id', $categoryId);
+        });
+    }
+
 }

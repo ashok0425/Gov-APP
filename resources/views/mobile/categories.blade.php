@@ -1,11 +1,12 @@
 @extends('mobile.layout')
 
-@section('title', 'Categories')
+@section('title', 'मेनु')
+@section('shell-class', 'has-nav')
 
 @section('appbar')
     <header class="appbar">
-        @include('mobile.partials.back-button', ['fallback' => route('m.palika', $palika->id)])
-        <span class="appbar-title">Categories</span>
+        @include('mobile.partials.back-button', ['fallback' => route('m.home')])
+        <span class="appbar-title">मेनु</span>
         <span class="icon-btn"></span>
     </header>
 @endsection
@@ -16,11 +17,15 @@
             @foreach ($categories as $category)
                 @include('mobile.partials.category-tile', [
                     'category' => $category,
-                    'href' => route('m.category.news', [$palika->id, $category->id]),
+                    'href' => route('m.category', $category->id),
                 ])
             @endforeach
         </div>
     @else
-        <div class="state"><p>No Data Found</p></div>
+        <div class="state"><p>कुनै विवरण भेटिएन</p></div>
     @endif
+@endsection
+
+@section('bottom')
+    @include('mobile.partials.bottom-nav')
 @endsection

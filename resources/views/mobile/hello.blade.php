@@ -15,7 +15,7 @@
                 'ownerLabel' => 'नगर प्रमुख',
             ])
         @empty
-            <div class="state"><p>No Data Found</p></div>
+            <div class="state"><p>कुनै विवरण भेटिएन</p></div>
         @endforelse
     </div>
 @endsection

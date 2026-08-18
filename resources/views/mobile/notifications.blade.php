@@ -12,7 +12,7 @@
         @if ($blogs->isNotEmpty())
             @include('mobile.partials.blog-rows', ['blogs' => $blogs])
         @else
-            <div class="state"><p>No Data Found</p></div>
+            <div class="state"><p>कुनै नयाँ सूचना छैन</p></div>
         @endif
     </div>
 @endsection

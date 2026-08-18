@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\PalikaController;
 use App\Http\Controllers\SummernoteController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -23,11 +22,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('posts', \App\Http\Controllers\BlogController::class)->names('blogs');
     Route::resource('banners', \App\Http\Controllers\BannerController::class);
     Route::resource('attachments', \App\Http\Controllers\AttachmentController::class);
-    Route::get('palika-reorder', [PalikaController::class,'reorder'])->name('palika.reorder');
-    Route::post('palika-reorder', [PalikaController::class,'reorderStore'])->name('palika.reorder.store');
-    Route::get('/palikas/{id}/categories', [PalikaController::class, 'editCategories'])->name('palika.categories.edit');
-    Route::post('/palikas/{id}/categories', [PalikaController::class, 'updateCategories'])->name('palika.categories.update');
-    Route::resource('palikas', PalikaController::class)->names('palika');
 
     Route::resource('pages', \App\Http\Controllers\PageController::class)->middleware('can:do anything');
     Route::resource('cms', \App\Http\Controllers\CmsController::class)->middleware('can:do anything');
@@ -65,15 +59,24 @@ Route::name('m.')->middleware('frontend.host')->group(function () {
     Route::get('/hello', [\App\Http\Controllers\MobileAppController::class, 'hello'])->name('hello');
     Route::get('/settings', [\App\Http\Controllers\MobileAppController::class, 'settings'])->name('settings');
     Route::get('/palika/{id}', [\App\Http\Controllers\MobileAppController::class, 'palika'])->name('palika');
-    Route::get('/palika/{id}/categories', [\App\Http\Controllers\MobileAppController::class, 'categories'])->name('categories');
-    Route::get('/palika/{id}/category/{category}', [\App\Http\Controllers\MobileAppController::class, 'categoryNews'])->name('category.news');
-    Route::get('/palika/{id}/category/{category}/{subcategory}', [\App\Http\Controllers\MobileAppController::class, 'subcategoryNews'])->name('subcategory.news');
     Route::get('/blog/{id}', [\App\Http\Controllers\MobileAppController::class, 'blog'])->name('blog');
     Route::get('/page/{slug}', [\App\Http\Controllers\MobileAppController::class, 'page'])->name('page');
 
-    // Links shared while the app still spoke of wards keep working.
+    // The menu belongs to the app, not to a palika. One route serves every
+    // level — a category id says on its own how deep in the tree it sits.
+    // "/menu" rather than "/categories": the admin categories resource already
+    // owns that URI, and a same-method same-URI route registered later here
+    // would replace it instead of sitting beside it.
+    Route::get('/menu', [\App\Http\Controllers\MobileAppController::class, 'categories'])->name('categories');
+    Route::get('/category/{category}', [\App\Http\Controllers\MobileAppController::class, 'category'])->name('category');
+
+    // Links shared while the app still spoke of wards, or scoped the menu to a
+    // palika, keep working.
     Route::redirect('/my-ward', '/palika');
     Route::get('/ward/{id}', fn ($id) => redirect()->route('m.palika', $id));
-    Route::get('/ward/{id}/categories', fn ($id) => redirect()->route('m.categories', $id));
-    Route::get('/ward/{id}/category/{category}', fn ($id, $category) => redirect()->route('m.category.news', [$id, $category]));
+    Route::get('/ward/{id}/categories', fn () => redirect()->route('m.categories'));
+    Route::get('/ward/{id}/category/{category}', fn ($id, $category) => redirect()->route('m.category', $category));
+    Route::get('/palika/{id}/categories', fn () => redirect()->route('m.categories'));
+    Route::get('/palika/{id}/category/{category}', fn ($id, $category) => redirect()->route('m.category', $category));
+    Route::get('/palika/{id}/category/{category}/{subcategory}', fn ($id, $category, $subcategory) => redirect()->route('m.category', $subcategory));
 });

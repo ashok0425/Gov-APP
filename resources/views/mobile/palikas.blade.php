@@ -28,7 +28,7 @@
             @endforeach
         </div>
     @else
-        <div class="state"><p>No Data Found</p></div>
+        <div class="state"><p>कुनै विवरण भेटिएन</p></div>
     @endif
 @endsection
 

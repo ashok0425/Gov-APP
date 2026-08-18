@@ -45,7 +45,7 @@
         </div>
     @elseif ($blogs->isEmpty())
         <div class="state">
-            <p>No results for “{{ $term }}”.</p>
+            <p>“{{ $term }}” सँग मिल्ने कुनै नतिजा भेटिएन।</p>
             <p class="state-hint">Try a shorter word or a different spelling.</p>
         </div>
     @else

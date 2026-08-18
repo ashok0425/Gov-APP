@@ -6,6 +6,7 @@ use App\Models\Banner;
 use App\Models\Blog;
 use App\Models\Business;
 use App\Models\Category;
+use App\Models\Cms;
 use App\Models\Page;
 use App\Services\NepaliTransliterator;
 use Illuminate\Http\Request;
@@ -16,6 +17,9 @@ use Illuminate\Http\Request;
  *
  * Palikas are stored in the legacy "businesses" table; there is no longer a
  * special row for the municipality — every published record is a palika.
+ *
+ * The menu is no longer partitioned per palika: home carries the category grid
+ * itself, and a category is browsed by its own id however deep it sits.
  */
 class MobileAppController extends Controller
 {
@@ -26,6 +30,8 @@ class MobileAppController extends Controller
         return view('mobile.home', [
             'banners' => $this->banners(1, 1),
             'breaking' => $this->breakingBlogs(),
+            'categories' => $this->menuCategories(),
+            'locationText' => optional(Cms::settings())->location_text,
             'blogs' => Blog::latest()
                 ->where('status', 1)
                 ->select('id', 'title', 'thumbnail', 'slug', 'short_description')
@@ -68,69 +74,40 @@ class MobileAppController extends Controller
 
     // ---------------------------------------------------------- categories
 
-    public function categories($id)
+    /** The whole top-level menu — the same grid home shows, on its own screen. */
+    public function categories()
     {
-        $palika = Business::where('status', 1)->findOrFail($id);
-
-        $categories = $palika->categories()
-            ->where('status', 1)
-            ->whereNull('parent_id')
-            ->orderBy('pivot_position')
-            ->get();
-
         return view('mobile.categories', [
-            'palika' => $palika,
-            'categories' => $categories,
+            'categories' => $this->menuCategories(),
         ]);
     }
 
     /**
-     * Tapping a category opens its subcategories when it has any, and drops
-     * straight to the post list when it does not.
+     * One screen for every level of the menu: a category with children opens
+     * as a grid of them, and one without drops straight to its post list. The
+     * id alone says where we are, so the same action serves all three levels.
      */
-    public function categoryNews(Request $request, $id, $categoryId)
+    public function category(Request $request, $categoryId)
     {
-        $palika = Business::where('status', 1)->findOrFail($id);
-        $category = Category::where('status', 1)->parents()->findOrFail($categoryId);
+        $category = Category::where('status', 1)->findOrFail($categoryId);
 
-        $subcategories = $category->children()->where('status', 1)->get();
+        $children = $category->children()->where('status', 1)->get();
 
-        if ($subcategories->isNotEmpty()) {
+        if ($children->isNotEmpty()) {
             return view('mobile.subcategories', [
-                'palika' => $palika,
                 'category' => $category,
-                'subcategories' => $subcategories,
+                'subcategories' => $children,
+                'backRoute' => $this->categoryBackRoute($category),
             ]);
         }
 
-        $blogs = $this->categoryBlogQuery($palika->id, $category->id)->paginate(25);
+        $blogs = $this->categoryBlogQuery($category->id)->paginate(25);
 
         return $this->newsResponse($request, $blogs, [
-            'palika' => $palika,
             'category' => $category,
-            'backRoute' => route('m.categories', $palika->id),
+            'backRoute' => $this->categoryBackRoute($category),
             'title' => $category->name,
-            'listUrl' => route('m.category.news', [$palika->id, $category->id]),
-        ]);
-    }
-
-    public function subcategoryNews(Request $request, $id, $categoryId, $subcategoryId)
-    {
-        $palika = Business::where('status', 1)->findOrFail($id);
-        $category = Category::where('status', 1)->parents()->findOrFail($categoryId);
-
-        $subcategory = Category::where('status', 1)
-            ->where('parent_id', $category->id)
-            ->findOrFail($subcategoryId);
-
-        $blogs = $this->categoryBlogQuery($palika->id, $category->id, $subcategory->id)->paginate(25);
-
-        return $this->newsResponse($request, $blogs, [
-            'palika' => $palika,
-            'category' => $subcategory,
-            'backRoute' => route('m.category.news', [$palika->id, $category->id]),
-            'title' => $subcategory->name,
-            'listUrl' => route('m.subcategory.news', [$palika->id, $category->id, $subcategory->id]),
+            'listUrl' => route('m.category', $category->id),
         ]);
     }
 
@@ -232,6 +209,20 @@ class MobileAppController extends Controller
             ->get();
     }
 
+    /** The published top-level menu, in the order the admin arranged it. */
+    protected function menuCategories()
+    {
+        return Category::where('status', 1)->parents()->ordered()->get();
+    }
+
+    /** Up one level, or home when we are already at the top of the menu. */
+    protected function categoryBackRoute(Category $category)
+    {
+        return $category->parent_id
+            ? route('m.category', $category->parent_id)
+            : route('m.home');
+    }
+
     /** Infinite scroll asks for page 2+ as JSON, the way the Flutter list does. */
     protected function newsResponse(Request $request, $blogs, array $data)
     {
@@ -274,13 +265,12 @@ class MobileAppController extends Controller
             ->get();
     }
 
-    protected function categoryBlogQuery($palikaId, $categoryId, $subcategoryId = null)
+    /** Every post filed at or under a category, newest first. */
+    protected function categoryBlogQuery($categoryId)
     {
         return Blog::latest()
             ->where('status', 1)
-            ->when($palikaId, fn ($q) => $q->where('business_id', $palikaId))
-            ->where('category_id', $categoryId)
-            ->when($subcategoryId, fn ($q) => $q->where('subcategory_id', $subcategoryId))
+            ->inCategory($categoryId)
             ->select('id', 'title', 'thumbnail', 'slug', 'short_description');
     }
 

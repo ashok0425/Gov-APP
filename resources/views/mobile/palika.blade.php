@@ -33,12 +33,12 @@
         @if ($blogs->isNotEmpty())
             @include('mobile.partials.blog-rows', ['blogs' => $blogs])
         @else
-            <div class="state"><p>No Data Found</p></div>
+            <div class="state"><p>कुनै विवरण भेटिएन</p></div>
         @endif
     </div>
 
     <div style="padding:15px">
-        <a class="btn-primary" href="{{ route('m.categories', $palika->id) }}">See More Menu</a>
+        <a class="btn-primary" href="{{ route('m.categories') }}">See More Menu</a>
     </div>
 
     {{-- Room for the floating contact button so it never sits on the last row. --}}
@@ -46,21 +46,8 @@
 @endsection
 
 @section('bottom')
-    {{-- Floating contact button — opens this palika's contact details. --}}
-    <button type="button" class="fab-contact" id="contact-open" aria-label="Contact {{ $palika->name }}">
-        <span class="material-symbols-rounded">call</span>
-    </button>
-
-    <div class="sheet-scrim" id="contact-scrim"></div>
-
-    <div class="sheet sheet-contact" id="contact-sheet">
-        <div class="sheet-handle"></div>
-
-        <div class="sheet-scroll">
-            @include('mobile.partials.contact-card', [
-                'entity' => $palika,
-                'ownerLabel' => 'नगर प्रमुख',
-            ])
-        </div>
-    </div>
+    @include('mobile.partials.contact-fab', [
+        'entity' => $palika,
+        'ownerLabel' => 'नगर प्रमुख',
+    ])
 @endsection
