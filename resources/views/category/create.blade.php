@@ -17,6 +17,21 @@
                 <input type="hidden" name="level" value="{{ $level }}">
 
                 <div class="row">
+                    @if ($level === 1)
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label">Organization</label>
+                            <select name="organization" class="form-control form-select" required>
+                                <option value="">select organization</option>
+                                @foreach ($organizations as $organization)
+                                    <option value="{{ $organization->id }}"
+                                        {{ old('organization') == $organization->id ? 'selected' : '' }}>
+                                        {{ $organization->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
+
                     <div class="mb-3 col-md-4">
                         <label class="form-label">Name</label>
                         <input type="text" name="name" class="form-control"

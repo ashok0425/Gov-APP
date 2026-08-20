@@ -13,9 +13,26 @@
                 {{-- Where the list said we came from, so saving lands back on
                      that page with its filters rather than at the top. --}}
                 <input type="hidden" name="redirect_to" value="{{ request('back', url()->previous()) }}">
+                {{-- The record keeps its level — decides which parents are required. --}}
+                <input type="hidden" name="level" value="{{ $level }}">
                 @method('PATCH')
 
                 <div class="row">
+                    @if ($level === 1)
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label">Organization</label>
+                            <select name="organization" class="form-control form-select" required>
+                                <option value="">select organization</option>
+                                @foreach ($organizations as $organization)
+                                    <option value="{{ $organization->id }}"
+                                        {{ old('organization', $category->organization_id) == $organization->id ? 'selected' : '' }}>
+                                        {{ $organization->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
+
                     <div class="mb-3 col-md-4">
                         <label class="form-label">Name</label>
                         <input type="text" name="name" class="form-control" placeholder="Category"
@@ -59,7 +76,14 @@
                     </div>
                 </div>
 
-                @include('category.partials.parent-cascade')
+                {{-- Only the levels above this record, and they are required —
+                     editing a subcategory asks for its category, nothing more. --}}
+                @if ($level > 1)
+                    @include('category.partials.parent-cascade', [
+                        'levels' => $level - 1,
+                        'requiredDepth' => $level - 1,
+                    ])
+                @endif
 
                 @include('category.partials.cover-fields', ['category' => $category])
 

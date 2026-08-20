@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Concerns\ReturnsToList;
 use App\Models\Category;
+use App\Models\Organization;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -76,6 +77,7 @@ class CategoryController extends Controller
                 $query->where('name', 'LIKE', '%'.$request->keyword.'%');
             })
             ->orderBy('parent_id')
+            ->orderBy('position')
             ->orderBy('name')
             ->paginate(15)
             ->withQueryString();
@@ -114,6 +116,7 @@ class CategoryController extends Controller
             'categoryTree' => $this->parentTree(),
             'parentTrail' => $this->trailOf($parent),
             'level' => $level,
+            'organizations' => Organization::ordered()->get(),
         ]);
     }
 
@@ -127,6 +130,9 @@ class CategoryController extends Controller
 
         $category = new Category;
         $category->parent_id = $this->parentFrom($request);
+        // Only a main category names its organization; the levels below
+        // belong to whatever organization their root does.
+        $category->organization_id = $category->parent_id ? null : $request->input('organization');
         $category->name = $request->name;
         $category->slug = Str::slug($request->name);
         $category->thumbnail = $request->file('thumbnail')?->store('uploads/category', 'public');
@@ -151,15 +157,15 @@ class CategoryController extends Controller
             abort(403);
         }
 
-        // However many levels this one spans, that many are unavailable at the
-        // bottom of the tree — it has to fit underneath whatever it moves to.
-        $levels = Category::MAX_DEPTH - $category->height();
-
+        // The record keeps its level: like the create form, editing asks only
+        // for the parents above it — a subcategory shows one Category picker,
+        // nothing about deeper levels.
         return view('category.edit', [
             'category' => $category,
             'categoryTree' => $this->parentTree($category),
             'parentTrail' => $this->trailOf($category->parent),
-            'levels' => $levels,
+            'level' => $category->level(),
+            'organizations' => Organization::ordered()->get(),
         ]);
     }
 
@@ -172,6 +178,7 @@ class CategoryController extends Controller
         $request->validate($this->rules($request, $category));
 
         $category->parent_id = $this->parentFrom($request);
+        $category->organization_id = $category->parent_id ? null : $request->input('organization');
         $category->name = $request->name;
         $category->slug = Str::slug($request->name);
         $category->status = $request->status;
@@ -219,6 +226,28 @@ class CategoryController extends Controller
             'alert-type' => 'success',
             'message' => 'Category Deleted',
         ]);
+    }
+
+    /** Drag-and-drop order from a list: positions follow the given ids. */
+    public function reorder(Request $request)
+    {
+        if (! Auth::user()->can('category:edit')) {
+            abort(403);
+        }
+
+        $request->validate([
+            'ids' => ['required', 'array'],
+            'ids.*' => ['integer'],
+            'start' => ['nullable', 'integer', 'min:0'],
+        ]);
+
+        $start = (int) $request->input('start', 0);
+
+        foreach ($request->ids as $index => $id) {
+            Category::where('id', $id)->update(['position' => $start + $index]);
+        }
+
+        return response()->json(['ok' => true]);
     }
 
     /**
@@ -279,6 +308,11 @@ class CategoryController extends Controller
         foreach ($this->cascadeFields() as $index => $field) {
             $rules[$field] = [$index < $level - 1 ? 'required' : 'nullable', Rule::in($allowed)];
         }
+
+        // A main category must say whose menu it belongs to.
+        $rules['organization'] = $level === 1
+            ? ['required', Rule::exists('organizations', 'id')]
+            : ['nullable'];
 
         return $rules;
     }

@@ -16,90 +16,78 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between bg-dark">
                 <div>
-                    <h5 class="card-title text-white">Category List</h5>
+                    <h5 class="card-title text-white">Organization List</h5>
                 </div>
                 <div>
-                    <a href="{{ route('categories.create') }}" class="btn btn-info btn-sm">
-                        <o class="fas fa-plus"></o>
-                        Add Category
+                    <a href="{{ route('organizations.create') }}" class="btn btn-info btn-sm">
+                        <i class="fas fa-plus"></i>
+                        Add Organization
                     </a>
                 </div>
             </div>
 
             <div class="card-body">
-                <table id="myTable" class="table table-responsive-sm">
+                <table class="table table-responsive-sm">
                     <thead>
                         <tr>
                             <th></th>
                             <th>#</th>
                             <th>Name</th>
-                            <th>Subcategories</th>
+                            <th>Categories</th>
                             <th>Thumbnail</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="sortable-body">
-                        @foreach ($categories as $category)
-                            <tr data-id="{{ $category->id }}">
+                        @forelse ($organizations as $organization)
+                            <tr data-id="{{ $organization->id }}">
                                 <td class="drag-handle" style="cursor: grab" title="drag to reorder">
                                     <i class="fas fa-grip-vertical text-muted"></i>
                                 </td>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $category->name }}</td>
-
+                                <td>{{ $organization->name }}</td>
                                 <td>
-                                    <a href="{{ route('subcategories.index', ['parent' => $category->id]) }}"
-                                       class="badge bg-secondary text-decoration-none">
-                                        {{ $category->children_count }}
-                                    </a>
-                                    <a href="{{ route('categories.create', ['parent' => $category->id, 'back' => request()->fullUrl()]) }}"
-                                       class="badge bg-info text-decoration-none"
-                                       title="Add a subcategory under {{ $category->name }}">+ add</a>
-                                </td>
-
-                                <td>
-                                    <img
-                                        src="{{ getImage($category->thumbnail) }}"
-                                        width="80"
-                                        alt=""
-                                    />
+                                    <span class="badge bg-secondary">{{ $organization->main_categories_count }}</span>
                                 </td>
                                 <td>
-                                    @if ($category->status == 1)
+                                    <img src="{{ getImage($organization->thumbnail) }}" width="70" alt="">
+                                </td>
+                                <td>
+                                    @if ($organization->status == 1)
                                         <a class="badge bg-success">Publish</a>
                                     @else
                                         <a class="badge bg-danger">Draft</a>
                                     @endif
                                 </td>
                                 <td>
-                                    <a
-                                        href="{{ route('categories.edit', ['category' => $category, 'back' => request()->fullUrl()]) }}"
-                                        class="btn btn-primary"
-                                    >
+                                    <a href="{{ route('organizations.edit', $organization) }}" class="btn btn-primary">
                                         <i class="far fa-edit"></i>
                                     </a>
-                                    <a
-                                    href="{{ route('categories.destroy',$category->id) }}"
-                                    class="btn btn-danger delete_btn"
-                                >
-                                    <i class="fas fa-trash"></i>
-                                </a>
+                                    <a href="{{ route('organizations.destroy', $organization->id) }}"
+                                       class="btn btn-danger delete_btn">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
                                 </td>
                             </tr>
-
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center">
+                                    No organization yet — use <b>Add Organization</b> to create one.
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
-            {{$categories->links()}}
+            {{ $organizations->links() }}
         </div>
     </div>
 
     @push('scripts')
         @include('partials.sortable-rows', [
-            'reorderUrl' => route('categories.reorder'),
-            'start' => ($categories->firstItem() ?? 1) - 1,
+            'reorderUrl' => route('organizations.reorder'),
+            'start' => ($organizations->firstItem() ?? 1) - 1,
         ])
     @endpush
 @endsection

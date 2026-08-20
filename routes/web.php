@@ -16,6 +16,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/password/update', [\App\Http\Controllers\AuthController::class, 'changePassword'])->name('password');
     Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
+    Route::post('organizations/reorder', [\App\Http\Controllers\OrganizationController::class, 'reorder'])->name('organizations.reorder')->middleware('can:do anything');
+    Route::resource('organizations', \App\Http\Controllers\OrganizationController::class)->except(['show'])->middleware('can:do anything');
+    Route::post('categories/reorder', [\App\Http\Controllers\CategoryController::class, 'reorder'])->name('categories.reorder')->middleware('can:do anything');
+
     Route::get('subcategories', [\App\Http\Controllers\CategoryController::class, 'subcategories'])->name('subcategories.index')->middleware('can:do anything');
     Route::get('child-categories', [\App\Http\Controllers\CategoryController::class, 'childCategories'])->name('childcategories.index')->middleware('can:do anything');
     Route::get('grandchild-categories', [\App\Http\Controllers\CategoryController::class, 'grandchildCategories'])->name('grandchildcategories.index')->middleware('can:do anything');
@@ -72,6 +76,7 @@ Route::name('m.')->middleware('frontend.host')->group(function () {
     // owns that URI, and a same-method same-URI route registered later here
     // would replace it instead of sitting beside it.
     Route::get('/menu', [\App\Http\Controllers\MobileAppController::class, 'categories'])->name('categories');
+    Route::get('/org/{id}', [\App\Http\Controllers\MobileAppController::class, 'organization'])->name('organization');
     Route::get('/category/{category}', [\App\Http\Controllers\MobileAppController::class, 'category'])->name('category');
 
     // Links shared while the app still spoke of wards, or scoped the menu to a

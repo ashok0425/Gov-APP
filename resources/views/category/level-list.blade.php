@@ -55,6 +55,7 @@
                 <table class="table table-responsive-sm">
                     <thead>
                         <tr>
+                            <th></th>
                             <th>#</th>
                             <th>{{ $levelName }}</th>
                             <th>Sits under</th>
@@ -67,9 +68,12 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="sortable-body">
                         @forelse ($rows as $row)
-                            <tr>
+                            <tr data-id="{{ $row->id }}">
+                                <td class="drag-handle" style="cursor: grab" title="drag to reorder">
+                                    <i class="fas fa-grip-vertical text-muted"></i>
+                                </td>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $row->name }}</td>
                                 <td>{{ $row->parent?->pathName() }}</td>
@@ -115,7 +119,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="{{ $childName ? 8 : 7 }}" class="text-center">
+                                <td colspan="{{ $childName ? 9 : 8 }}" class="text-center">
                                     No {{ Str::lower($levelName) }} yet — use
                                     <b>Add {{ $levelName }}</b> to create one.
                                 </td>
@@ -135,5 +139,10 @@
                 $('.searchable').select2({ width: '100%' });
             });
         </script>
+
+        @include('partials.sortable-rows', [
+            'reorderUrl' => route('categories.reorder'),
+            'start' => ($rows->firstItem() ?? 1) - 1,
+        ])
     @endpush
 @endsection

@@ -64,6 +64,13 @@
             @can('do:anything')
             <li class="sidebar-header">Manage Category</li>
 
+            <li class="sidebar-item">
+                <a class="sidebar-link {{ Request::is('organizations', 'organizations/*') ? 'text-light' : '' }}" href="{{ route('organizations.index') }}">
+                    <i class="fas fa-building"></i>
+                    <span class="align-middle">Organization</span>
+                </a>
+            </li>
+
             @php
                 // The create and edit screens live under /categories whatever
                 // level they work on, so the highlight follows the level

@@ -8,6 +8,7 @@ use App\Models\Business;
 use App\Models\Category;
 use App\Models\Cms;
 use App\Models\Notice;
+use App\Models\Organization;
 use App\Models\Page;
 use App\Services\NepaliTransliterator;
 use Illuminate\Http\Request;
@@ -39,7 +40,7 @@ class MobileAppController extends Controller
         return view('mobile.home', [
             'banners' => $this->banners(1, 1),
             'breaking' => $this->breakingBlogs(),
-            'categories' => $this->menuCategories(),
+            'organizations' => $this->menuOrganizations(),
             'blogs' => $blogs,
             'locationText' => optional(Cms::settings())->location_text,
         ]);
@@ -94,11 +95,22 @@ class MobileAppController extends Controller
 
     // ---------------------------------------------------------- categories
 
-    /** The whole top-level menu — the same grid home shows, on its own screen. */
+    /** The whole top of the menu — the same organization grid home shows. */
     public function categories()
     {
         return view('mobile.categories', [
-            'categories' => $this->menuCategories(),
+            'organizations' => $this->menuOrganizations(),
+        ]);
+    }
+
+    /** One organization's own menu: the main categories filed under it. */
+    public function organization($id)
+    {
+        $organization = Organization::where('status', 1)->findOrFail($id);
+
+        return view('mobile.organization', [
+            'organization' => $organization,
+            'categories' => $organization->mainCategories()->where('status', 1)->get(),
         ]);
     }
 
@@ -225,16 +237,20 @@ class MobileAppController extends Controller
     }
 
     /** The published top-level menu, in the order the admin arranged it. */
-    protected function menuCategories()
+    protected function menuOrganizations()
     {
-        return Category::where('status', 1)->parents()->ordered()->get();
+        return Organization::where('status', 1)->ordered()->get();
     }
 
-    /** Up one level, or home when we are already at the top of the menu. */
+    /** Up one level: parent category, then organization, then home. */
     protected function categoryBackRoute(Category $category)
     {
-        return $category->parent_id
-            ? route('m.category', $category->parent_id)
+        if ($category->parent_id) {
+            return route('m.category', $category->parent_id);
+        }
+
+        return $category->organization_id
+            ? route('m.organization', $category->organization_id)
             : route('m.home');
     }
 
