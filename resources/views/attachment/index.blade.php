@@ -25,7 +25,7 @@
                             <th>#</th>
                             <th>Name</th>
                             <th>Attachment</th>
-                            <th>Ward</th>
+                            <th>Palika</th>
                             <th>Action</th>
                         </tr>
                     </thead>

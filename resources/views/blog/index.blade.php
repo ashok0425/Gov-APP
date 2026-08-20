@@ -6,14 +6,11 @@
                 <div class="col-md-3 mb-2">
                     <input type="search" name="keyword" value="{{request()->query('keyword')}}" class="form-control" placeholder="search...">
                 </div>
-                <div class="col-md-3 mb-2">
-
-                <select name="category[]" id="" class="form-control select2" multiple placeholder="category">
-                   @foreach ($categories as $category)
-                       <option value="{{$category->id}}" {{in_array($category->id,request()->query('category')??[])?'selected':''}}>{{$category->name}}</option>
-                   @endforeach
-                </select>
-                </div>
+                @include('partials.category-cascade', [
+                    'categoryTree' => $categoryTree,
+                    'selected' => $selectedTrail,
+                    'columns' => 3,
+                ])
                 <div class="col-md-2 mb-2">
                         <select name="status" id="status" class="form-control form-select">
                             <option value="" selected>All</option>
@@ -21,15 +18,6 @@
                             <option value="0" {{ request()->query('status')!=''&&request()->query('status')==0 ? 'selected' : '' }}>Draft</option>
                         </select>
                     </div>
-                    @can('do:anything')
-                    <div class="col-md-3 mb-2">
-                        <select name="business[]" id="" class="form-control select" multiple>
-                           @foreach ($businesses as $business)
-                               <option value="{{$business->id}}" {{in_array($business->id,request()->query('business')??[])?'selected':''}}>{{$business->name}}</option>
-                           @endforeach
-                        </select>
-                        </div>
-                    @endcan
                     {{-- <div class="col-md-2 mb-2">
                         <input type="text" name="dates" id="" class="form-control" value="{{request()->query('dates')}}">
                     </div> --}}
@@ -79,10 +67,14 @@
                                     @else
                                         <a class="badge bg-danger">Draft</a>
                                     @endif
+
+                                    @if ($post->is_breaking)
+                                        <a class="badge bg-warning text-dark">Breaking</a>
+                                    @endif
                                 </td>
                                 <td>
                                     <a
-                                        href="{{ route('blogs.edit', $post) }}"
+                                        href="{{ route('blogs.edit', ['post' => $post, 'back' => request()->fullUrl()]) }}"
                                         class="btn btn-primary"
                                     >
                                         <i class="far fa-edit"></i>
@@ -120,20 +112,9 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+@include('partials.category-cascade-script')
+
 <script>
-    $(document).ready(function() {
-    $('.select2').select2({
-        placeholder:'select category'
-    });
-});
-
-$(document).ready(function() {
-    $('.select').select2({
-        placeholder:'select wards'
-    });
-});
-
-$('input[name="dates"]').daterangepicker();
-
+    $('input[name="dates"]').daterangepicker();
 </script>
 @endpush

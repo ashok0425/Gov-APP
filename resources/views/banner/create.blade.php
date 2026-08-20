@@ -40,10 +40,10 @@
                     </div>
 
                     @can('do:anything')
-                        <div class="mb-3 col-md-6" id="ward-dropdown">
-                            <label class="form-label">Select Ward</label>
+                        <div class="mb-3 col-md-6" id="palika-dropdown">
+                            <label class="form-label">Select Palika</label>
                             <select name="business_id" class="form-control form-select" >
-                                <option value="">Select Ward</option>
+                                <option value="">Select Palika</option>
                                 @foreach ($businesses as $business)
                                     <option value="{{ $business->id }}">{{ $business->name }}</option>
                                 @endforeach
@@ -65,21 +65,21 @@
 
     @push('scripts')
         <script>
-            function toggleWardDropdown() {
+            function togglePalikaDropdown() {
                 const isHomepage = document.getElementById('is_homepage_banner').value;
-                const wardDropdown = document.getElementById('ward-dropdown');
+                const palikaDropdown = document.getElementById('palika-dropdown');
                 if (isHomepage === "1") {
-                    wardDropdown.style.display = 'none';
+                    palikaDropdown.style.display = 'none';
                 } else {
-                    wardDropdown.style.display = 'block';
+                    palikaDropdown.style.display = 'block';
                 }
             }
 
             document.addEventListener('DOMContentLoaded', function () {
                 const isHomepageField = document.getElementById('is_homepage_banner');
                 if (isHomepageField) {
-                    toggleWardDropdown(); // Initial check
-                    isHomepageField.addEventListener('change', toggleWardDropdown);
+                    togglePalikaDropdown(); // Initial check
+                    isHomepageField.addEventListener('change', togglePalikaDropdown);
                 }
             });
         </script>

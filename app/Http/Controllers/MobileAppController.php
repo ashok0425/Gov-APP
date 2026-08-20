@@ -6,126 +6,175 @@ use App\Models\Banner;
 use App\Models\Blog;
 use App\Models\Business;
 use App\Models\Category;
+use App\Models\Cms;
+use App\Models\Notice;
 use App\Models\Page;
+use App\Services\NepaliTransliterator;
 use Illuminate\Http\Request;
 
 /**
  * Mobile web app — a browser rendering of the Nagarpalika Flutter application.
  * Reads the same data the /api endpoints expose, straight through Eloquent.
+ *
+ * Palikas are stored in the legacy "businesses" table; there is no longer a
+ * special row for the municipality — every published record is a palika.
+ *
+ * The menu is no longer partitioned per palika: home carries the category grid
+ * itself, and a category is browsed by its own id however deep it sits.
  */
 class MobileAppController extends Controller
 {
-    /** The Palika is stored as a business row like the wards are. */
-    public const PALIKA_ID = 22;
-
     // ---------------------------------------------------------------- home
 
     public function home()
     {
+        // Home is a teaser: the four newest posts. The full list lives behind
+        // the categories and search, where the infinite loader takes over.
+        $blogs = Blog::latest()
+            ->where('status', 1)
+            ->select('id', 'title', 'thumbnail', 'slug', 'short_description')
+            ->take(4)
+            ->get();
+
         return view('mobile.home', [
             'banners' => $this->banners(1, 1),
-            'wards' => $this->wardList(),
-            'blogs' => Blog::latest()
-                ->where('status', 1)
-                ->select('id', 'title', 'thumbnail', 'slug', 'short_description')
-                ->take(10)
-                ->get(),
-            'noticeCount' => $this->noticeCount(),
+            'breaking' => $this->breakingBlogs(),
+            'categories' => $this->menuCategories(),
+            'blogs' => $blogs,
+            'locationText' => optional(Cms::settings())->location_text,
         ]);
     }
 
     public function notifications()
     {
+        // The bell shows exactly what its badge counts: the posts published
+        // in the last 24 hours. Older ones live on in their categories.
         return view('mobile.notifications', [
-            'blogs' => $this->todaysBlogs(),
-            'noticeCount' => $this->noticeCount(),
+            'blogs' => Blog::latest()
+                ->where('status', 1)
+                ->where('created_at', '>=', now()->subDay())
+                ->select('id', 'title', 'thumbnail', 'slug', 'short_description')
+                ->take(50)
+                ->get(),
         ]);
     }
 
-    // --------------------------------------------------------------- wards
-
-    /** The "My Ward" grid. */
-    public function wards()
+    public function notice($id)
     {
-        return view('mobile.wards', [
-            'wards' => $this->wardList(),
+        $notice = Notice::published()->findOrFail($id);
+
+        return view('mobile.notice', [
+            'notice' => $notice,
+            'body' => $this->prepareHtml($notice->description),
         ]);
     }
 
-    public function ward($id)
-    {
-        $ward = Business::where('status', 1)->findOrFail($id);
+    // ------------------------------------------------------------- palikas
 
-        return view('mobile.ward', [
-            'ward' => $ward,
-            'bannersOne' => $this->wardBanners($ward->id, 1),
-            'bannersTwo' => $this->wardBanners($ward->id, 2),
-            'blogs' => $this->blogsByWard($ward->id)->take(3),
-            'showStaffSlider' => true,
+    /** The Palika grid. */
+    public function palikas()
+    {
+        return view('mobile.palikas', [
+            'palikas' => $this->palikaList(),
+        ]);
+    }
+
+    public function palika($id)
+    {
+        $palika = Business::where('status', 1)->findOrFail($id);
+
+        return view('mobile.palika', [
+            'palika' => $palika,
+            'bannersOne' => $this->palikaBanners($palika->id, 1),
+            'bannersTwo' => $this->palikaBanners($palika->id, 2),
+            'blogs' => $this->blogsByPalika($palika->id)->take(3),
             'blogsHeading' => 'सूचना तथा जनकारी',
-        ]);
-    }
-
-    /** Palika screen — the same layout as a ward, minus the staff slider. */
-    public function palika()
-    {
-        $ward = Business::where('status', 1)->find(self::PALIKA_ID);
-
-        // The app shows "No Data Available" rather than failing when the
-        // Palika row is missing, so mirror that instead of 404ing.
-        if (! $ward) {
-            return view('mobile.empty', [
-                'title' => 'Palika',
-                'message' => 'No Data Available',
-            ]);
-        }
-
-        return view('mobile.ward', [
-            'ward' => $ward,
-            'bannersOne' => $this->wardBanners($ward->id, 1),
-            'bannersTwo' => collect(),
-            'blogs' => $this->blogsByWard($ward->id),
-            'showStaffSlider' => false,
-            'blogsHeading' => 'सूचना तथा समाचार',
         ]);
     }
 
     // ---------------------------------------------------------- categories
 
-    public function categories($id)
+    /** The whole top-level menu — the same grid home shows, on its own screen. */
+    public function categories()
     {
-        $ward = Business::where('status', 1)->findOrFail($id);
-
-        $categories = $ward->categories()
-            ->where('status', 1)
-            ->orderBy('pivot_position')
-            ->get();
-
         return view('mobile.categories', [
-            'ward' => $ward,
-            'categories' => $categories,
+            'categories' => $this->menuCategories(),
         ]);
     }
 
-    public function categoryNews(Request $request, $id, $categoryId)
+    /**
+     * One screen for every level of the menu: a category with children opens
+     * as a grid of them, and one without drops straight to its post list. The
+     * id alone says where we are, so the same action serves all three levels.
+     */
+    public function category(Request $request, $categoryId)
     {
-        $ward = Business::where('status', 1)->findOrFail($id);
         $category = Category::where('status', 1)->findOrFail($categoryId);
 
-        $blogs = $this->categoryBlogQuery($category->id, $ward->id)->paginate(25);
+        // One screen for every level: whatever sits under this category, and
+        // then the posts filed anywhere beneath it. A leaf simply has no grid
+        // to draw, and a category nobody has posted under has no list.
+        $children = $category->children()->where('status', 1)->ordered()->get();
 
-        // Infinite scroll asks for page 2+ as JSON, the way the Flutter list does.
-        if ($request->wantsJson()) {
-            return response()->json([
-                'html' => view('mobile.partials.blog-rows', ['blogs' => $blogs])->render(),
-                'hasMore' => $blogs->hasMorePages(),
-            ]);
+        $blogs = $this->categoryBlogQuery($category->id)->paginate(25);
+
+        return $this->newsResponse($request, $blogs, [
+            'category' => $category,
+            'subcategories' => $children,
+            'backRoute' => $this->categoryBackRoute($category),
+            'title' => $category->name,
+            'listUrl' => route('m.category', $category->id),
+        ]);
+    }
+
+    // -------------------------------------------------------------- search
+
+    /**
+     * Searches every published post. Latin terms are also matched against
+     * their Devanagari spelling, so "sifaris" finds सिफारिस.
+     */
+    public function search(Request $request, NepaliTransliterator $transliterator)
+    {
+        $term = trim((string) $request->query('q', ''));
+        $blogs = null;
+        $nepaliPattern = null;
+
+        if (mb_strlen($term) >= 2) {
+            if (! $transliterator->isDevanagari($term)) {
+                $nepaliPattern = $transliterator->toRegex($term);
+            }
+
+            $blogs = Blog::latest()
+                ->where('status', 1)
+                ->where(function ($query) use ($term, $nepaliPattern) {
+                    $like = '%'.$term.'%';
+
+                    $query->where('title', 'LIKE', $like)
+                        ->orWhere('short_description', 'LIKE', $like)
+                        ->orWhere('long_description', 'LIKE', $like);
+
+                    // REGEXP is a scan, so keep it off the long HTML body.
+                    if ($nepaliPattern) {
+                        $query->orWhere('title', 'REGEXP', $nepaliPattern)
+                            ->orWhere('short_description', 'REGEXP', $nepaliPattern);
+                    }
+                })
+                ->select('id', 'title', 'thumbnail', 'slug', 'short_description')
+                ->paginate(25)
+                ->withQueryString();
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'html' => view('mobile.partials.blog-rows', ['blogs' => $blogs])->render(),
+                    'hasMore' => $blogs->hasMorePages(),
+                ]);
+            }
         }
 
-        return view('mobile.category-news', [
-            'ward' => $ward,
-            'category' => $category,
+        return view('mobile.search', [
+            'term' => $term,
             'blogs' => $blogs,
+            'matchedNepali' => (bool) $nepaliPattern,
         ]);
     }
 
@@ -146,9 +195,7 @@ class MobileAppController extends Controller
     public function hello()
     {
         return view('mobile.hello', [
-            'palika' => Business::where('status', 1)->find(self::PALIKA_ID),
-            'wards' => $this->wardList(),
-            'noticeCount' => $this->noticeCount(),
+            'palikas' => $this->palikaList(),
         ]);
     }
 
@@ -169,13 +216,39 @@ class MobileAppController extends Controller
 
     // ------------------------------------------------------------ internals
 
-    /** Wards, excluding the Palika row — matches GET /api/wards. */
-    protected function wardList()
+    /** Every published palika — matches GET /api/wards. */
+    protected function palikaList()
     {
         return Business::orderBy('business_order', 'asc')
-            ->where('id', '!=', self::PALIKA_ID)
             ->where('status', 1)
             ->get();
+    }
+
+    /** The published top-level menu, in the order the admin arranged it. */
+    protected function menuCategories()
+    {
+        return Category::where('status', 1)->parents()->ordered()->get();
+    }
+
+    /** Up one level, or home when we are already at the top of the menu. */
+    protected function categoryBackRoute(Category $category)
+    {
+        return $category->parent_id
+            ? route('m.category', $category->parent_id)
+            : route('m.home');
+    }
+
+    /** Infinite scroll asks for page 2+ as JSON, the way the Flutter list does. */
+    protected function newsResponse(Request $request, $blogs, array $data)
+    {
+        if ($request->wantsJson()) {
+            return response()->json([
+                'html' => view('mobile.partials.blog-rows', ['blogs' => $blogs])->render(),
+                'hasMore' => $blogs->hasMorePages(),
+            ]);
+        }
+
+        return view('mobile.category-news', $data + ['blogs' => $blogs]);
     }
 
     protected function banners($type, $isHomepage = null)
@@ -188,43 +261,43 @@ class MobileAppController extends Controller
             ->get();
     }
 
-    protected function wardBanners($wardId, $type)
+    protected function palikaBanners($palikaId, $type)
     {
-        return Banner::where('business_id', $wardId)
+        return Banner::where('business_id', $palikaId)
             ->where('status', 1)
             ->select('id', 'thumbnail', 'title')
             ->where('type', $type)
             ->get();
     }
 
-    protected function blogsByWard($wardId)
+    protected function blogsByPalika($palikaId)
     {
         return Blog::latest()
             ->where('status', 1)
-            ->where('business_id', $wardId)
+            ->where('business_id', $palikaId)
             ->select('id', 'title', 'thumbnail', 'slug', 'short_description')
             ->take(25)
             ->get();
     }
 
-    protected function categoryBlogQuery($categoryId, $wardId)
+    /** Every post filed at or under a category, newest first. */
+    protected function categoryBlogQuery($categoryId)
     {
         return Blog::latest()
             ->where('status', 1)
-            ->when($wardId, fn ($q) => $q->where('business_id', $wardId))
-            ->where('category_id', $categoryId)
+            ->inCategory($categoryId)
             ->select('id', 'title', 'thumbnail', 'slug', 'short_description');
     }
 
-    /** Today's posts — the badge on the notifications tab counts these. */
-    protected function todaysBlogs()
+    /** Posts ticked "Breaking news" in the admin — the सूचना ticker line. */
+    protected function breakingBlogs()
     {
-        return Blog::whereDate('created_at', today())->latest()->get();
-    }
-
-    protected function noticeCount()
-    {
-        return Blog::whereDate('created_at', today())->count();
+        return Blog::latest()
+            ->where('status', 1)
+            ->where('is_breaking', 1)
+            ->select('id', 'title', 'thumbnail', 'slug')
+            ->take(10)
+            ->get();
     }
 
     /**

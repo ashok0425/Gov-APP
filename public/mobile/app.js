@@ -6,31 +6,44 @@
     'use strict';
 
     /* ------------------------------------------------------------ carousel
-       CustomSlider: infinite loop, 5s autoplay, 800ms ease, tappable dots. */
+       CustomSlider: infinite loop, 5s autoplay, 800ms ease, tappable dots.
+       The first slide is cloned onto the end so the loop always slides
+       forward — even a single banner keeps auto-scrolling. */
     function initCarousel(root) {
         var track = root.querySelector('.carousel-track');
         var dots = Array.prototype.slice.call(root.querySelectorAll('.carousel-dot'));
         var count = track.children.length;
-        if (count < 2) return;
+        if (!count) return;
+
+        track.appendChild(track.children[0].cloneNode(true));
 
         var index = 0;
-        var autoplay = root.dataset.autoplay === 'true';
         var timer = null;
 
-        function render() {
+        function render(anim) {
+            track.classList.toggle('no-anim', anim === false);
             track.style.transform = 'translateX(' + -index * 100 + '%)';
             dots.forEach(function (dot, i) {
-                dot.classList.toggle('is-active', i === index);
+                dot.classList.toggle('is-active', i === index % count);
             });
         }
 
         function go(next) {
-            index = (next + count) % count;
-            render();
+            index = next > count || next < 0 ? (next + count) % count : next;
+            render(true);
+
+            // Landed on the clone: snap back to the real first slide once
+            // the 800ms slide has finished, so the next tick moves forward.
+            if (index === count) {
+                setTimeout(function () {
+                    if (index !== count) return;
+                    index = 0;
+                    render(false);
+                }, 850);
+            }
         }
 
         function start() {
-            if (!autoplay) return;
             stop();
             timer = setInterval(function () {
                 go(index + 1);
@@ -53,6 +66,11 @@
         var startX = null;
         var startY = null;
 
+        function swallow(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
         root.addEventListener(
             'touchstart',
             function (e) {
@@ -71,6 +89,9 @@
                 var dy = e.changedTouches[0].clientY - startY;
                 if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
                     go(dx < 0 ? index + 1 : index - 1);
+                    // Slides can be links (breaking news); swallow the click
+                    // the browser fires after the swipe so it doesn't navigate.
+                    root.addEventListener('click', swallow, { capture: true, once: true });
                 }
                 startX = null;
                 start();
@@ -83,15 +104,16 @@
             document.hidden ? stop() : start();
         });
 
-        render();
+        render(false);
         start();
     }
 
-    /* -------------------------------------------------------- bottom sheet */
-    function initSheet() {
-        var sheet = document.getElementById('menu-sheet');
-        var scrim = document.getElementById('menu-scrim');
-        var opener = document.getElementById('menu-open');
+    /* -------------------------------------------------------- bottom sheet
+       Drives both the menu sheet and the palika contact sheet.             */
+    function initSheet(sheetId, scrimId, openerId) {
+        var sheet = document.getElementById(sheetId);
+        var scrim = document.getElementById(scrimId);
+        var opener = document.getElementById(openerId);
         if (!sheet || !scrim || !opener) return;
 
         function open() {
@@ -107,10 +129,12 @@
         opener.addEventListener('click', open);
         scrim.addEventListener('click', close);
 
-        // Drag the sheet down to dismiss it, like enableDrag: true.
+        // Drag the sheet down to dismiss it, like enableDrag: true. Only the
+        // handle drags, so a scrollable sheet body still scrolls.
         var dragStart = null;
+        var handle = sheet.querySelector('.sheet-handle') || sheet;
 
-        sheet.addEventListener(
+        handle.addEventListener(
             'touchstart',
             function (e) {
                 dragStart = e.touches[0].clientY;
@@ -118,7 +142,7 @@
             { passive: true },
         );
 
-        sheet.addEventListener(
+        handle.addEventListener(
             'touchmove',
             function (e) {
                 if (dragStart === null) return;
@@ -128,7 +152,7 @@
             { passive: true },
         );
 
-        sheet.addEventListener(
+        handle.addEventListener(
             'touchend',
             function (e) {
                 if (dragStart === null) return;
@@ -272,7 +296,7 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.carousel').forEach(initCarousel);
-        initSheet();
+        initSheet('contact-sheet', 'contact-scrim', 'contact-open');
         initInfiniteList();
         initShare();
         initImageFallbacks();

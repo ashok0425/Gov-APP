@@ -3,62 +3,58 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between bg-dark">
             <div>
-                <h5 class="card-title text-white">Edit category</h5>
+                <h5 class="card-title text-white">Edit {{ $category->levelName() }} — {{ $category->pathName() }}</h5>
             </div>
         </div>
 
         <div class="card-body">
-            <form
-                action="{{ route('categories.update', $category) }}"
-                method="POST"
-                enctype="multipart/form-data"
-            >
+            <form action="{{ route('categories.update', $category) }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                {{-- Where the list said we came from, so saving lands back on
+                     that page with its filters rather than at the top. --}}
+                <input type="hidden" name="redirect_to" value="{{ request('back', url()->previous()) }}">
                 @method('PATCH')
+
                 <div class="row">
                     <div class="mb-3 col-md-4">
-                        <label class="form-label">Category</label>
-                        <input
-                            type="text"
-                            name="name"
-                            class="form-control"
-                            placeholder="Category"
-                            value="{{ $category->name }}"
-                        />
+                        <label class="form-label">Name</label>
+                        <input type="text" name="name" class="form-control" placeholder="Category"
+                               value="{{ old('name', $category->name) }}" required>
                     </div>
 
                     <div class="mb-3 col-md-4">
                         <label class="form-label">Status</label>
-                        <select name="status" id="" class="form-control form-select" required>
-                            <option value="">select status</option>
-                            <option value="1" {{ $category->status ? 'selected' : '' }}>
-                                Publish
-                            </option>
-                            <option value="0" {{ ! $category->status ? 'selected' : '' }}>
-                                Draft
-                            </option>
+                        <select name="status" class="form-control form-select" required>
+                            <option value="1" {{ old('status', (int) $category->status) == 1 ? 'selected' : '' }}>Publish</option>
+                            <option value="0" {{ old('status', (int) $category->status) == 0 ? 'selected' : '' }}>Draft</option>
                         </select>
                     </div>
-                    <div class="mb-3 col-md-4">
+
+                    <div class="mb-3 col-md-6">
                         <label class="form-label">Thumbnail</label>
                         <div class="file-upload-wrapper" data-text="Select your file!">
-                            <input
-                                name="thumbnail"
-                                type="file"
-                                class="file-upload-field"
-                                value=""
-                            />
+                            <input name="thumbnail" type="file" class="file-upload-field">
                         </div>
-                        <br />
-                        <img
-                            src="{{ getImage($category->thumbnail) }}"
-                            alt="{{ $category->name }}"
-                            width="100"
-                        />
+                        <br>
+                        <img src="{{ getImage($category->thumbnail) }}" alt="{{ $category->name }}" width="100">
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">update</button>
+
+                @include('category.partials.parent-cascade')
+
+                @include('category.partials.cover-fields', ['category' => $category])
+
+                @if ($category->level() > 1)
+                    @include('category.partials.contact-fields', ['category' => $category])
+                @endif
+
+                <button type="submit" class="btn btn-primary">Update</button>
             </form>
         </div>
     </div>
+
+    @push('scripts')
+        @include('partials.select2-assets')
+        @include('partials.category-cascade-script')
+    @endpush
 @endsection

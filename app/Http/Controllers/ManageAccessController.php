@@ -78,16 +78,8 @@ class ManageAccessController extends Controller
                 'password' => 'required',
                 'permissions' => 'nullable|array',
                 'role' => 'required|integer',
-                'business_id' => 'nullable',
-            ],
-            [
-                'business_id.required' => 'Ward field is required.',
             ],
         );
-
-        $validator->sometimes('business_id', 'required', function ($input) {
-            return in_array($input->role, [3, 4]);
-        });
 
         $validator->validate();
 
@@ -96,9 +88,8 @@ class ManageAccessController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'phone' => $request->phone,
-            'business_id' => $request->business_id,
             'status' => $request->status,
-            'role' => $request->role ?? 4,
+            'role' => $request->role ?? 2,
         ]);
 
         // if ($request->is_owner==1) {
@@ -165,16 +156,8 @@ class ManageAccessController extends Controller
                 'phone' => 'required|integer',
                 'permissions' => 'nullable|array',
                 'role' => 'required|integer',
-                'business_id' => 'nullable',
-            ],
-            [
-                'business_id.required' => 'Ward field is required.',
             ],
         );
-
-        $validator->sometimes('business_id', 'required', function ($input) {
-            return in_array($input->role, [3, 4]);
-        });
 
         $validator->validate();
 
@@ -189,8 +172,7 @@ class ManageAccessController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'status' => $request->status,
-            'business_id' => $request->business_id,
-            'role' => $request->role ?? 4,
+            'role' => $request->role ?? 2,
         ]);
 
         if ($request->password) {

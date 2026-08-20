@@ -37,7 +37,6 @@ $publishBlog=App\Models\Blog::when(!Auth::user()->can('do:anything'),function($q
 
             })->where('status',1)
 ->count();
-$totalWard=App\Models\Business::query()->count();
 $totalBanner=App\Models\Banner::when(!Auth::user()->can('do:anything'),function($query){
     $query->where('business_id',Auth::user()->business_id);
 })->count();
@@ -135,19 +134,6 @@ $totalUser=App\Models\User::when(!Auth::user()->can('do:anything'),function($que
                     </div>
                     <small class="text-muted h5">Total Banner</small>
                     <h4 class="fw-bold mt-1 h3">{{$totalBanner}}</h4>
-                </div>
-                </a>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card shadow-sm stat-card border-0 rounded text-center">
-                <a href="{{route('business.index')}}" class="text-decoration-none text-dark">
-                <div class="card-body py-4">
-                    <div class="icon-circle mx-auto mb-3">
-                        <i class="fas fa-home fa-2x"></i>
-                    </div>
-                    <small class="text-muted h5">Total Ward</small>
-                    <h4 class="fw-bold mt-1 h3">{{$totalWard}}</h4>
                 </div>
                 </a>
             </div>

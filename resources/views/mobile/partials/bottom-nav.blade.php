@@ -1,53 +1,46 @@
-{{-- BottomAppBar + centre-docked FAB + the menu modal sheet. --}}
-<div class="fab-dock">
-    <a href="{{ route('m.home') }}" class="fab" aria-label="Home">
-        <img src="{{ asset('mobile/img/icon.png') }}" alt="">
-    </a>
-</div>
-
+{{-- Five tabs on a white bar. Home sits in the middle at the same level as
+     the others — the logo drawn tab-icon size instead of a raised FAB. --}}
 <nav class="bottom-nav">
-    <a href="{{ route('m.notifications') }}" class="nav-tab">
+    <a href="{{ route('m.search') }}"
+       class="nav-tab {{ request()->routeIs('m.search') ? 'is-active' : '' }}">
         <span class="nav-icon">
-            <span class="material-symbols-rounded">notifications</span>
+            <span class="material-symbols-rounded">search</span>
+        </span>
+        <span>खोज</span>
+    </a>
+
+    <a href="{{ route('m.categories') }}"
+       class="nav-tab {{ request()->routeIs('m.categories') || request()->routeIs('m.category') ? 'is-active' : '' }}">
+        <span class="nav-icon">
+            <span class="material-symbols-rounded">grid_view</span>
+        </span>
+        <span>मेनु</span>
+    </a>
+
+    <a href="{{ route('m.home') }}"
+       class="nav-tab nav-home {{ request()->routeIs('m.home') ? 'is-active' : '' }}"
+       aria-label="गृह">
+        <span class="nav-icon">
+            <img src="{{ asset('mobile/img/thumb-icon.png') }}" alt="" class="nav-home-logo">
+        </span>
+    </a>
+
+    <a href="{{ route('m.notifications') }}"
+       class="nav-tab {{ request()->routeIs('m.notifications') ? 'is-active' : '' }}">
+        <span class="nav-icon">
+            <span class="material-symbols-rounded">campaign</span>
             @if (($noticeCount ?? 0) > 0)
                 <span class="nav-badge">{{ $noticeCount }}</span>
             @endif
         </span>
-        <span>Notifications</span>
+        <span>सूचना</span>
     </a>
 
-    <button type="button" class="nav-tab" id="menu-open">
+    <a href="{{ route('m.settings') }}"
+       class="nav-tab {{ request()->routeIs('m.settings') ? 'is-active' : '' }}">
         <span class="nav-icon">
-            <span class="material-symbols-rounded">grid_view</span>
+            <span class="material-symbols-rounded">settings</span>
         </span>
-        <span>Menu</span>
-    </button>
+        <span>सेटिङ</span>
+    </a>
 </nav>
-
-<div class="sheet-scrim" id="menu-scrim"></div>
-
-<div class="sheet" id="menu-sheet">
-    <div class="sheet-handle"></div>
-
-    <div class="sheet-grid">
-        <a class="menu-item" href="{{ route('m.palika') }}">
-            <span class="menu-item-icon"><img src="{{ asset('mobile/img/palika.png') }}" alt=""></span>
-            <span>Palika</span>
-        </a>
-
-        <a class="menu-item" href="{{ route('m.wards') }}">
-            <span class="menu-item-icon"><img src="{{ asset('mobile/img/ward.png') }}" alt=""></span>
-            <span>My Ward</span>
-        </a>
-
-        <a class="menu-item" href="{{ route('m.hello') }}">
-            <span class="menu-item-icon"><img src="{{ asset('mobile/img/hello.png') }}" alt=""></span>
-            <span>Hello</span>
-        </a>
-
-        <a class="menu-item" href="{{ route('m.settings') }}">
-            <span class="menu-item-icon"><img src="{{ asset('mobile/img/settings.png') }}" alt=""></span>
-            <span>Settings</span>
-        </a>
-    </div>
-</div>

@@ -1,4 +1,5 @@
-{{-- hello_ward.dart contact card. $ownerLabel differs for the Palika vs a ward. --}}
+{{-- hello_ward.dart contact card, shown per palika on Hello and behind the
+     floating contact button on a palika's page. --}}
 @php
     $whatsapp = trim((string) $entity->whatsapp);
 

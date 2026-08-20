@@ -27,26 +27,11 @@
                         />
                     </div>
 
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">Select Category</label>
-                        <select name="category" id="" class="form-control form-select" required>
-                           <option value="">select category</option>
-                           @foreach ($categories as $category)
-                           <option value="{{$category->id}}">{{$category->name}}</option>
-                           @endforeach
-                        </select>
-                    </div>
-                    @if(!auth()->user()->business_id)
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">Select Ward <small class="text-info">(Not selecting ward will be consider as Gaupalika Post)</small></label>
-                        <select name="business_id" id="" class="form-control form-select" >
-                           <option value="">select Ward</option>
-                           @foreach ($businesses as $business)
-                           <option value="{{$business->id}}">{{$business->name}}</option>
-                           @endforeach
-                        </select>
-                    </div>
-                     @endif
+                    @include('partials.category-cascade', [
+                        'categoryTree' => $categoryTree,
+                        'required' => true,
+                        'columns' => 3,
+                    ])
 
                     <div class="form-group col-md-4 mb-3">
                         <label for="status">Post Status</label>
@@ -54,6 +39,18 @@
                             <option value="1" {{old('status') == 1 ? 'selected' : '' }}>Publish</option>
                             <option value="0" {{ old('status')  == 0 ? 'selected' : '' }}>Draft</option>
                         </select>
+                    </div>
+
+                    <div class="form-group col-md-4 mb-3 d-flex align-items-end">
+                        <label class="d-flex align-items-center">
+                            <input type="hidden" name="is_breaking" value="0">
+                            <input type="checkbox" name="is_breaking" value="1" style="transform: scale(1.5)"
+                                {{ old('is_breaking') ? 'checked' : '' }}>
+                            <span class="mx-3">
+                                Breaking news
+                                <small class="text-info d-block">(show in the home page carousel)</small>
+                            </span>
+                        </label>
                     </div>
 
 
@@ -119,3 +116,8 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    @include('partials.select2-assets')
+    @include('partials.category-cascade-script')
+@endpush

@@ -70,17 +70,6 @@
                                     </div>
                                 </div>
                                 <div class="form-group col-md-4 mb-3">
-                                    <label class="form-label">Ward</label>
-                                    <select name="business_id" id="" class="form-control form-select">
-                                        <option value="">Select Ward</option>
-                                        @foreach (App\Models\Business::all() as $location)
-                                            <option value="{{ $location->id }}"
-                                                {{ $location->id == $user->business_id ? 'selected' : '' }}>{{ $location->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-4 mb-3">
                                     <label for="status">Status</label>
                                     <select name="status" id="status" class="form-control form-select">
                                         <option value="1" {{ $user->status == 1 ? 'selected' : '' }}>Publish</option>
@@ -97,13 +86,6 @@
                                     <label><input {{ $user->role == 2 ? 'checked' : '' }} name="role" type="radio"
                                             style="transform: scale(2)" value="2"><span class="mx-3">Admin</span></label>
                                 </div>
-
-                              <div class="form-group col-md-3 mb-3 mb-3">
-                        <label><input {{ $user->role == 3 ? 'checked' : '' }} name="role" type="radio" style="transform: scale(2)" value="3"><span class="mx-3">Ward Admin</span></label>
-                    </div>
-                      <div class="form-group col-md-3 mb-3 mb-3">
-                        <label><input {{ $user->role == 4 ? 'checked' : '' }} name="role" type="radio" style="transform: scale(2)" value="4"><span class="mx-3">Ward User</span></label>
-                    </div>
                             </div>
                         @endcan
 

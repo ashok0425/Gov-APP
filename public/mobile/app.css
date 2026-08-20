@@ -1,25 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;500;600;700&display=swap');
 
 /* ---------------------------------------------------------------- tokens
-   Mirrors lib/core/app_constants/app_colors.dart                          */
+   The app is white: paper, ink, and a hairline to separate them. What used
+   to be green is ink now, so anything that was picked out in colour — the
+   open tab, the buttons, the badges — is picked out in weight instead.
+   Photographs and category artwork keep their own colours.                */
 :root {
-    --green: #0e7f6b;
-    --green-90: rgba(14, 127, 107, 0.9);
-    --green-60: rgba(14, 127, 107, 0.6);
-    --green-20: rgba(76, 175, 80, 0.2);
+    --green: #1f1f1f;
+    --green-90: rgba(31, 31, 31, 0.9);
+    --green-60: rgba(31, 31, 31, 0.55);
+    --green-20: #f2f2f2;
     --white: #ffffff;
-    --scaffold: #f3f3f3;
+    --scaffold: #ffffff;
+    --line: #e6e6e6;
     --matte-black: #343634;
     --black: #323232;
     --grey: #8f8f8f;
     --light-grey: #e0e0e0;
-    --red: #f44336;
-    --blue: #2196f3;
+    --red: #1f1f1f;
+    --blue: #1f1f1f;
+    /* The one colour left in the app: an unread count has to catch the eye,
+       and this is the red from the Nepal Connect logo. */
+    --alert: #f2131c;
     --text-body: #252525;
 
-    --appbar-h: 110px;
-    --cover-h: 105px;
     --navbar-h: 70px;
+    --cover-h: 105px;
     --shell: 480px;
 }
 
@@ -75,6 +81,8 @@ button {
     flex-direction: column;
     overflow: hidden;
     box-shadow: 0 0 24px rgba(0, 0, 0, 0.12);
+    border-left: 1px solid var(--line);
+    border-right: 1px solid var(--line);
 }
 
 .scroll-area {
@@ -83,16 +91,19 @@ button {
     -webkit-overflow-scrolling: touch;
 }
 
-/* Clear the FAB, which overlaps the body the same way it does in the app. */
+/* A little air under the last row, above the bottom bar. */
 .has-nav .scroll-area {
-    padding-bottom: 36px;
+    padding-bottom: 12px;
 }
 
 /* --------------------------------------------------------------- appbars */
 
 /* Home / notifications: the animated banner strip. */
+/* Fixed 900x150 shape: the strip is always 6:1, and the image fills it.
+   Upload the banner at 900x150 and it fits exactly; any other ratio gets
+   cropped to the strip. */
 .appbar-banner {
-    height: var(--appbar-h);
+    aspect-ratio: 900 / 150;
     background: var(--scaffold);
     overflow: hidden;
     flex: none;
@@ -100,6 +111,7 @@ button {
 }
 
 .appbar-banner img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -121,11 +133,12 @@ button {
     object-fit: cover;
 }
 
-/* Solid green bar with a centred title. */
+/* A white bar with a centred title, held apart from the page by a line. */
 .appbar {
     min-height: 56px;
-    background: var(--green);
-    color: var(--white);
+    background: var(--white);
+    color: var(--black);
+    border-bottom: 1px solid var(--line);
     display: flex;
     align-items: center;
     padding: 0 8px;
@@ -152,10 +165,6 @@ button {
     color: var(--matte-black);
 }
 
-.appbar-white .icon-btn {
-    color: var(--matte-black);
-}
-
 .icon-btn {
     width: 40px;
     height: 40px;
@@ -163,27 +172,33 @@ button {
     display: grid;
     place-items: center;
     border-radius: 50%;
-    color: var(--white);
+    /* The appbars are white, so the back arrow is ink like everything else. */
+    color: var(--matte-black);
 }
 
 .icon-btn:active {
-    background: rgba(255, 255, 255, 0.16);
+    background: rgba(0, 0, 0, 0.08);
 }
 
-/* Back button floating over an image appbar. */
+/* Back button floating over an image appbar — white there, because it sits on
+   a dark disc over the photograph rather than on paper. */
 .appbar-cover .icon-btn {
     position: absolute;
     top: 8px;
     left: 6px;
     z-index: 2;
+    color: var(--white);
     background: rgba(0, 0, 0, 0.25);
 }
 
+.appbar-cover .icon-btn:active {
+    background: rgba(0, 0, 0, 0.45);
+}
+
 /* -------------------------------------------------------------- carousel
-   CustomSlider: 16 / 9, radius 10, autoplay 5s, dots at the bottom.       */
+   CustomSlider: 16 / 9, square corners, autoplay 5s, dots at the bottom.  */
 .carousel {
     position: relative;
-    border-radius: 10px;
     overflow: hidden;
     aspect-ratio: 16 / 9;
     background: var(--light-grey);
@@ -232,6 +247,7 @@ button {
     background: #4caf50;
 }
 
+
 /* Shimmer stand-in while an image is still loading. */
 .shimmer {
     background: linear-gradient(90deg, #e0e0e0 25%, #f5f5f5 50%, #e0e0e0 75%);
@@ -248,6 +264,165 @@ button {
     }
 }
 
+/* ---------------------------------------------------------- location bar
+   The line under home's banner, e.g. "लुम्बिनी प्रदेश › बर्दिया › बारबर्दिया". */
+.blog-row-meta {
+    color: var(--grey);
+    font-size: 12px;
+}
+
+/* Stands in for the picture on a notification that has none. */
+.notice-mark {
+    flex: none;
+    width: 74px;
+    height: 74px;
+    border-radius: 8px;
+    background: var(--green-20);
+    display: grid;
+    place-items: center;
+}
+
+.notice-mark .material-symbols-rounded {
+    font-size: 32px;
+    color: var(--green);
+}
+
+.notice-date {
+    color: var(--grey);
+    font-size: 13px;
+}
+
+/* ---------------------------------------------------------- सूचना ticker
+   One line under the banner: a fixed red label, then the breaking headlines
+   sliding past it. The track carries the same run twice and travels exactly
+   half its own width, so the loop never shows a gap. */
+.news-ticker {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 12px 10px;
+    padding: 6px 10px 6px 6px;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    /* Rides along: sticks just under the top edge while the page scrolls. */
+    position: sticky;
+    top: 8px;
+    z-index: 5;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
+}
+
+.ticker-label {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: var(--red);
+    color: var(--white);
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.ticker-label .material-symbols-rounded {
+    font-size: 15px;
+}
+
+/* min-width: 0 lets the flex child be narrower than its content. */
+.ticker-window {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.ticker-track {
+    display: flex;
+    width: max-content;
+    animation: ticker-scroll var(--ticker-duration, 24s) linear infinite;
+}
+
+/* Give a reader a way to stop the line and click a headline. */
+.news-ticker:hover .ticker-track,
+.news-ticker:focus-within .ticker-track {
+    animation-play-state: paused;
+}
+
+.ticker-run {
+    display: flex;
+}
+
+.ticker-item {
+    font-size: 14px;
+    color: var(--text-body);
+    white-space: nowrap;
+}
+
+/* The separator belongs to the strip, not to the headline text. */
+.ticker-item::after {
+    content: '•';
+    color: var(--light-grey);
+    padding: 0 10px;
+}
+
+@keyframes ticker-scroll {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ticker-track {
+        animation: none;
+    }
+}
+
+.location-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 15px;
+    background: var(--green);
+    color: var(--white);
+    font-size: 15px;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* The place trail wraps as one line of parts, arrows and all. */
+.location-trail {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.location-arrow {
+    opacity: 0.75;
+}
+
+.location-bar .material-symbols-rounded {
+    font-size: 18px;
+    flex: none;
+}
+
+/* The trail above a category screen, when it sits below the top level. */
+.breadcrumb {
+    padding: 10px 15px 0;
+    color: var(--grey);
+    font-size: 13px;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
 /* --------------------------------------------------------------- section */
 .section {
     padding: 10px 15px;
@@ -260,31 +435,6 @@ button {
     color: var(--matte-black);
     padding: 10px 15px 0;
     margin: 0;
-}
-
-/* ---------------------------------------------------------- ward circles */
-.ward-strip {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 5px;
-    padding: 10px 15px;
-}
-
-.ward-circle {
-    width: 65px;
-    height: 65px;
-    border-radius: 50%;
-    background: var(--white);
-    overflow: hidden;
-    display: grid;
-    place-items: center;
-    flex: none;
-}
-
-.ward-circle img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
 }
 
 /* --------------------------------------------------------------- blog row
@@ -300,10 +450,8 @@ button {
     background: var(--white);
     padding: 10px;
     margin: 0 12px 10px;
-    box-shadow:
-        0 2px 1px -1px rgba(0, 0, 0, 0.2),
-        0 1px 1px 0 rgba(0, 0, 0, 0.14),
-        0 1px 3px 0 rgba(0, 0, 0, 0.12);
+    border: 1px solid var(--line);
+    border-radius: 8px;
 }
 
 .blog-row img {
@@ -364,27 +512,64 @@ button {
 }
 
 /* ------------------------------------------------------------- bottom nav
-   BottomAppBar: green, 70px tall, 16px top radius, notched for the FAB.   */
+   White bar, five equal tabs, the active one green under a short indicator. */
 .bottom-nav {
     height: var(--navbar-h);
-    background: var(--green);
+    background: var(--white);
+    border-top: 1px solid var(--line);
     border-radius: 16px 16px 0 0;
     display: flex;
-    justify-content: space-between;
+    align-items: stretch;
     flex: none;
     z-index: 10;
 }
 
 .nav-tab {
-    width: 50%;
-    padding-top: 14px;
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    padding-top: 13px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 2px;
-    color: var(--white);
-    font-size: 16px;
+    color: var(--grey);
+    font-size: 13px;
     font-weight: 500;
+    text-align: center;
+}
+
+.nav-tab.is-active {
+    color: var(--green);
+    font-weight: 700;
+}
+
+/* The bar over the tab that is open. */
+.nav-tab.is-active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 34px;
+    height: 3px;
+    border-radius: 0 0 3px 3px;
+    background: var(--green);
+}
+
+/* Home rides in the middle as an ordinary tab — just the logo, no label,
+   drawn larger and centred on the same row as the other icons. */
+.nav-tab.nav-home {
+    padding-top: 0;
+    justify-content: center;
+}
+
+.nav-home-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: contain;
+    display: block;
 }
 
 .nav-tab .material-symbols-rounded {
@@ -405,48 +590,103 @@ button {
     height: 18px;
     padding: 0 4px;
     border-radius: 9px;
-    background: var(--red);
+    background: var(--alert);
     color: var(--white);
     font-size: 10px;
     line-height: 18px;
     text-align: center;
 }
 
-/* The notch + docked FAB. */
-.fab-dock {
-    position: absolute;
-    left: 50%;
-    bottom: calc(var(--navbar-h) - 28px);
-    transform: translateX(-50%);
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
-    background: var(--scaffold);
-    display: grid;
-    place-items: center;
-    z-index: 11;
-    pointer-events: none;
+/* ------------------------------------------------------------------ search */
+.appbar-search {
+    padding: 8px 10px;
 }
 
-.fab {
+.search-box {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--white);
+    border-radius: 24px;
+    padding: 0 12px;
+    height: 44px;
+}
+
+.search-box .material-symbols-rounded {
+    color: var(--grey);
+    flex: none;
+}
+
+.search-box input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: none;
+    font: inherit;
+    font-size: 16px;
+    color: var(--text-body);
+    /* Safari's own clear button would sit on top of ours. */
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.search-box input::-webkit-search-cancel-button {
+    display: none;
+}
+
+.search-clear {
+    display: grid;
+    place-items: center;
+    flex: none;
+    color: var(--grey);
+}
+
+.search-count {
+    margin: 0;
+    padding: 12px 15px 0;
+    color: var(--matte-black);
+    font-size: 14px;
+}
+
+.search-hint {
+    color: var(--grey);
+}
+
+.state-hint {
+    color: var(--grey);
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+/* ------------------------------------------------- floating contact button
+   Sits over the palika page, bottom-right, and opens the contact sheet.    */
+.fab-contact {
+    position: absolute;
+    right: 16px;
+    bottom: 20px;
     width: 56px;
     height: 56px;
     border-radius: 50%;
     background: var(--green);
+    color: var(--white);
     display: grid;
     place-items: center;
-    overflow: hidden;
-    pointer-events: auto;
+    z-index: 12;
     box-shadow:
         0 3px 5px -1px rgba(0, 0, 0, 0.2),
         0 6px 10px 0 rgba(0, 0, 0, 0.14),
         0 1px 18px 0 rgba(0, 0, 0, 0.12);
 }
 
-.fab img {
-    width: 100%;
-    height: 100%;
-    object-fit: fill;
+.fab-contact:active {
+    background: #0c6d5c;
+}
+
+.fab-contact .material-symbols-rounded {
+    font-size: 26px;
 }
 
 /* ------------------------------------------------------------ menu sheet
@@ -492,43 +732,18 @@ button {
     margin: 12px auto 16px;
 }
 
-.sheet-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding-bottom: 24px;
-}
-
-.menu-item {
-    flex: 1 1 0;
-    min-width: 0;
+/* The contact card is taller than the menu, so it scrolls inside the sheet. */
+.sheet-contact {
+    max-height: 85vh;
+    max-height: 85dvh;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 8px;
 }
 
-.menu-item-icon {
-    width: 100%;
-    aspect-ratio: 1;
-    background: var(--green);
-    border-radius: 8px;
-    padding: 12px;
-    display: grid;
-    place-items: center;
-}
-
-.menu-item-icon img {
-    max-height: 32px;
-    width: auto;
-    /* The Flutter tiles tint the glyph white. */
-    filter: brightness(0) invert(1);
-}
-
-.menu-item span {
-    text-align: center;
-    font-size: 14px;
-    color: var(--black);
+.sheet-scroll {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 12px;
 }
 
 /* -------------------------------------------------------------- grids */
@@ -537,13 +752,19 @@ button {
     padding: 12px;
 }
 
-/* minmax(0, 1fr) keeps wide thumbnails from pushing the tracks past the shell. */
+/* The menu card: three columns of icon tiles on white.
+   minmax(0, 1fr) keeps a wide name from pushing the tracks past the shell. */
 .grid-categories {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px 10px;
+    gap: 16px 8px;
+    margin: 12px;
+    padding: 16px 8px;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 12px;
 }
 
-.grid-wards {
+.grid-palikas {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 12px 10px;
 }
@@ -552,29 +773,53 @@ button {
     min-width: 0;
 }
 
-.grid-categories > a {
-    aspect-ratio: 1;
-    border-radius: 10px;
-    overflow: hidden;
-    background: #eeeeee;
+/* A menu entry, not a picture: a 60x60 icon with the name under it. The tile
+   grows to fit however many lines a Nepali name needs. */
+.cat-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 2px;
+    text-align: center;
+}
+
+.cat-icon {
+    width: 60px;
+    height: 60px;
+    flex: none;
     display: grid;
     place-items: center;
 }
 
-.grid-categories img {
+/* contain, not cover: the artwork is an icon and must not be cropped. */
+.cat-icon img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
-.grid-wards > a {
+/* No artwork yet — a generic glyph holds the 60x60 box. */
+.cat-icon .material-symbols-rounded {
+    font-size: 30px;
+    color: var(--green);
+}
+
+.cat-name {
+    font-size: 12px;
+    line-height: 1.25;
+    color: var(--black);
+    overflow-wrap: anywhere;
+}
+
+.grid-palikas > a {
     aspect-ratio: 1;
     overflow: hidden;
     display: grid;
     place-items: center;
 }
 
-.grid-wards img {
+.grid-palikas img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -813,29 +1058,6 @@ button {
 @keyframes spin {
     to {
         transform: rotate(360deg);
-    }
-}
-
-/* ---------------------------------------------------------------- splash */
-.splash {
-    position: fixed;
-    inset: 0;
-    background: var(--green-60);
-    display: grid;
-    place-items: center;
-    z-index: 100;
-    animation: splash-out 0.35s ease 1s forwards;
-}
-
-.splash img {
-    width: 50vw;
-    max-width: 240px;
-}
-
-@keyframes splash-out {
-    to {
-        opacity: 0;
-        visibility: hidden;
     }
 }
 

@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\SummernoteController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -17,18 +16,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/password/update', [\App\Http\Controllers\AuthController::class, 'changePassword'])->name('password');
     Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
+    Route::get('subcategories', [\App\Http\Controllers\CategoryController::class, 'subcategories'])->name('subcategories.index')->middleware('can:do anything');
+    Route::get('child-categories', [\App\Http\Controllers\CategoryController::class, 'childCategories'])->name('childcategories.index')->middleware('can:do anything');
+    Route::get('grandchild-categories', [\App\Http\Controllers\CategoryController::class, 'grandchildCategories'])->name('grandchildcategories.index')->middleware('can:do anything');
     Route::resource('categories', \App\Http\Controllers\CategoryController::class)->middleware('can:do anything');
 
     Route::resource('posts', \App\Http\Controllers\BlogController::class)->names('blogs');
     Route::resource('banners', \App\Http\Controllers\BannerController::class);
     Route::resource('attachments', \App\Http\Controllers\AttachmentController::class);
-    Route::resource('wards', \App\Http\Controllers\BusinessController::class)->names('business');
-    Route::get('business-reorder', [\App\Http\Controllers\BusinessController::class,'reorder'])->name('business.reorder')->middleware('can:do anything');
-    Route::post('business-reorder', [\App\Http\Controllers\BusinessController::class,'reorderStore'])->name('business.reorder.store')->middleware('can:do anything');
 
-Route::get('/business/{id}/categories', [BusinessController::class, 'editCategories'])->name('business.categories.edit');
-Route::post('/business/{id}/categories', [BusinessController::class, 'updateCategories'])->name('business.categories.update');
-
+    Route::resource('notices', \App\Http\Controllers\NoticeController::class)->middleware('can:do anything');
     Route::resource('pages', \App\Http\Controllers\PageController::class)->middleware('can:do anything');
     Route::resource('cms', \App\Http\Controllers\CmsController::class)->middleware('can:do anything');
     Route::get('users/index', [\App\Http\Controllers\ManageAccessController::class,'users'])->middleware('can:do anything')->name('users');
@@ -53,18 +50,37 @@ Route::get('storages', function () {
 Route::post('/summernote/upload', [SummernoteController::class, 'upload'])->name('summernote.upload');
 
 // Public mobile web app — the browser version of the Nagarpalika Flutter app.
-// Registered last so it never shadows an admin route. "/my-ward" rather than
-// "/wards", which the admin business resource already owns.
-Route::name('m.')->group(function () {
+// Registered last so it never shadows an admin route. "/palika" rather than
+// "/palikas", which the admin palika resource already owns.
+// In production these answer only on config('app.frontend_host'); see
+// App\Http\Middleware\EnsureFrontendHost.
+Route::name('m.')->middleware('frontend.host')->group(function () {
     Route::get('/', [\App\Http\Controllers\MobileAppController::class, 'home'])->name('home');
     Route::get('/notifications', [\App\Http\Controllers\MobileAppController::class, 'notifications'])->name('notifications');
-    Route::get('/my-ward', [\App\Http\Controllers\MobileAppController::class, 'wards'])->name('wards');
-    Route::get('/palika', [\App\Http\Controllers\MobileAppController::class, 'palika'])->name('palika');
+    Route::get('/search', [\App\Http\Controllers\MobileAppController::class, 'search'])->name('search');
+    Route::get('/palika', [\App\Http\Controllers\MobileAppController::class, 'palikas'])->name('palikas');
     Route::get('/hello', [\App\Http\Controllers\MobileAppController::class, 'hello'])->name('hello');
     Route::get('/settings', [\App\Http\Controllers\MobileAppController::class, 'settings'])->name('settings');
-    Route::get('/ward/{id}', [\App\Http\Controllers\MobileAppController::class, 'ward'])->name('ward');
-    Route::get('/ward/{id}/categories', [\App\Http\Controllers\MobileAppController::class, 'categories'])->name('categories');
-    Route::get('/ward/{id}/category/{category}', [\App\Http\Controllers\MobileAppController::class, 'categoryNews'])->name('category.news');
+    Route::get('/palika/{id}', [\App\Http\Controllers\MobileAppController::class, 'palika'])->name('palika');
     Route::get('/blog/{id}', [\App\Http\Controllers\MobileAppController::class, 'blog'])->name('blog');
+    Route::get('/notice/{id}', [\App\Http\Controllers\MobileAppController::class, 'notice'])->name('notice');
     Route::get('/page/{slug}', [\App\Http\Controllers\MobileAppController::class, 'page'])->name('page');
+
+    // The menu belongs to the app, not to a palika. One route serves every
+    // level — a category id says on its own how deep in the tree it sits.
+    // "/menu" rather than "/categories": the admin categories resource already
+    // owns that URI, and a same-method same-URI route registered later here
+    // would replace it instead of sitting beside it.
+    Route::get('/menu', [\App\Http\Controllers\MobileAppController::class, 'categories'])->name('categories');
+    Route::get('/category/{category}', [\App\Http\Controllers\MobileAppController::class, 'category'])->name('category');
+
+    // Links shared while the app still spoke of wards, or scoped the menu to a
+    // palika, keep working.
+    Route::redirect('/my-ward', '/palika');
+    Route::get('/ward/{id}', fn ($id) => redirect()->route('m.palika', $id));
+    Route::get('/ward/{id}/categories', fn () => redirect()->route('m.categories'));
+    Route::get('/ward/{id}/category/{category}', fn ($id, $category) => redirect()->route('m.category', $category));
+    Route::get('/palika/{id}/categories', fn () => redirect()->route('m.categories'));
+    Route::get('/palika/{id}/category/{category}', fn ($id, $category) => redirect()->route('m.category', $category));
+    Route::get('/palika/{id}/category/{category}/{subcategory}', fn ($id, $category, $subcategory) => redirect()->route('m.category', $subcategory));
 });

@@ -3,27 +3,28 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Controllers\Concerns\ReturnsToList;
 use App\Models\Blog;
-use App\Models\Business;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 class BlogController extends Controller
 {
+    use ReturnsToList;
+
     public function index(Request $request)
     {
         $posts = Blog::query()
-              ->with('business')
               ->accessibleBy(Auth::user())
             ->when($request->status!=''||$request->status,function($query) use ($request){
            $query->where('status',$request->status);
             })
-            ->when($request->category,function($query) use ($request){
-                $query->whereIn('category_id',$request->category);
-            })
-            ->when($request->business,function($query) use ($request){
-                $query->whereIn('business_id',$request->business);
+            // The cascade sends one id per level; the deepest one picked is
+            // what to match, and inCategory() catches that node and everything
+            // filed below it.
+            ->when($this->deepestOf($request),function($query, $categoryId){
+                $query->inCategory($categoryId);
             })
             ->when($request->keyword,function($query) use ($request){
                 $query->where(function($q) use ( $request){
@@ -46,17 +47,16 @@ class BlogController extends Controller
             })
         ->orderBy('id', 'desc')->paginate(20);
 
-        $categories=Category::accessibleBy(Auth::user())->get();
-        $businesses=Business::all();
-        // dd($request->all());
-        return view('blog.index', compact('posts','categories','businesses'));
+        return view('blog.index', [
+            'posts' => $posts,
+            'categoryTree' => $this->categoryTree(),
+            'selectedTrail' => $this->selectedTrail($request),
+        ]);
     }
 
     public function create()
     {
-        $categories=Category::accessibleBy(Auth::user())->get();
-    $businesses=Business::all();
-        return view('blog.create',compact('categories','businesses'));
+        return view('blog.create', ['categoryTree' => $this->categoryTree()]);
     }
 
     public function store(Request $request)
@@ -64,7 +64,10 @@ class BlogController extends Controller
         $request->validate([
             'title' => 'required',
             'long_description' => 'required',
-
+            'category' => 'required|exists:categories,id',
+            'subcategory' => 'nullable|exists:categories,id',
+            'child' => 'nullable|exists:categories,id',
+            'grandchild' => 'nullable|exists:categories,id',
         ]);
 
         $post = new Blog;
@@ -74,12 +77,13 @@ class BlogController extends Controller
         $cover = $request->file('cover')?->store('uploads', 'public') ?? null;
         $post->title = $request->title;
         $post->slug = Str::slug($request->title);
-        $post->short_description = $request->short_description;
+        $post->short_description = $request->short_description ?? '';
         $post->long_description = $request->long_description;
-        $post->category_id = $request->category;
+        $post->forceFill($this->trailFor($request));
+        $post->is_breaking = $request->boolean('is_breaking');
         $post->status = $request->status??$post->status;
         $post->thumbnail = $thumbnail;
-        $post->business_id = $request->business_id??Auth::user()->business_id;
+        $post->business_id = Auth::user()->business_id ?? 0;
         $post->user_id =Auth::user()->id;
         $post->cover = $cover;
         $post->save();
@@ -103,9 +107,11 @@ class BlogController extends Controller
             ];
             return redirect()->route('blogs.index')->with($notification);
         }
-        $categories=Category::accessibleBy(Auth::user())->get();
-        $businesses=Business::all();
-        return view('blog.edit', compact('post','businesses','categories'));
+        return view('blog.edit', [
+            'post' => $post,
+            'categoryTree' => $this->categoryTree(),
+            'selectedTrail' => $post->only(\App\Models\Blog::TRAIL_COLUMNS),
+        ]);
     }
 
     public function update(Request $request, Blog $post)
@@ -113,7 +119,10 @@ class BlogController extends Controller
         $request->validate([
             'title' => 'required',
             'long_description' => 'required',
-
+            'category' => 'required|exists:categories,id',
+            'subcategory' => 'nullable|exists:categories,id',
+            'child' => 'nullable|exists:categories,id',
+            'grandchild' => 'nullable|exists:categories,id',
         ]);
         // if(!Auth::user()->can('can:do-anything') && $post->business_id!=Auth::user()->business_id){
         //     $notification = [
@@ -129,12 +138,13 @@ class BlogController extends Controller
 
         $post->title = $request->title;
         $post->slug = Str::slug($request->title);
-        $post->short_description = $request->short_description;
+        $post->short_description = $request->short_description ?? '';
         $post->long_description = $request->long_description;
         $post->thumbnail = $thumbnail;
         $post->status = $request->status??$post->status;
-        $post->category_id = $request->category;
-        $post->business_id = $request->business_id??Auth::user()->business_id;
+        $post->forceFill($this->trailFor($request));
+        $post->is_breaking = $request->boolean('is_breaking');
+        $post->business_id = Auth::user()->business_id ?? 0;
         $post->cover = $cover;
 
         $post->save();
@@ -144,7 +154,7 @@ class BlogController extends Controller
 
         ];
 
-        return redirect()->route('blogs.index')->with($notification);
+        return redirect()->to($this->returnUrl($request, 'blogs.index'))->with($notification);
     }
 
     public function show(Blog $post) {
@@ -176,5 +186,77 @@ class BlogController extends Controller
         ];
 
         return redirect()->route('blogs.index')->with($notification);
+    }
+
+    /**
+     * The whole menu as nested arrays, which is what the cascade selects run
+     * on: one payload, every level, no round trip when a level changes.
+     */
+    protected function categoryTree()
+    {
+        $categories = Category::accessibleBy(Auth::user())
+            ->ordered()
+            ->get(['id', 'name', 'parent_id'])
+            ->groupBy('parent_id');
+
+        $build = function ($parentId) use (&$build, $categories) {
+            // groupBy turns a null parent into an empty-string key.
+            return $categories->get($parentId ?? '', collect())
+                ->map(fn ($category) => [
+                    'id' => $category->id,
+                    'name' => $category->name,
+                    'children' => $build($category->id),
+                ])
+                ->values();
+        };
+
+        return $build(null);
+    }
+
+    /** The four ids the cascade holds, deepest last. */
+    protected function selectedTrail(Request $request)
+    {
+        return collect($this->cascadeFields())
+            ->map(fn ($field) => $request->input($field))
+            ->values()
+            ->all();
+    }
+
+    /** The deepest level the cascade actually has a pick for. */
+    protected function deepestOf(Request $request)
+    {
+        return collect(array_reverse($this->cascadeFields()))
+            ->map(fn ($field) => $request->input($field))
+            ->first(fn ($value) => filled($value));
+    }
+
+    /**
+     * A post records its whole filing trail. Rather than trust the four ids
+     * the form sent, walk up from the deepest one — that way the columns are
+     * always a real path through the menu, whatever the browser posted.
+     */
+    protected function trailFor(Request $request)
+    {
+        $columns = array_fill_keys(\App\Models\Blog::TRAIL_COLUMNS, null);
+        $deepest = $this->deepestOf($request);
+        $category = $deepest ? Category::find($deepest) : null;
+
+        if (! $category) {
+            return $columns;
+        }
+
+        $trail = $category->ancestors()->push($category)->values();
+
+        foreach (array_keys($columns) as $index => $column) {
+            $columns[$column] = $trail->get($index)?->id;
+        }
+
+        return $columns;
+    }
+
+    /** One form field per level, top first. */
+    protected function cascadeFields()
+    {
+        return array_slice(['category', 'subcategory', 'child', 'grandchild'], 0, Category::MAX_DEPTH);
     }
 }

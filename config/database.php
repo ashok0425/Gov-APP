@@ -57,7 +57,13 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'strict' => true,
-            'engine' => null,
+            /*
+             * Left to the server's default, shared hosts hand out MyISAM, whose
+             * index limit is 1000 bytes — not enough for a utf8mb4 composite key
+             * such as the one Sanctum's morphs() or Spatie's (name, guard_name)
+             * needs. InnoDB with a dynamic row format allows 3072.
+             */
+            'engine' => env('DB_ENGINE', 'InnoDB ROW_FORMAT=DYNAMIC'),
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],

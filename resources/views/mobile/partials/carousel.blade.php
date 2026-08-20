@@ -1,11 +1,10 @@
-{{-- CustomSlider — 16:9, radius 10, dots below. $autoplay mirrors autoPlay. --}}
+{{-- CustomSlider — 16:9, square corners, dots below. Always auto-plays. --}}
 @php
     $slides = collect($banners ?? [])->pluck('thumbnail')->filter()->values();
-    $autoplay = $autoplay ?? true;
 @endphp
 
 @if ($slides->isNotEmpty())
-    <div class="carousel" data-autoplay="{{ $autoplay ? 'true' : 'false' }}">
+    <div class="carousel">
         <div class="carousel-track">
             @foreach ($slides as $thumbnail)
                 <div class="carousel-slide">
