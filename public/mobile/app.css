@@ -460,7 +460,8 @@ button {
     align-items: center;
 }
 
-.blog-row-compact img {
+/* Doubled class to outrank the base .blog-row img rule further down. */
+.blog-row.blog-row-compact img {
     width: 38px;
     height: 25px;
     object-fit: contain;
