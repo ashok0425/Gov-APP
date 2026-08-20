@@ -39,6 +39,7 @@ class OrganizationController extends Controller
         $organization = new Organization;
         $organization->name = $request->name;
         $organization->thumbnail = $request->file('thumbnail')?->store('uploads/organization', 'public');
+        $organization->top_image = $request->file('top_image')?->store('uploads/organization-tops', 'public');
         $organization->status = $request->status ?? 1;
         $organization->save();
 
@@ -62,6 +63,15 @@ class OrganizationController extends Controller
 
         if ($thumbnail = $request->file('thumbnail')?->store('uploads/organization', 'public')) {
             $organization->thumbnail = $thumbnail;
+        }
+
+        if ($request->boolean('remove_top_image')) {
+            \Storage::disk('public')->delete((string) $organization->top_image);
+            $organization->top_image = null;
+        }
+
+        if ($topImage = $request->file('top_image')?->store('uploads/organization-tops', 'public')) {
+            $organization->top_image = $topImage;
         }
 
         $organization->save();
@@ -112,6 +122,7 @@ class OrganizationController extends Controller
                 Rule::unique('organizations', 'name')->ignore($organization?->id),
             ],
             'thumbnail' => ['nullable', 'image'],
+            'top_image' => ['nullable', 'image'],
         ];
     }
 }

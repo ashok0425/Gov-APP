@@ -12,11 +12,13 @@
 
             // The options for one level, given what the level above holds.
             // An organization select in front narrows the top level to that
-            // organization's own categories.
+            // organization's own categories. Left empty, a required select
+            // offers nothing yet — pick the organization first — while an
+            // optional one (the list filter) falls back to the whole menu.
             function optionsFor(level) {
                 if (level === 0) {
                     if (!organization) return tree;
-                    if (!organization.value) return [];
+                    if (!organization.value) return organization.required ? [] : tree;
 
                     return tree.filter(function (node) {
                         return String(node.organization_id) === String(organization.value);

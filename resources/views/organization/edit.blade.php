@@ -35,6 +35,25 @@
                         <br>
                         <img src="{{ getImage($organization->thumbnail) }}" alt="{{ $organization->name }}" width="100">
                     </div>
+
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label">
+                            Top image
+                            <small class="text-info">(960&times;210 — the strip at the top of this organization's screen, back arrow over it; empty keeps the plain title bar)</small>
+                        </label>
+                        <div class="file-upload-wrapper" data-text="Select your file!">
+                            <input name="top_image" type="file" class="file-upload-field" accept="image/*">
+                        </div>
+
+                        @if (filled($organization->top_image))
+                            <br>
+                            <img src="{{ getImage($organization->top_image) }}" alt="" width="200">
+                            <label class="d-flex align-items-center small mb-0 mt-1">
+                                <input type="checkbox" name="remove_top_image" value="1">
+                                <span class="mx-2 text-danger">remove</span>
+                            </label>
+                        @endif
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Update</button>

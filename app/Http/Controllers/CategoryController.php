@@ -117,6 +117,7 @@ class CategoryController extends Controller
             'parentTrail' => $this->trailOf($parent),
             'level' => $level,
             'organizations' => Organization::ordered()->get(),
+            'parentOrganization' => $this->organizationOf($parent),
         ]);
     }
 
@@ -166,6 +167,7 @@ class CategoryController extends Controller
             'parentTrail' => $this->trailOf($category->parent),
             'level' => $category->level(),
             'organizations' => Organization::ordered()->get(),
+            'parentOrganization' => $this->organizationOf($category->parent),
         ]);
     }
 
@@ -335,6 +337,16 @@ class CategoryController extends Controller
         return null;
     }
 
+    /** The organization at the root of a branch — what its whole tree belongs to. */
+    protected function organizationOf(?Category $category)
+    {
+        if (! $category) {
+            return null;
+        }
+
+        return ($category->ancestors()->first() ?? $category)->organization_id;
+    }
+
     /** A category and its ancestors, top first — what the cascade opens on. */
     protected function trailOf(?Category $category)
     {
@@ -360,6 +372,9 @@ class CategoryController extends Controller
                 ->map(fn ($option) => [
                     'id' => $option->id,
                     'name' => $option->name,
+                    // Only roots carry one; the cascade's organization
+                    // select filters the top level by it.
+                    'organization_id' => $option->organization_id,
                     'children' => $build($option->id),
                 ])
                 ->values();

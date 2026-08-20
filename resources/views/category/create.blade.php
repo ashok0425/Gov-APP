@@ -72,6 +72,8 @@
                     @include('category.partials.parent-cascade', [
                         'levels' => $level - 1,
                         'requiredDepth' => $level - 1,
+                        'organizations' => $organizations,
+                        'selectedOrganization' => $parentOrganization,
                     ])
                 @endif
 

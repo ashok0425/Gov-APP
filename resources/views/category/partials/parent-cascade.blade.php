@@ -5,6 +5,8 @@
      several levels tall has fewer places it can go. --}}
 @php
     $requiredDepth = $requiredDepth ?? 0;
+    $organizations = $organizations ?? null;
+    $selectedOrganization = $selectedOrganization ?? null;
 @endphp
 
 <div class="row">
@@ -36,5 +38,7 @@
         'names' => array_slice(['category', 'subcategory', 'child', 'grandchild'], 0, $levels),
         'columns' => 4,
         'requiredDepth' => $requiredDepth,
+        'organizations' => $organizations,
+        'selectedOrganization' => $selectedOrganization,
     ])
 @endif

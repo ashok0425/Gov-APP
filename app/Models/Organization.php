@@ -13,6 +13,7 @@ class Organization extends Model
     protected $fillable = [
         'name',
         'thumbnail',
+        'top_image',
         'status',
         'position',
     ];
