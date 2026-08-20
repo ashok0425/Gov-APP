@@ -76,7 +76,7 @@
     @if ($blogs->isNotEmpty())
         {{-- Just a taste — the four newest, title only, each marked with its
              organization's icon. The rest is a category tap away. --}}
-        <div class="blog-list">
+        <div class="blog-list blog-list-card">
             @include('mobile.partials.blog-rows', ['blogs' => $blogs, 'orgIcon' => true])
         </div>
     @else

@@ -502,6 +502,28 @@ button {
     border-radius: 8px;
 }
 
+/* Home's news block: one card for the whole list, a hairline between the
+   rows instead of a card apiece. */
+.blog-list-card {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    margin: 10px 12px 25px;
+    padding: 0;
+}
+
+.blog-list-card .blog-row {
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    margin: 0;
+}
+
+.blog-list-card .blog-row:last-child {
+    border-bottom: 0;
+}
+
 .blog-row img {
     width: 60px;
     height: 60px;
