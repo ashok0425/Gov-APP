@@ -24,6 +24,15 @@
                         'X-CSRF-TOKEN': @json(csrf_token()),
                     },
                     body: JSON.stringify({ ids: ids, start: {{ (int) ($start ?? 0) }} }),
+                }).then(function (response) {
+                    if (!window.toastr) return;
+                    if (response.ok) {
+                        toastr.success('Order saved');
+                    } else {
+                        toastr.error('Could not save the order');
+                    }
+                }).catch(function () {
+                    if (window.toastr) toastr.error('Could not save the order');
                 });
             },
         });

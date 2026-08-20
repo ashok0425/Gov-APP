@@ -6,12 +6,22 @@
         document.querySelectorAll('.category-cascade').forEach(function (block) {
             var tree = JSON.parse(block.dataset.tree || '[]');
             var selects = Array.prototype.slice.call(block.querySelectorAll('.cascade-level'));
+            var organization = block.querySelector('.cascade-organization');
 
             if (!selects.length) return;
 
             // The options for one level, given what the level above holds.
+            // An organization select in front narrows the top level to that
+            // organization's own categories.
             function optionsFor(level) {
-                if (level === 0) return tree;
+                if (level === 0) {
+                    if (!organization) return tree;
+                    if (!organization.value) return [];
+
+                    return tree.filter(function (node) {
+                        return String(node.organization_id) === String(organization.value);
+                    });
+                }
 
                 var parentId = selects[level - 1].value;
                 if (!parentId) return [];
@@ -83,6 +93,25 @@
                     window.jQuery(select).on('select2:select select2:clear', cascadeDown);
                 }
             });
+
+            if (organization) {
+                var organizationChanged = function () {
+                    selects.forEach(function (select) {
+                        select.dataset.selected = '';
+                    });
+                    selects.forEach(function (select, level) {
+                        render(level);
+                    });
+                };
+
+                organization.addEventListener('change', organizationChanged);
+
+                if (window.jQuery) {
+                    window.jQuery(organization).on('select2:select select2:clear', organizationChanged);
+                }
+
+                dress(organization);
+            }
 
             selects.forEach(function (select, level) {
                 render(level);

@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Concerns\ReturnsToList;
 use App\Models\Blog;
 use App\Models\Category;
+use App\Models\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -25,6 +26,11 @@ class BlogController extends Controller
             // filed below it.
             ->when($this->deepestOf($request),function($query, $categoryId){
                 $query->inCategory($categoryId);
+            })
+            // An organization picked with no category narrows to every post
+            // filed anywhere under that organization's menu.
+            ->when($request->organization && ! $this->deepestOf($request), function ($query) use ($request) {
+                $query->whereIn('category_id', Category::where('organization_id', $request->organization)->pluck('id'));
             })
             ->when($request->keyword,function($query) use ($request){
                 $query->where(function($q) use ( $request){
@@ -51,12 +57,18 @@ class BlogController extends Controller
             'posts' => $posts,
             'categoryTree' => $this->categoryTree(),
             'selectedTrail' => $this->selectedTrail($request),
+            'organizations' => Organization::ordered()->get(),
+            'selectedOrganization' => $request->organization,
         ]);
     }
 
     public function create()
     {
-        return view('blog.create', ['categoryTree' => $this->categoryTree()]);
+        return view('blog.create', [
+            'categoryTree' => $this->categoryTree(),
+            'organizations' => Organization::ordered()->get(),
+            'selectedOrganization' => null,
+        ]);
     }
 
     public function store(Request $request)
@@ -111,6 +123,9 @@ class BlogController extends Controller
             'post' => $post,
             'categoryTree' => $this->categoryTree(),
             'selectedTrail' => $post->only(\App\Models\Blog::TRAIL_COLUMNS),
+            'organizations' => Organization::ordered()->get(),
+            // The post's own organization: whatever its root category names.
+            'selectedOrganization' => optional($post->category)->organization_id,
         ]);
     }
 
@@ -196,7 +211,7 @@ class BlogController extends Controller
     {
         $categories = Category::accessibleBy(Auth::user())
             ->ordered()
-            ->get(['id', 'name', 'parent_id'])
+            ->get(['id', 'name', 'parent_id', 'organization_id'])
             ->groupBy('parent_id');
 
         $build = function ($parentId) use (&$build, $categories) {
@@ -205,6 +220,9 @@ class BlogController extends Controller
                 ->map(fn ($category) => [
                     'id' => $category->id,
                     'name' => $category->name,
+                    // Only roots carry one; the cascade's organization
+                    // select filters the top level by it.
+                    'organization_id' => $category->organization_id,
                     'children' => $build($category->id),
                 ])
                 ->values();
