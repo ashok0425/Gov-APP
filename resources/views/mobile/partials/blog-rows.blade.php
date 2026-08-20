@@ -13,10 +13,16 @@
                 : $blog->thumbnail;
         @endphp
 
-        <img src="{{ asset('storage/' . $rowImage) }}"
-             alt=""
-             loading="lazy"
-             data-fallback="{{ asset('mobile/img/placeholder-thumb.jpeg') }}">
+        @if ($orgIcon && blank($rowImage))
+            {{-- No icon uploaded for this organization: hold the slot open,
+                 no grey placeholder. --}}
+            <span class="blog-row-icon-spacer" aria-hidden="true"></span>
+        @else
+            <img src="{{ asset('storage/' . $rowImage) }}"
+                 alt=""
+                 loading="lazy"
+                 data-fallback="{{ asset('mobile/img/placeholder-thumb.jpeg') }}">
+        @endif
 
         <span class="blog-row-body">
             <span class="blog-row-title">{{ $blog->title }}</span>
