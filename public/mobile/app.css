@@ -441,7 +441,7 @@ button {
 .section-title-lead {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
     text-align: left;
     font-size: 13px;
     font-weight: 700;
@@ -449,8 +449,8 @@ button {
 }
 
 .section-title-lead img {
-    width: 22px;
-    height: 22px;
+    width: 37px;
+    height: 37px;
     object-fit: contain;
     flex: none;
 }
@@ -502,12 +502,10 @@ button {
     border-radius: 8px;
 }
 
-/* Home's news block: one card for the whole list, a hairline between the
-   rows instead of a card apiece. */
+/* Home's news block: one borderless white sheet, every row underlined by a
+   hairline — no side or outer border at all. */
 .blog-list-card {
     background: var(--white);
-    border: 1px solid var(--line);
-    border-radius: 8px;
     margin: 10px 12px 25px;
     padding: 0;
 }
@@ -518,10 +516,7 @@ button {
     border-bottom: 1px solid var(--line);
     border-radius: 0;
     margin: 0;
-}
-
-.blog-list-card .blog-row:last-child {
-    border-bottom: 0;
+    gap: 6px;
 }
 
 .blog-row img {

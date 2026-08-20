@@ -69,7 +69,7 @@
     @endif
 
     <h2 class="section-title section-title-lead">
-        <img src="{{ asset('mobile/img/megaphone.png') }}" alt="" width="22" height="22">
+        <img src="{{ asset('mobile/img/megaphone.png') }}" alt="" width="37" height="37">
         भर्खरका मुख्य सूचनाहरू
     </h2>
 
