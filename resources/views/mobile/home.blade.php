@@ -39,34 +39,47 @@
     --}}
 
     <div class="section">
-        @include('mobile.partials.carousel', ['banners' => $banners, 'autoplay' => true])
+        @include('mobile.partials.carousel', ['banners' => $banners])
     </div>
 
     {{-- सूचना runs as one scrolling line here rather than as a second picture
-         slider — they are the same posts either way. --}}
+         slider, and stays stuck under the banner while you scroll. --}}
     @include('mobile.partials.news-ticker', ['posts' => $breaking])
 
-    {{-- The menu itself, in the order the admin arranged it. --}}
+    {{-- A taste of the menu: the first five entries in the admin's order,
+         and a sixth tile that opens the full menu — a tidy 3x2 grid. --}}
     @if ($categories->isNotEmpty())
         <div class="grid grid-categories">
-            @foreach ($categories as $category)
+            @foreach ($categories->take(5) as $category)
                 @include('mobile.partials.category-tile', [
                     'category' => $category,
                     'href' => route('m.category', $category->id),
                 ])
             @endforeach
+
+            <a href="{{ route('m.categories') }}" class="cat-tile">
+                <span class="cat-icon">
+                    <span class="material-symbols-rounded">apps</span>
+                </span>
+
+                <span class="cat-name">सबै हेर्नुहोस्</span>
+            </a>
         </div>
     @endif
 
     <h2 class="section-title">सूचना तथा जनकारी</h2>
 
-    <div class="blog-list">
-        @if ($blogs->isNotEmpty())
+    @if ($blogs->isNotEmpty())
+        {{-- Just a taste — the four newest. The rest is a category tap away. --}}
+        <div class="blog-list">
             @include('mobile.partials.blog-rows', ['blogs' => $blogs])
-        @else
+        </div>
+    @else
+        <div class="blog-list">
             <div class="state"><p>कुनै विवरण भेटिएन</p></div>
-        @endif
-    </div>
+        </div>
+    @endif
+
 @endsection
 
 @section('bottom')

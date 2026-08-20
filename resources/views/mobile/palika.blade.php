@@ -16,14 +16,14 @@
 
 @section('content')
     <div class="section">
-        @include('mobile.partials.carousel', ['banners' => $bannersOne, 'autoplay' => true])
+        @include('mobile.partials.carousel', ['banners' => $bannersOne])
     </div>
 
     @if ($bannersTwo->isNotEmpty())
         <h2 class="section-title">जनप्रतिनिधि / कर्मचारी</h2>
 
         <div class="section" style="padding-top:0">
-            @include('mobile.partials.carousel', ['banners' => $bannersTwo, 'autoplay' => false])
+            @include('mobile.partials.carousel', ['banners' => $bannersTwo])
         </div>
     @endif
 

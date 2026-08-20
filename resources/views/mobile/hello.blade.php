@@ -18,6 +18,7 @@
             <div class="state"><p>कुनै विवरण भेटिएन</p></div>
         @endforelse
     </div>
+
 @endsection
 
 @section('bottom')

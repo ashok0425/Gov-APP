@@ -28,25 +28,34 @@ class MobileAppController extends Controller
 
     public function home()
     {
+        // Home is a teaser: the four newest posts. The full list lives behind
+        // the categories and search, where the infinite loader takes over.
+        $blogs = Blog::latest()
+            ->where('status', 1)
+            ->select('id', 'title', 'thumbnail', 'slug', 'short_description')
+            ->take(4)
+            ->get();
+
         return view('mobile.home', [
             'banners' => $this->banners(1, 1),
             'breaking' => $this->breakingBlogs(),
             'categories' => $this->menuCategories(),
-            'blogs' => Blog::latest()
-                ->where('status', 1)
-                ->select('id', 'title', 'thumbnail', 'slug', 'short_description')
-                ->take(10)
-                ->get(),
-            'noticeCount' => $this->noticeCount(),
+            'blogs' => $blogs,
             'locationText' => optional(Cms::settings())->location_text,
         ]);
     }
 
     public function notifications()
     {
+        // The bell shows exactly what its badge counts: the posts published
+        // in the last 24 hours. Older ones live on in their categories.
         return view('mobile.notifications', [
-            'notices' => Notice::published()->latestFirst()->take(50)->get(),
-            'noticeCount' => $this->noticeCount(),
+            'blogs' => Blog::latest()
+                ->where('status', 1)
+                ->where('created_at', '>=', now()->subDay())
+                ->select('id', 'title', 'thumbnail', 'slug', 'short_description')
+                ->take(50)
+                ->get(),
         ]);
     }
 
@@ -57,7 +66,6 @@ class MobileAppController extends Controller
         return view('mobile.notice', [
             'notice' => $notice,
             'body' => $this->prepareHtml($notice->description),
-            'noticeCount' => $this->noticeCount(),
         ]);
     }
 
@@ -188,7 +196,6 @@ class MobileAppController extends Controller
     {
         return view('mobile.hello', [
             'palikas' => $this->palikaList(),
-            'noticeCount' => $this->noticeCount(),
         ]);
     }
 
@@ -282,7 +289,7 @@ class MobileAppController extends Controller
             ->select('id', 'title', 'thumbnail', 'slug', 'short_description');
     }
 
-    /** Posts ticked "Breaking news" in the admin — the home carousel. */
+    /** Posts ticked "Breaking news" in the admin — the सूचना ticker line. */
     protected function breakingBlogs()
     {
         return Blog::latest()
@@ -291,15 +298,6 @@ class MobileAppController extends Controller
             ->select('id', 'title', 'thumbnail', 'slug')
             ->take(10)
             ->get();
-    }
-
-    /**
-     * The number on the सूचना tab: notifications sent in the last 24 hours.
-     * Anything older has been seen, and a badge that never clears is noise.
-     */
-    protected function noticeCount()
-    {
-        return Notice::published()->recent()->count();
     }
 
     /**

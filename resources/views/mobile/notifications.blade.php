@@ -8,13 +8,15 @@
 @endsection
 
 @section('content')
+    {{-- The same posts the nav badge counts: published in the last 24 hours. --}}
     <div class="blog-list">
-        @if ($notices->isNotEmpty())
-            @include('mobile.partials.notice-rows', ['notices' => $notices])
+        @if ($blogs->isNotEmpty())
+            @include('mobile.partials.blog-rows', ['blogs' => $blogs])
         @else
             <div class="state"><p>कुनै नयाँ सूचना छैन</p></div>
         @endif
     </div>
+
 @endsection
 
 @section('bottom')

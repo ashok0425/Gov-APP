@@ -1,6 +1,6 @@
-{{-- One list for every level below the top: subcategories, child categories
-     and grandchild categories differ only in what they hang off and what they
-     can hold, so they share a screen. --}}
+{{-- One list for every level below the top: subcategories and child
+     categories differ only in what they hang off and what they can hold,
+     so they share a screen. --}}
 @extends('layout.master')
 @section('main-content')
     @php
@@ -43,7 +43,7 @@
                     <h5 class="card-title text-white">{{ $levelName }} List</h5>
                 </div>
                 <div>
-                    <a href="{{ route('categories.create', ['parent' => request()->query('parent'), 'back' => request()->fullUrl()]) }}"
+                    <a href="{{ route('categories.create', ['level' => $level, 'parent' => request()->query('parent'), 'back' => request()->fullUrl()]) }}"
                        class="btn btn-info btn-sm">
                         <i class="fas fa-plus"></i>
                         Add {{ $levelName }}

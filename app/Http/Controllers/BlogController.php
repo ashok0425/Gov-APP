@@ -257,6 +257,6 @@ class BlogController extends Controller
     /** One form field per level, top first. */
     protected function cascadeFields()
     {
-        return ['category', 'subcategory', 'child', 'grandchild'];
+        return array_slice(['category', 'subcategory', 'child', 'grandchild'], 0, Category::MAX_DEPTH);
     }
 }

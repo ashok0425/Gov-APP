@@ -24,6 +24,7 @@
     @else
         <div class="state"><p>कुनै विवरण भेटिएन</p></div>
     @endif
+
 @endsection
 
 @section('bottom')

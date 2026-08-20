@@ -10,8 +10,9 @@ use Illuminate\Database\Eloquent\Model;
  * → grandchild category. Every level is a row here; parent_id is what
  * separates them.
  *
- * A category can also carry its own contact details, which the app shows
- * behind a floating button when "show_contact" is on.
+ * Every level below the top can carry its own contact details, which the
+ * app shows behind a floating button when "show_contact" is on. Main
+ * categories don't — they are menu headings, not offices.
  */
 class Category extends Model
 {
@@ -33,6 +34,7 @@ class Category extends Model
         'name',
         'thumbnail',
         'status',
+        'show_cover',
         'show_contact',
         'owner_name',
         'address',
@@ -48,6 +50,7 @@ class Category extends Model
 
     protected $casts = [
         'show_contact' => 'boolean',
+        'show_cover' => 'boolean',
     ];
 
     /**
@@ -117,6 +120,12 @@ class Category extends Model
     public function blogs()
     {
         return $this->hasMany(Blog::class);
+    }
+
+    /** The cover carousel's slides, in the order the admin arranged them. */
+    public function covers()
+    {
+        return $this->hasMany(CategoryImage::class)->orderBy('position')->orderBy('id');
     }
 
     /** 1 for a category, 2 for a subcategory, 3 for a child category. */

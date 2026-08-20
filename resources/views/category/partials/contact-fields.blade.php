@@ -1,6 +1,6 @@
 {{-- The contact card the app floats behind the green phone button on this
-     category's screen. Every level can carry one, though it earns its keep
-     most on a child category — an office a citizen can actually ring. --}}
+     category's screen. Only levels below the top carry one — a main category
+     is a heading, not an office a citizen can ring. --}}
 @php
     $category = $category ?? null;
 @endphp

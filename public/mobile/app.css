@@ -24,9 +24,8 @@
     --alert: #f2131c;
     --text-body: #252525;
 
-    --appbar-h: 110px;
-    --cover-h: 105px;
     --navbar-h: 70px;
+    --cover-h: 105px;
     --shell: 480px;
 }
 
@@ -100,8 +99,11 @@ button {
 /* --------------------------------------------------------------- appbars */
 
 /* Home / notifications: the animated banner strip. */
+/* Fixed 900x150 shape: the strip is always 6:1, and the image fills it.
+   Upload the banner at 900x150 and it fits exactly; any other ratio gets
+   cropped to the strip. */
 .appbar-banner {
-    height: var(--appbar-h);
+    aspect-ratio: 900 / 150;
     background: var(--scaffold);
     overflow: hidden;
     flex: none;
@@ -109,6 +111,7 @@ button {
 }
 
 .appbar-banner img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -193,10 +196,9 @@ button {
 }
 
 /* -------------------------------------------------------------- carousel
-   CustomSlider: 16 / 9, radius 10, autoplay 5s, dots at the bottom.       */
+   CustomSlider: 16 / 9, square corners, autoplay 5s, dots at the bottom.  */
 .carousel {
     position: relative;
-    border-radius: 10px;
     overflow: hidden;
     aspect-ratio: 16 / 9;
     background: var(--light-grey);
@@ -304,6 +306,11 @@ button {
     border: 1px solid var(--line);
     border-radius: 8px;
     overflow: hidden;
+    /* Rides along: sticks just under the top edge while the page scrolls. */
+    position: sticky;
+    top: 8px;
+    z-index: 5;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
 }
 
 .ticker-label {
@@ -550,60 +557,19 @@ button {
     background: var(--green);
 }
 
-/* Keeps the two inner tabs clear of the docked Home button. */
-.nav-notch {
-    flex: 0 0 72px;
+/* Home rides in the middle as an ordinary tab — just the logo, no label,
+   drawn larger and centred on the same row as the other icons. */
+.nav-tab.nav-home {
+    padding-top: 0;
+    justify-content: center;
 }
 
-/* The dock is a circle in the bar's own white, so the bump reads as part of
-   the bar rather than as a disc sitting on top of it. */
-.fab-dock {
-    position: absolute;
-    left: 50%;
-    bottom: calc(var(--navbar-h) - 28px);
-    transform: translateX(-50%);
-    width: 72px;
-    height: 72px;
+.nav-home-logo {
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
-    background: var(--white);
-    display: grid;
-    place-items: center;
-    z-index: 11;
-    /* Only the button inside takes the tap. */
-    pointer-events: none;
-}
-
-.fab {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    /* White, because the logo inside carries its own colour. */
-    background: var(--white);
-    border: 1px solid var(--line);
-    display: grid;
-    place-items: center;
-    overflow: hidden;
-    pointer-events: auto;
-    box-shadow:
-        0 3px 5px -1px rgba(0, 0, 0, 0.2),
-        0 6px 10px 0 rgba(0, 0, 0, 0.14),
-        0 1px 18px 0 rgba(0, 0, 0, 0.12);
-}
-
-.fab.is-active {
-    /* On home the ring darkens; the logo itself stays as it is. */
-    border-color: var(--matte-black);
-}
-
-.fab-logo {
-    width: 100%;
-    height: 100%;
     object-fit: contain;
     display: block;
-}
-
-.fab:active {
-    background: var(--light-grey);
 }
 
 .nav-tab .material-symbols-rounded {

@@ -36,18 +36,18 @@ class AppServiceProvider extends ServiceProvider
         // fields (title, slug, short_description) are text columns already.
         Schema::defaultStringLength(191);
 
-        // The bottom nav rides on several mobile screens; rather than thread
-        // the badge count through each controller action, fill it in here when
-        // the view didn't already supply one.
+        // The nav rides at the foot of several mobile screens; fill the badge
+        // in here rather than threading it through each controller action.
+        // It counts the posts published in the last 24 hours: anything older
+        // has been seen, and a badge that never clears is noise.
         View::composer('mobile.partials.bottom-nav', function ($view) {
-            if (! array_key_exists('noticeCount', $view->getData())) {
-                $view->with('noticeCount', Blog::whereDate('created_at', today())->count());
-            }
+            $view->with('noticeCount', Blog::where('status', 1)
+                ->where('created_at', '>=', now()->subDay())
+                ->count());
         });
 
-        // Palika is behind a switch in Cms, and both the nav and the app's
-        // Settings screen have to agree on it.
-        View::composer(['mobile.partials.bottom-nav', 'mobile.settings'], function ($view) {
+        // Palika is behind a switch in Cms.
+        View::composer('mobile.settings', function ($view) {
             $view->with('showPalika', (bool) optional(Cms::settings())->show_palika);
         });
 

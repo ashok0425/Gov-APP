@@ -101,13 +101,19 @@ class CategoryController extends Controller
         }
 
         // "Add Subcategory" / "Add Child Category" land here with the parent
-        // already chosen, so the cascade opens on that branch.
+        // already chosen, so the cascade opens on that branch. Which button
+        // was pressed decides the level, and the form only asks for the
+        // levels above it — Add Category asks for nothing at all.
         $parent = Category::find($request->query('parent'));
+
+        $level = $parent
+            ? min($parent->level() + 1, Category::MAX_DEPTH)
+            : max(1, min((int) $request->query('level', 1), Category::MAX_DEPTH));
 
         return view('category.create', [
             'categoryTree' => $this->parentTree(),
             'parentTrail' => $this->trailOf($parent),
-            'levels' => Category::MAX_DEPTH - 1,
+            'level' => $level,
         ]);
     }
 
@@ -125,8 +131,10 @@ class CategoryController extends Controller
         $category->slug = Str::slug($request->name);
         $category->thumbnail = $request->file('thumbnail')?->store('uploads/category', 'public');
         $category->status = $request->status ?? 1;
+        $category->show_cover = $request->boolean('show_cover');
         $this->fillContact($category, $request);
         $category->save();
+        $this->syncCovers($category, $request);
 
         return redirect()
             ->to($this->returnUrl($request, $this->listRouteFor($category)))
@@ -171,8 +179,10 @@ class CategoryController extends Controller
             $category->thumbnail = $thumbnail;
         }
 
+        $category->show_cover = $request->boolean('show_cover');
         $this->fillContact($category, $request);
         $category->save();
+        $this->syncCovers($category, $request);
 
         return redirect()
             ->to($this->returnUrl($request, $this->listRouteFor($category)))
@@ -240,6 +250,10 @@ class CategoryController extends Controller
                     ->where(fn ($q) => $q->where('parent_id', $parentId)),
             ],
             'thumbnail' => ['nullable', 'image'],
+            'cover_images' => ['nullable', 'array'],
+            'cover_images.*' => ['image'],
+            'remove_covers' => ['nullable', 'array'],
+            'remove_covers.*' => ['integer'],
             'email' => ['nullable', 'email', 'max:255'],
             'google_map_link' => ['nullable', 'url', 'max:255'],
             'facebook' => ['nullable', 'url', 'max:255'],
@@ -247,9 +261,12 @@ class CategoryController extends Controller
         ];
 
         // Every level of the cascade has to name a category that may hold this
-        // one; anything else is a browser posting its own ideas.
-        foreach ($this->cascadeFields() as $field) {
-            $rules[$field] = ['nullable', Rule::in($allowed)];
+        // one; anything else is a browser posting its own ideas. On the create
+        // form the level is fixed, so the parents above it are mandatory.
+        $level = max(1, min((int) $request->input('level', 1), Category::MAX_DEPTH));
+
+        foreach ($this->cascadeFields() as $index => $field) {
+            $rules[$field] = [$index < $level - 1 ? 'required' : 'nullable', Rule::in($allowed)];
         }
 
         return $rules;
@@ -306,13 +323,45 @@ class CategoryController extends Controller
         return $build(null);
     }
 
-    /** The contact card the app floats behind the phone button. */
+    /**
+     * The cover carousel: drop the slides the editor ticked for removal,
+     * their files included, then append whatever was uploaded after the
+     * ones already there.
+     */
+    protected function syncCovers(Category $category, Request $request)
+    {
+        $removed = $category->covers()
+            ->whereIn('id', $request->input('remove_covers', []))
+            ->get();
+
+        foreach ($removed as $cover) {
+            \Storage::disk('public')->delete($cover->thumbnail);
+            $cover->delete();
+        }
+
+        $position = (int) $category->covers()->max('position');
+
+        foreach ($request->file('cover_images', []) as $image) {
+            $category->covers()->create([
+                'thumbnail' => $image->store('uploads/category-covers', 'public'),
+                'position' => ++$position,
+            ]);
+        }
+    }
+
+    /**
+     * The contact card the app floats behind the phone button. Only levels
+     * below the top carry one — a main category is a heading, not an office —
+     * so a record saved at the top has its contact cleared.
+     */
     protected function fillContact(Category $category, Request $request)
     {
-        $category->show_contact = $request->boolean('show_contact');
+        $isMain = $this->parentFrom($request) === null;
+
+        $category->show_contact = ! $isMain && $request->boolean('show_contact');
 
         foreach (['owner_name', 'address', 'google_map_link', 'email', 'phone', 'whatsapp', 'messanger', 'facebook', 'other'] as $field) {
-            $category->{$field} = $request->input($field) ?: null;
+            $category->{$field} = $isMain ? null : ($request->input($field) ?: null);
         }
     }
 

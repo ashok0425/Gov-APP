@@ -16,6 +16,14 @@
         <div class="breadcrumb">{{ $category->pathName() }}</div>
     @endif
 
+    {{-- The category's own cover carousel, when the admin switched it on.
+         The rows carry a thumbnail column, so the banner partial serves. --}}
+    @if ($category->show_cover && $category->covers->isNotEmpty())
+        <div class="section">
+            @include('mobile.partials.carousel', ['banners' => $category->covers])
+        </div>
+    @endif
+
     {{-- What sits under this category, if anything does. --}}
     @if (($subcategories ?? collect())->isNotEmpty())
         <div class="grid grid-categories">
@@ -34,17 +42,10 @@
             <h2 class="section-title">सूचना तथा समाचार</h2>
         @endif
 
-        <div class="blog-list"
-             id="infinite-list"
-             data-url="{{ $listUrl }}"
-             data-page="{{ $blogs->currentPage() }}"
-             data-has-more="{{ $blogs->hasMorePages() ? 'true' : 'false' }}">
-            @include('mobile.partials.blog-rows', ['blogs' => $blogs])
-        </div>
-
-        @if ($blogs->hasMorePages())
-            <div id="infinite-sentinel"><div class="spinner"></div></div>
-        @endif
+        @include('mobile.partials.infinite-list', [
+            'blogs' => $blogs,
+            'url' => $listUrl,
+        ])
     @elseif (($subcategories ?? collect())->isEmpty())
         <div class="state"><p>कुनै विवरण भेटिएन</p></div>
     @endif

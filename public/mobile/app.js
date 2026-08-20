@@ -6,31 +6,44 @@
     'use strict';
 
     /* ------------------------------------------------------------ carousel
-       CustomSlider: infinite loop, 5s autoplay, 800ms ease, tappable dots. */
+       CustomSlider: infinite loop, 5s autoplay, 800ms ease, tappable dots.
+       The first slide is cloned onto the end so the loop always slides
+       forward — even a single banner keeps auto-scrolling. */
     function initCarousel(root) {
         var track = root.querySelector('.carousel-track');
         var dots = Array.prototype.slice.call(root.querySelectorAll('.carousel-dot'));
         var count = track.children.length;
-        if (count < 2) return;
+        if (!count) return;
+
+        track.appendChild(track.children[0].cloneNode(true));
 
         var index = 0;
-        var autoplay = root.dataset.autoplay === 'true';
         var timer = null;
 
-        function render() {
+        function render(anim) {
+            track.classList.toggle('no-anim', anim === false);
             track.style.transform = 'translateX(' + -index * 100 + '%)';
             dots.forEach(function (dot, i) {
-                dot.classList.toggle('is-active', i === index);
+                dot.classList.toggle('is-active', i === index % count);
             });
         }
 
         function go(next) {
-            index = (next + count) % count;
-            render();
+            index = next > count || next < 0 ? (next + count) % count : next;
+            render(true);
+
+            // Landed on the clone: snap back to the real first slide once
+            // the 800ms slide has finished, so the next tick moves forward.
+            if (index === count) {
+                setTimeout(function () {
+                    if (index !== count) return;
+                    index = 0;
+                    render(false);
+                }, 850);
+            }
         }
 
         function start() {
-            if (!autoplay) return;
             stop();
             timer = setInterval(function () {
                 go(index + 1);
@@ -91,7 +104,7 @@
             document.hidden ? stop() : start();
         });
 
-        render();
+        render(false);
         start();
     }
 

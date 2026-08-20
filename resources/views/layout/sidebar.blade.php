@@ -64,33 +64,59 @@
             @can('do:anything')
             <li class="sidebar-header">Manage Category</li>
 
+            @php
+                // The create and edit screens live under /categories whatever
+                // level they work on, so the highlight follows the level
+                // rather than the URL: the ?level / ?parent of a create, or
+                // the record itself on an edit.
+                $menuLevel = null;
+
+                if (Request::is('subcategories', 'subcategories/*')) {
+                    $menuLevel = 2;
+                } elseif (Request::is('child-categories', 'child-categories/*')) {
+                    $menuLevel = 3;
+                } elseif (Request::is('grandchild-categories', 'grandchild-categories/*')) {
+                    $menuLevel = 4;
+                } elseif (Request::is('categories/create')) {
+                    $menuParent = \App\Models\Category::find(request('parent'));
+                    $menuLevel = $menuParent
+                        ? min($menuParent->level() + 1, \App\Models\Category::MAX_DEPTH)
+                        : max(1, min((int) request('level', 1), \App\Models\Category::MAX_DEPTH));
+                } elseif (($menuRecord = request()->route('category')) instanceof \App\Models\Category) {
+                    $menuLevel = $menuRecord->level();
+                } elseif (Request::is('categories', 'categories/*')) {
+                    $menuLevel = 1;
+                }
+            @endphp
+
             <li class="sidebar-item">
-                <a class="sidebar-link {{Request::is('categories','categories/*')?'text-light':' '}}" href="{{ route('categories.index') }}">
+                <a class="sidebar-link {{ $menuLevel === 1 ? 'text-light' : '' }}" href="{{ route('categories.index') }}">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="align-middle">Category</span>
                 </a>
             </li>
 
             <li class="sidebar-item">
-                <a class="sidebar-link {{Request::is('subcategories','subcategories/*')?'text-light':' '}}" href="{{ route('subcategories.index') }}">
+                <a class="sidebar-link {{ $menuLevel === 2 ? 'text-light' : '' }}" href="{{ route('subcategories.index') }}">
                     <i class="fas fa-sitemap"></i>
                     <span class="align-middle">Subcategory</span>
                 </a>
             </li>
 
             <li class="sidebar-item">
-                <a class="sidebar-link {{Request::is('child-categories','child-categories/*')?'text-light':' '}}" href="{{ route('childcategories.index') }}">
+                <a class="sidebar-link {{ $menuLevel === 3 ? 'text-light' : '' }}" href="{{ route('childcategories.index') }}">
                     <i class="fas fa-stream"></i>
                     <span class="align-middle">Child Category</span>
                 </a>
             </li>
 
             <li class="sidebar-item">
-                <a class="sidebar-link {{Request::is('grandchild-categories','grandchild-categories/*')?'text-light':' '}}" href="{{ route('grandchildcategories.index') }}">
+                <a class="sidebar-link {{ $menuLevel === 4 ? 'text-light' : '' }}" href="{{ route('grandchildcategories.index') }}">
                     <i class="fas fa-code-branch"></i>
                     <span class="align-middle">Grandchild Category</span>
                 </a>
             </li>
+
             @endcan
 
             @canAny(['post:view','post:create','post:edit','post:delete'])

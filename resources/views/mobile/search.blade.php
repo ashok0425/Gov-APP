@@ -42,18 +42,12 @@
             {{ $blogs->total() }} {{ Str::plural('result', $blogs->total()) }} for “{{ $term }}”
         </p>
 
-        <div class="blog-list"
-             id="infinite-list"
-             data-url="{{ route('m.search', ['q' => $term]) }}"
-             data-page="{{ $blogs->currentPage() }}"
-             data-has-more="{{ $blogs->hasMorePages() ? 'true' : 'false' }}">
-            @include('mobile.partials.blog-rows', ['blogs' => $blogs])
-        </div>
-
-        @if ($blogs->hasMorePages())
-            <div id="infinite-sentinel"><div class="spinner"></div></div>
-        @endif
+        @include('mobile.partials.infinite-list', [
+            'blogs' => $blogs,
+            'url' => route('m.search', ['q' => $term]),
+        ])
     @endif
+
 @endsection
 
 @section('bottom')

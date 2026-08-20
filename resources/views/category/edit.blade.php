@@ -42,7 +42,11 @@
 
                 @include('category.partials.parent-cascade')
 
-                @include('category.partials.contact-fields', ['category' => $category])
+                @include('category.partials.cover-fields', ['category' => $category])
+
+                @if ($category->level() > 1)
+                    @include('category.partials.contact-fields', ['category' => $category])
+                @endif
 
                 <button type="submit" class="btn btn-primary">Update</button>
             </form>
