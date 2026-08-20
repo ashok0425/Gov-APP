@@ -9,13 +9,13 @@
 <hr>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h5 class="mb-0">Cover images</h5>
+    <h5 class="mb-0">Slider images</h5>
 
     <label class="d-flex align-items-center mb-0">
         <input type="hidden" name="show_cover" value="0">
         <input type="checkbox" name="show_cover" value="1" style="transform: scale(1.4)"
                {{ old('show_cover', $category?->show_cover) ? 'checked' : '' }}>
-        <span class="mx-3">Show cover carousel in the app</span>
+        <span class="mx-3">Show slider in the app</span>
     </label>
 </div>
 
