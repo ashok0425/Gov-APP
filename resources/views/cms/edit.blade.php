@@ -93,8 +93,8 @@
               </div>
               <small class="text-info d-block">
                 The strip across the top of the app's Home, Notices and Hello screens.
-                Wide and short works best — around 960&times;220. Animated GIF is fine.
-                Leave empty to keep the current one.
+                Upload it at 900&times;150 — it shows centered at half that size.
+                Animated GIF is fine. Leave empty to keep the current one.
               </small>
               <br />
               <img src="{{ $cms->header_banner ? getImage($cms->header_banner) : asset('mobile/img/mainbanner.gif') }}"

@@ -33,9 +33,19 @@
                     </div>
 
                     <div class="mb-3 col-md-6">
-                        <label class="form-label">Thumbnail</label>
+                        <label class="form-label">Thumbnail <small class="text-info">(60&times;60 — the icon on the menu grid)</small></label>
                         <div class="file-upload-wrapper" data-text="Select your file!">
                             <input name="thumbnail" type="file" class="file-upload-field">
+                        </div>
+                    </div>
+
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label">
+                            Top image
+                            <small class="text-info">(960&times;210 — the strip at the top of this category's screen, back arrow over it; empty keeps the plain title bar)</small>
+                        </label>
+                        <div class="file-upload-wrapper" data-text="Select your file!">
+                            <input name="top_image" type="file" class="file-upload-field" accept="image/*">
                         </div>
                     </div>
                 </div>

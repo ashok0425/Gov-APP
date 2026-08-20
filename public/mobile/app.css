@@ -200,6 +200,7 @@ button {
 .carousel {
     position: relative;
     overflow: hidden;
+    border-radius: 10px;
     background: var(--light-grey);
 }
 

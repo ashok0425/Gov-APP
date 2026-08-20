@@ -52,7 +52,7 @@
                     @endcan
 
                     <div class="mb-3 col-md-6">
-                        <label class="form-label">Banner image</label>
+                        <label class="form-label">Banner image <small class="text-info">(900&times;450 works best — keep every banner the same size)</small></label>
                         <div class="file-upload-wrapper" data-text="Select your file!">
                             <input name="thumbnail" type="file" class="file-upload-field" required />
                         </div>

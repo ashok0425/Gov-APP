@@ -46,11 +46,11 @@
          slider, and stays stuck under the banner while you scroll. --}}
     @include('mobile.partials.news-ticker', ['posts' => $breaking])
 
-    {{-- A taste of the menu: the first five entries in the admin's order,
-         and a sixth tile that opens the full menu — a tidy 3x2 grid. --}}
+    {{-- A taste of the menu: the first eight entries in the admin's order,
+         and a ninth tile that opens the full menu — a tidy 3x3 grid. --}}
     @if ($categories->isNotEmpty())
         <div class="grid grid-categories">
-            @foreach ($categories->take(5) as $category)
+            @foreach ($categories->take(8) as $category)
                 @include('mobile.partials.category-tile', [
                     'category' => $category,
                     'href' => route('m.category', $category->id),

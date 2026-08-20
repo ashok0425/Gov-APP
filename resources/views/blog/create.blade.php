@@ -55,7 +55,7 @@
 
 
                      <div class="mb-3 col-md-6">
-                        <label class="form-label">Thumbnail</label>
+                        <label class="form-label">Thumbnail <small class="text-info">(square works best — shows at 60&times;60 in lists)</small></label>
                         <div class="file-upload-wrapper" data-text="Select your file!">
                             <input
                                 name="thumbnail"

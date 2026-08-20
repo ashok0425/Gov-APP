@@ -3,11 +3,24 @@
 @section('title', $title)
 
 @section('appbar')
-    <header class="appbar appbar-white">
-        @include('mobile.partials.back-button', ['fallback' => $backRoute])
-        <span class="appbar-title">{{ $title }}</span>
-        <span class="icon-btn"></span>
-    </header>
+    {{-- With a top image the bar becomes the picture, the back arrow
+         floating over it — the same treatment a palika's cover gets.
+         Without one the plain white title bar stays. --}}
+    @if (filled($category->top_image))
+        <header class="appbar-cover">
+            @include('mobile.partials.back-button', ['fallback' => $backRoute])
+
+            <img src="{{ asset('storage/' . $category->top_image) }}"
+                 alt=""
+                 data-fallback="{{ asset('mobile/img/placeholder.jpeg') }}">
+        </header>
+    @else
+        <header class="appbar appbar-white">
+            @include('mobile.partials.back-button', ['fallback' => $backRoute])
+            <span class="appbar-title">{{ $title }}</span>
+            <span class="icon-btn"></span>
+        </header>
+    @endif
 @endsection
 
 @section('content')

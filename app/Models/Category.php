@@ -33,6 +33,7 @@ class Category extends Model
         'parent_id',
         'name',
         'thumbnail',
+        'top_image',
         'status',
         'show_cover',
         'show_contact',

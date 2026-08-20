@@ -22,7 +22,8 @@
 <div class="row">
     <div class="mb-3 col-md-6">
         <label class="form-label">
-            Add images <small class="text-info">(pick several at once for a slideshow)</small>
+            Add images
+            <small class="text-info">(900&times;450 works best — keep every slide the same size; pick several at once for a slideshow)</small>
         </label>
         <input type="file" name="cover_images[]" class="form-control" accept="image/*" multiple>
     </div>

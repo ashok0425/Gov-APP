@@ -130,6 +130,7 @@ class CategoryController extends Controller
         $category->name = $request->name;
         $category->slug = Str::slug($request->name);
         $category->thumbnail = $request->file('thumbnail')?->store('uploads/category', 'public');
+        $category->top_image = $request->file('top_image')?->store('uploads/category-tops', 'public');
         $category->status = $request->status ?? 1;
         $category->show_cover = $request->boolean('show_cover');
         $this->fillContact($category, $request);
@@ -177,6 +178,15 @@ class CategoryController extends Controller
 
         if ($thumbnail = $request->file('thumbnail')?->store('uploads/category', 'public')) {
             $category->thumbnail = $thumbnail;
+        }
+
+        if ($request->boolean('remove_top_image')) {
+            \Storage::disk('public')->delete((string) $category->top_image);
+            $category->top_image = null;
+        }
+
+        if ($topImage = $request->file('top_image')?->store('uploads/category-tops', 'public')) {
+            $category->top_image = $topImage;
         }
 
         $category->show_cover = $request->boolean('show_cover');
@@ -250,6 +260,7 @@ class CategoryController extends Controller
                     ->where(fn ($q) => $q->where('parent_id', $parentId)),
             ],
             'thumbnail' => ['nullable', 'image'],
+            'top_image' => ['nullable', 'image'],
             'cover_images' => ['nullable', 'array'],
             'cover_images.*' => ['image'],
             'remove_covers' => ['nullable', 'array'],
