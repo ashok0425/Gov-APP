@@ -29,11 +29,13 @@ class MobileAppController extends Controller
 
     public function home()
     {
-        // Home is a teaser: the four newest posts. The full list lives behind
-        // the categories and search, where the infinite loader takes over.
+        // Home is a teaser: the four newest posts, title only, marked with
+        // the icon of the organization each was filed under. The full list
+        // lives behind the categories and search.
         $blogs = Blog::latest()
             ->where('status', 1)
-            ->select('id', 'title', 'thumbnail', 'slug', 'short_description')
+            ->select('id', 'title', 'category_id', 'slug')
+            ->with(['category:id,organization_id', 'category.organization:id,thumbnail'])
             ->take(4)
             ->get();
 

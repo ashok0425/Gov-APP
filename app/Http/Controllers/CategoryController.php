@@ -63,7 +63,7 @@ class CategoryController extends Controller
      */
     protected function levelList(Request $request, $level)
     {
-        if (! Auth::user()->can('category:view')) {
+        if (! Auth::user()->can('subcategory:view')) {
             abort(403);
         }
 
@@ -98,10 +98,6 @@ class CategoryController extends Controller
 
     public function create(Request $request)
     {
-        if (! Auth::user()->can('category:create')) {
-            abort(403);
-        }
-
         // "Add Subcategory" / "Add Child Category" land here with the parent
         // already chosen, so the cascade opens on that branch. Which button
         // was pressed decides the level, and the form only asks for the
@@ -111,6 +107,10 @@ class CategoryController extends Controller
         $level = $parent
             ? min($parent->level() + 1, Category::MAX_DEPTH)
             : max(1, min((int) $request->query('level', 1), Category::MAX_DEPTH));
+
+        if (! Auth::user()->can($level === 1 ? 'category:create' : 'subcategory:create')) {
+            abort(403);
+        }
 
         return view('category.create', [
             'categoryTree' => $this->parentTree(),
@@ -123,7 +123,9 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        if (! Auth::user()->can('category:create')) {
+        $level = max(1, min((int) $request->input('level', 1), Category::MAX_DEPTH));
+
+        if (! Auth::user()->can($level === 1 ? 'category:create' : 'subcategory:create')) {
             abort(403);
         }
 
@@ -154,7 +156,7 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-        if (! Auth::user()->can('category:edit')) {
+        if (! Auth::user()->can($category->level() === 1 ? 'category:edit' : 'subcategory:edit')) {
             abort(403);
         }
 
@@ -173,7 +175,7 @@ class CategoryController extends Controller
 
     public function update(Request $request, Category $category)
     {
-        if (! Auth::user()->can('category:edit')) {
+        if (! Auth::user()->can($category->level() === 1 ? 'category:edit' : 'subcategory:edit')) {
             abort(403);
         }
 
@@ -215,7 +217,7 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
-        if (! Auth::user()->can('category:delete')) {
+        if (! Auth::user()->can($category->level() === 1 ? 'category:delete' : 'subcategory:delete')) {
             abort(403);
         }
 
@@ -233,7 +235,7 @@ class CategoryController extends Controller
     /** Drag-and-drop order from a list: positions follow the given ids. */
     public function reorder(Request $request)
     {
-        if (! Auth::user()->can('category:edit')) {
+        if (! Auth::user()->canAny(['category:edit', 'subcategory:edit'])) {
             abort(403);
         }
 

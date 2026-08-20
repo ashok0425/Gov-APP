@@ -68,12 +68,16 @@
         </div>
     @endif
 
-    <h2 class="section-title">सूचना तथा जनकारी</h2>
+    <h2 class="section-title section-title-lead">
+        <span class="material-symbols-rounded">campaign</span>
+        भर्खरका मुख्य सूचनाहरू
+    </h2>
 
     @if ($blogs->isNotEmpty())
-        {{-- Just a taste — the four newest. The rest is a category tap away. --}}
+        {{-- Just a taste — the four newest, title only, each marked with its
+             organization's icon. The rest is a category tap away. --}}
         <div class="blog-list">
-            @include('mobile.partials.blog-rows', ['blogs' => $blogs])
+            @include('mobile.partials.blog-rows', ['blogs' => $blogs, 'orgIcon' => true])
         </div>
     @else
         <div class="blog-list">

@@ -50,6 +50,7 @@ class DatabaseSeeder extends Seeder
         // filed under it. Every one of these is re-runnable — they match on
         // slug or name, so seeding twice updates rather than doubles.
         $this->call([
+            PermissionSeeder::class,
             CategorySeeder::class,
             BlogSeeder::class,
             BannerSeeder::class,

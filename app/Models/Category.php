@@ -108,6 +108,12 @@ class Category extends Model
         return $query->orderBy('position')->orderBy('name');
     }
 
+    /** Only main categories carry one; the levels below inherit through their root. */
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
     public function parent()
     {
         return $this->belongsTo(Category::class, 'parent_id');

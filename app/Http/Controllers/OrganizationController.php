@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Organization;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -14,6 +15,10 @@ class OrganizationController extends Controller
 {
     public function index(Request $request)
     {
+        if (! Auth::user()->can('organization:view')) {
+            abort(403);
+        }
+
         $organizations = Organization::withCount([
                 'categories as main_categories_count' => fn ($q) => $q->whereNull('parent_id'),
             ])
@@ -29,11 +34,19 @@ class OrganizationController extends Controller
 
     public function create()
     {
+        if (! Auth::user()->can('organization:create')) {
+            abort(403);
+        }
+
         return view('organization.create');
     }
 
     public function store(Request $request)
     {
+        if (! Auth::user()->can('organization:create')) {
+            abort(403);
+        }
+
         $request->validate($this->rules());
 
         $organization = new Organization;
@@ -51,11 +64,19 @@ class OrganizationController extends Controller
 
     public function edit(Organization $organization)
     {
+        if (! Auth::user()->can('organization:edit')) {
+            abort(403);
+        }
+
         return view('organization.edit', compact('organization'));
     }
 
     public function update(Request $request, Organization $organization)
     {
+        if (! Auth::user()->can('organization:edit')) {
+            abort(403);
+        }
+
         $request->validate($this->rules($organization));
 
         $organization->name = $request->name;
@@ -84,6 +105,10 @@ class OrganizationController extends Controller
 
     public function destroy(Organization $organization)
     {
+        if (! Auth::user()->can('organization:delete')) {
+            abort(403);
+        }
+
         // Its categories live on, just unassigned — the foreign key nulls
         // itself — so they can be moved to another organization rather than
         // vanishing with this one.
@@ -98,6 +123,10 @@ class OrganizationController extends Controller
     /** Drag-and-drop order from the list: positions follow the given ids. */
     public function reorder(Request $request)
     {
+        if (! Auth::user()->can('organization:edit')) {
+            abort(403);
+        }
+
         $request->validate([
             'ids' => ['required', 'array'],
             'ids.*' => ['integer'],

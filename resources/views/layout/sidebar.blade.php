@@ -61,15 +61,17 @@
         <ul class="sidebar-nav">
             {{-- The menu tree has a section of its own; posts are what gets
                  filed into it. --}}
-            @can('do:anything')
+            @canAny(['organization:view', 'category:view', 'subcategory:view'])
             <li class="sidebar-header">Manage Category</li>
 
+            @can('organization:view')
             <li class="sidebar-item">
                 <a class="sidebar-link {{ Request::is('organizations', 'organizations/*') ? 'text-light' : '' }}" href="{{ route('organizations.index') }}">
                     <i class="fas fa-building"></i>
                     <span class="align-middle">Organization</span>
                 </a>
             </li>
+            @endcan
 
             @php
                 // The create and edit screens live under /categories whatever
@@ -96,13 +98,16 @@
                 }
             @endphp
 
+            @can('category:view')
             <li class="sidebar-item">
                 <a class="sidebar-link {{ $menuLevel === 1 ? 'text-light' : '' }}" href="{{ route('categories.index') }}">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="align-middle">Category</span>
                 </a>
             </li>
+            @endcan
 
+            @can('subcategory:view')
             <li class="sidebar-item">
                 <a class="sidebar-link {{ $menuLevel === 2 ? 'text-light' : '' }}" href="{{ route('subcategories.index') }}">
                     <i class="fas fa-sitemap"></i>
@@ -123,8 +128,9 @@
                     <span class="align-middle">Grandchild Category</span>
                 </a>
             </li>
-
             @endcan
+
+            @endcanAny
 
             @canAny(['post:view','post:create','post:edit','post:delete'])
             <li class="sidebar-header">Manage Post</li>
@@ -139,16 +145,19 @@
             </li>
             @endcanAny
 
-            @can('do:anything')
+            @canAny(['notice:view', 'do:anything'])
             <li class="sidebar-header">General</li>
 
+            @can('notice:view')
             <li class="sidebar-item">
                 <a class="sidebar-link {{Request::is('notices','notices/*')?'text-light':' '}}" href="{{ route('notices.index') }}">
                     <i class="fas fa-bell"></i>
                     <span class="align-middle">Notification</span>
                 </a>
             </li>
+            @endcan
 
+            @can('do:anything')
             <li class="sidebar-item">
                 <a class="sidebar-link {{Request::is('pages','pages/*')?'text-light':' '}}" href="{{ route('pages.index') }}">
                     <i class="far fa-calendar-minus"></i>
@@ -163,6 +172,7 @@
                 </a>
             </li>
             @endcan
+            @endcanAny
 
         </ul>
     </div>

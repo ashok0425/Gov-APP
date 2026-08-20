@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Concerns\ReturnsToList;
 use App\Models\Notice;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -17,6 +18,10 @@ class NoticeController extends Controller
 
     public function index()
     {
+        if (! Auth::user()->can('notice:view')) {
+            abort(403);
+        }
+
         $notices = Notice::latestFirst()->paginate(20);
 
         return view('notice.index', compact('notices'));
@@ -24,11 +29,19 @@ class NoticeController extends Controller
 
     public function create()
     {
+        if (! Auth::user()->can('notice:create')) {
+            abort(403);
+        }
+
         return view('notice.create');
     }
 
     public function store(Request $request)
     {
+        if (! Auth::user()->can('notice:create')) {
+            abort(403);
+        }
+
         $data = $this->validated($request);
 
         $notice = new Notice;
@@ -44,11 +57,19 @@ class NoticeController extends Controller
 
     public function edit(Notice $notice)
     {
+        if (! Auth::user()->can('notice:edit')) {
+            abort(403);
+        }
+
         return view('notice.edit', compact('notice'));
     }
 
     public function update(Request $request, Notice $notice)
     {
+        if (! Auth::user()->can('notice:edit')) {
+            abort(403);
+        }
+
         $data = $this->validated($request);
 
         $notice->fill($data);
@@ -74,6 +95,10 @@ class NoticeController extends Controller
 
     public function destroy(Notice $notice)
     {
+        if (! Auth::user()->can('notice:delete')) {
+            abort(403);
+        }
+
         $this->forget($notice->thumbnail);
         $notice->delete();
 

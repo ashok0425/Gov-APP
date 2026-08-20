@@ -16,20 +16,22 @@ Route::middleware('auth')->group(function () {
     Route::post('/password/update', [\App\Http\Controllers\AuthController::class, 'changePassword'])->name('password');
     Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
-    Route::post('organizations/reorder', [\App\Http\Controllers\OrganizationController::class, 'reorder'])->name('organizations.reorder')->middleware('can:do anything');
-    Route::resource('organizations', \App\Http\Controllers\OrganizationController::class)->except(['show'])->middleware('can:do anything');
-    Route::post('categories/reorder', [\App\Http\Controllers\CategoryController::class, 'reorder'])->name('categories.reorder')->middleware('can:do anything');
+    // Organizations and the menu tree check their own granular permissions
+    // (organization:*, category:*, subcategory:*) inside the controllers.
+    Route::post('organizations/reorder', [\App\Http\Controllers\OrganizationController::class, 'reorder'])->name('organizations.reorder');
+    Route::resource('organizations', \App\Http\Controllers\OrganizationController::class)->except(['show']);
+    Route::post('categories/reorder', [\App\Http\Controllers\CategoryController::class, 'reorder'])->name('categories.reorder');
 
-    Route::get('subcategories', [\App\Http\Controllers\CategoryController::class, 'subcategories'])->name('subcategories.index')->middleware('can:do anything');
-    Route::get('child-categories', [\App\Http\Controllers\CategoryController::class, 'childCategories'])->name('childcategories.index')->middleware('can:do anything');
-    Route::get('grandchild-categories', [\App\Http\Controllers\CategoryController::class, 'grandchildCategories'])->name('grandchildcategories.index')->middleware('can:do anything');
-    Route::resource('categories', \App\Http\Controllers\CategoryController::class)->middleware('can:do anything');
+    Route::get('subcategories', [\App\Http\Controllers\CategoryController::class, 'subcategories'])->name('subcategories.index');
+    Route::get('child-categories', [\App\Http\Controllers\CategoryController::class, 'childCategories'])->name('childcategories.index');
+    Route::get('grandchild-categories', [\App\Http\Controllers\CategoryController::class, 'grandchildCategories'])->name('grandchildcategories.index');
+    Route::resource('categories', \App\Http\Controllers\CategoryController::class);
 
     Route::resource('posts', \App\Http\Controllers\BlogController::class)->names('blogs');
     Route::resource('banners', \App\Http\Controllers\BannerController::class);
     Route::resource('attachments', \App\Http\Controllers\AttachmentController::class);
 
-    Route::resource('notices', \App\Http\Controllers\NoticeController::class)->middleware('can:do anything');
+    Route::resource('notices', \App\Http\Controllers\NoticeController::class);
     Route::resource('pages', \App\Http\Controllers\PageController::class)->middleware('can:do anything');
     Route::resource('cms', \App\Http\Controllers\CmsController::class)->middleware('can:do anything');
     Route::get('users/index', [\App\Http\Controllers\ManageAccessController::class,'users'])->middleware('can:do anything')->name('users');
