@@ -448,9 +448,10 @@ button {
     padding: 12px 12px 4px;
 }
 
-.section-title-lead .material-symbols-rounded {
-    font-size: 22px;
-    line-height: 1;
+.section-title-lead img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
     flex: none;
 }
 

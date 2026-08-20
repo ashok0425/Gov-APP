@@ -69,7 +69,7 @@
     @endif
 
     <h2 class="section-title section-title-lead">
-        <span class="material-symbols-rounded">campaign</span>
+        <img src="{{ asset('mobile/img/megaphone.png') }}" alt="" width="22" height="22">
         भर्खरका मुख्य सूचनाहरू
     </h2>
 
