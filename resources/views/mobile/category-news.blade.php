@@ -8,8 +8,6 @@
          Without one the plain white title bar stays. --}}
     @if (filled($category->top_image))
         <header class="appbar-cover">
-            <span class="icon-btn"></span>
-
             <img src="{{ asset('storage/' . $category->top_image) }}"
                  alt=""
                  data-fallback="{{ asset('mobile/img/placeholder.jpeg') }}">

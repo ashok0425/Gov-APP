@@ -7,8 +7,6 @@
          floating over it; without one the plain white title bar stays. --}}
     @if (filled($organization->top_image))
         <header class="appbar-cover">
-            <span class="icon-btn"></span>
-
             <img src="{{ asset('storage/' . $organization->top_image) }}"
                  alt=""
                  data-fallback="{{ asset('mobile/img/placeholder.jpeg') }}">

@@ -116,10 +116,9 @@ button {
     margin: 10px auto 0;
 }
 
-/* Ward / palika: the cover image behind a translucent green wash. */
+/* Ward / palika: the cover image, shown whole on a plain background. */
 .appbar-cover {
     height: var(--cover-h);
-    background: var(--green-90);
     position: relative;
     flex: none;
     overflow: hidden;
@@ -176,21 +175,6 @@ button {
 
 .icon-btn:active {
     background: rgba(0, 0, 0, 0.08);
-}
-
-/* Back button floating over an image appbar — white there, because it sits on
-   a dark disc over the photograph rather than on paper. */
-.appbar-cover .icon-btn {
-    position: absolute;
-    top: 8px;
-    left: 6px;
-    z-index: 2;
-    color: var(--white);
-    background: rgba(0, 0, 0, 0.25);
-}
-
-.appbar-cover .icon-btn:active {
-    background: rgba(0, 0, 0, 0.45);
 }
 
 /* -------------------------------------------------------------- carousel
