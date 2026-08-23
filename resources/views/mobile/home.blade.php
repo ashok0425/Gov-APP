@@ -60,7 +60,7 @@
 
             <a href="{{ route('m.categories') }}" class="cat-tile">
                 <span class="cat-icon">
-                    <span class="material-symbols-rounded">apps</span>
+                    <img src="{{ asset('mobile/img/see-all.png') }}" alt="" width="60" height="60">
                 </span>
 
                 <span class="cat-name">सबै हेर्नुहोस्</span>

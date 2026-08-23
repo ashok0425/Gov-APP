@@ -3,14 +3,12 @@
 @section('title', $page->name ?: $page->title)
 
 @section('appbar')
-    <header class="appbar">
-        <span class="icon-btn"></span>
-        <span class="appbar-title">{{ $page->name ?: $page->title }}</span>
-        <span class="icon-btn"></span>
-    </header>
+    @include('mobile.partials.app-banner')
 @endsection
 
 @section('content')
+    <h2 class="section-title">{{ $page->name ?: $page->title }}</h2>
+
     <div class="rich" style="padding:16px">
         {!! $body !!}
     </div>
