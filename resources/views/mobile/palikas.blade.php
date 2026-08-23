@@ -5,7 +5,7 @@
 
 @section('appbar')
     <header class="appbar">
-        @include('mobile.partials.back-button')
+        <span class="icon-btn"></span>
         <span class="appbar-title">Palika</span>
         <span class="icon-btn"></span>
     </header>

@@ -135,7 +135,6 @@ class MobileAppController extends Controller
         return $this->newsResponse($request, $blogs, [
             'category' => $category,
             'subcategories' => $children,
-            'backRoute' => $this->categoryBackRoute($category),
             'title' => $category->name,
             'listUrl' => route('m.category', $category->id),
         ]);
@@ -144,18 +143,46 @@ class MobileAppController extends Controller
     // -------------------------------------------------------------- search
 
     /**
-     * Searches every published post. Latin terms are also matched against
+     * Searches everything the app shows: organizations, every level of the
+     * menu, and every published post. Latin terms are also matched against
      * their Devanagari spelling, so "sifaris" finds सिफारिस.
      */
     public function search(Request $request, NepaliTransliterator $transliterator)
     {
         $term = trim((string) $request->query('q', ''));
         $blogs = null;
+        $organizations = collect();
+        $categories = collect();
         $nepaliPattern = null;
 
         if (mb_strlen($term) >= 2) {
             if (! $transliterator->isDevanagari($term)) {
                 $nepaliPattern = $transliterator->toRegex($term);
+            }
+
+            $nameMatches = function ($query) use ($term, $nepaliPattern) {
+                $query->where('name', 'LIKE', '%'.$term.'%');
+
+                if ($nepaliPattern) {
+                    $query->orWhere('name', 'REGEXP', $nepaliPattern);
+                }
+            };
+
+            // The menu matches come whole, not paged — they are a short list
+            // on top of the news, which is what scrolls.
+            if (! $request->wantsJson()) {
+                $organizations = Organization::where('status', 1)
+                    ->where($nameMatches)
+                    ->ordered()
+                    ->limit(20)
+                    ->get();
+
+                $categories = Category::where('status', 1)
+                    ->where($nameMatches)
+                    ->with('parent.parent.parent')
+                    ->ordered()
+                    ->limit(30)
+                    ->get();
             }
 
             $blogs = Blog::latest()
@@ -187,6 +214,8 @@ class MobileAppController extends Controller
 
         return view('mobile.search', [
             'term' => $term,
+            'organizations' => $organizations,
+            'categories' => $categories,
             'blogs' => $blogs,
             'matchedNepali' => (bool) $nepaliPattern,
         ]);
@@ -242,18 +271,6 @@ class MobileAppController extends Controller
     protected function menuOrganizations()
     {
         return Organization::where('status', 1)->ordered()->get();
-    }
-
-    /** Up one level: parent category, then organization, then home. */
-    protected function categoryBackRoute(Category $category)
-    {
-        if ($category->parent_id) {
-            return route('m.category', $category->parent_id);
-        }
-
-        return $category->organization_id
-            ? route('m.organization', $category->organization_id)
-            : route('m.home');
     }
 
     /** Infinite scroll asks for page 2+ as JSON, the way the Flutter list does. */

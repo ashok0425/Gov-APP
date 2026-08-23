@@ -4,27 +4,11 @@
 @section('shell-class', 'has-nav')
 
 @section('appbar')
-    <header class="appbar">
-        @include('mobile.partials.back-button')
-        <span class="appbar-title">My Setting</span>
-        <span class="icon-btn"></span>
-    </header>
+    @include('mobile.partials.app-banner')
 @endsection
 
 @section('content')
     <div style="padding:10px 15px">
-        @if ($showPalika ?? false)
-            <a class="tile" href="{{ route('m.palikas') }}">
-                <span class="material-symbols-rounded">location_city</span>
-                <span>
-                    <span class="tile-title" style="display:block">Palika</span>
-                    <span class="tile-sub">Browse the palika directory</span>
-                </span>
-            </a>
-
-            <div style="height:10px"></div>
-        @endif
-
         <a class="tile" href="{{ route('m.page', 'contact-us') }}">
             <span class="material-symbols-rounded">contact_emergency</span>
             <span>

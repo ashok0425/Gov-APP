@@ -32,6 +32,15 @@
 
                                 <td>
                                     <a
+                                        href="{{ route('m.page', $page->slug) }}"
+                                        class="btn btn-success"
+                                        target="_blank"
+                                        rel="noopener"
+                                        title="View public page"
+                                    >
+                                        <i class="far fa-eye"></i>
+                                    </a>
+                                    <a
                                         href="{{ route('pages.edit', $page) }}"
                                         class="btn btn-primary"
                                     >

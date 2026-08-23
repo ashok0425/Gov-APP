@@ -43,6 +43,13 @@
                     <h5 class="card-title text-white">{{ $levelName }} List</h5>
                 </div>
                 <div>
+                    @can('subcategory:edit')
+                        <a href="{{ route('categories.reorder.page', ['level' => $level, 'parent' => request()->query('parent')]) }}"
+                           class="btn btn-secondary btn-sm">
+                            <i class="fas fa-sort"></i>
+                            Reorder
+                        </a>
+                    @endcan
                     <a href="{{ route('categories.create', ['level' => $level, 'parent' => request()->query('parent'), 'back' => request()->fullUrl()]) }}"
                        class="btn btn-info btn-sm">
                         <i class="fas fa-plus"></i>
@@ -55,7 +62,6 @@
                 <table class="table table-responsive-sm">
                     <thead>
                         <tr>
-                            <th></th>
                             <th>#</th>
                             <th>{{ $levelName }}</th>
                             <th>Sits under</th>
@@ -68,12 +74,9 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody id="sortable-body">
+                    <tbody>
                         @forelse ($rows as $row)
-                            <tr data-id="{{ $row->id }}">
-                                <td class="drag-handle" style="cursor: grab" title="drag to reorder">
-                                    <i class="fas fa-grip-vertical text-muted"></i>
-                                </td>
+                            <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $row->name }}</td>
                                 <td>{{ $row->parent?->pathName() }}</td>
@@ -119,7 +122,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="{{ $childName ? 9 : 8 }}" class="text-center">
+                                <td colspan="{{ $childName ? 8 : 7 }}" class="text-center">
                                     No {{ Str::lower($levelName) }} yet — use
                                     <b>Add {{ $levelName }}</b> to create one.
                                 </td>
@@ -139,10 +142,5 @@
                 $('.searchable').select2({ width: '100%' });
             });
         </script>
-
-        @include('partials.sortable-rows', [
-            'reorderUrl' => route('categories.reorder'),
-            'start' => ($rows->firstItem() ?? 1) - 1,
-        ])
     @endpush
 @endsection

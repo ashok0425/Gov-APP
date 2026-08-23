@@ -10,9 +10,8 @@ use Illuminate\Database\Eloquent\Model;
  * → grandchild category. Every level is a row here; parent_id is what
  * separates them.
  *
- * Every level below the top can carry its own contact details, which the
- * app shows behind a floating button when "show_contact" is on. Main
- * categories don't — they are menu headings, not offices.
+ * Every level, main categories included, can carry its own contact details,
+ * which the app shows behind a floating button when "show_contact" is on.
  */
 class Category extends Model
 {

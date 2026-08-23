@@ -4,11 +4,7 @@
 @section('shell-class', 'has-nav')
 
 @section('appbar')
-    <header class="appbar">
-        @include('mobile.partials.back-button', ['fallback' => route('m.home')])
-        <span class="appbar-title">मेनु</span>
-        <span class="icon-btn"></span>
-    </header>
+    @include('mobile.partials.app-banner')
 @endsection
 
 @section('content')

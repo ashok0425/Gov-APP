@@ -50,7 +50,15 @@
                                 value=""
                             />
                         </div>
-                        <img src="{{getImage($post->thumbnail)}}" alt="" width="100">
+                        @if ($post->thumbnail)
+                            <img src="{{ getImage($post->thumbnail) }}" alt="" width="100">
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" name="remove_thumbnail" value="1" id="remove_thumbnail">
+                                <label class="form-check-label" for="remove_thumbnail">Remove current image</label>
+                            </div>
+                        @else
+                            <small class="text-muted d-block mt-2">No image — the app shows its icon instead.</small>
+                        @endif
                     </div>
 
                     {{--<div class="mb-3 col-md-6">

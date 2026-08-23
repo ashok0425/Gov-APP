@@ -18,10 +18,11 @@
                  no grey placeholder. --}}
             <span class="blog-row-icon-spacer" aria-hidden="true"></span>
         @else
-            <img src="{{ asset('storage/' . $rowImage) }}"
+            {{-- A post with no picture of its own shows the app's icon. --}}
+            <img src="{{ filled($rowImage) ? asset('storage/' . $rowImage) : asset('mobile/img/post-fallback.png') }}"
                  alt=""
                  loading="lazy"
-                 data-fallback="{{ asset('mobile/img/placeholder-thumb.jpeg') }}">
+                 data-fallback="{{ asset('mobile/img/post-fallback.png') }}">
         @endif
 
         <span class="blog-row-body">

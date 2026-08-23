@@ -15,26 +15,15 @@
 
 @can('banners:view')
 <li class="sidebar-item">
-    <a href="javascript:void(0);" class="sidebar-link d-flex justify-between align-items-center {{Request::is('banners','banners/*')?'text-light':' '}}" data-toggle="banner-dropdown">
-        <span>
-            <i class="fas fa-images"></i>
-            <span class="align-middle">Banners</span>
-        </span>
-        <i class="fas fa-chevron-down toggle-icon"></i>
+    <a class="sidebar-link {{Request::is('banners','banners/*')?'text-light':' '}}" href="{{ route('banners.index',['type'=>1]) }}">
+        <i class="fas fa-images"></i>
+        <span class="align-middle">Banners</span>
     </a>
-    <ul class="submenu {{Request::is('banners','banners/*')?'d-block':' d-none'}}" id="banner-dropdown" >
-        <li class="submenu-item">
-            <a href="{{ route('banners.index',['type'=>1]) }}" class="sidebar-link">Notice Banner</a>
-        </li>
-        <li class="submenu-item">
-            <a href="{{ route('banners.index',['type'=>2]) }}" class="sidebar-link">Rep Banner</a>
-        </li>
-    </ul>
 </li>
 @endcan
 
  <li class="sidebar-item">
-           <a target="_blank" class="sidebar-link {{Request::is('attachments','attachments/*')?'text-light':' '}}" href="{{ route('attachments.index') }}">
+           <a class="sidebar-link {{Request::is('attachments','attachments/*')?'text-light':' '}}" href="{{ route('attachments.index') }}">
                <i class="fas fa-copy"></i>
                <span class="align-middle">Attachment</span>
            </a>

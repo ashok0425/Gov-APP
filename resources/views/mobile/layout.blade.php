@@ -27,6 +27,13 @@
     </div>
 
     <script src="{{ asset('mobile/app.js') }}?v={{ filemtime(public_path('mobile/app.js')) }}"></script>
+    {{-- Offline fallback: with no network, pages show /mobile/offline.html
+         instead of the browser's own error. See public/sw.js. --}}
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(function () {});
+        }
+    </script>
     @stack('scripts')
 </body>
 </html>

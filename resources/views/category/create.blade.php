@@ -79,9 +79,7 @@
 
                 @include('category.partials.cover-fields', ['category' => null])
 
-                @if ($level > 1)
-                    @include('category.partials.contact-fields', ['category' => null])
-                @endif
+                @include('category.partials.contact-fields', ['category' => null])
 
                 <button type="submit" class="btn btn-primary">Add</button>
             </form>

@@ -54,6 +54,8 @@ class OrganizationController extends Controller
         $organization->thumbnail = $request->file('thumbnail')?->store('uploads/organization', 'public');
         $organization->top_image = $request->file('top_image')?->store('uploads/organization-tops', 'public');
         $organization->status = $request->status ?? 1;
+        // A new one lands at the end of the grid, not in front of everything.
+        $organization->position = (int) Organization::max('position') + 1;
         $organization->save();
 
         return redirect()->route('organizations.index')->with([
@@ -117,6 +119,18 @@ class OrganizationController extends Controller
         return redirect()->back()->with([
             'alert-type' => 'success',
             'message' => 'Organization Deleted',
+        ]);
+    }
+
+    /** One page with every organization on it, for dragging into order. */
+    public function reorderPage()
+    {
+        if (! Auth::user()->can('organization:edit')) {
+            abort(403);
+        }
+
+        return view('organization.reorder', [
+            'organizations' => Organization::ordered()->get(),
         ]);
     }
 

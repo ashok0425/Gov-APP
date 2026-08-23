@@ -4,7 +4,7 @@
 
 @section('appbar')
     <header class="appbar-cover">
-        @include('mobile.partials.back-button', ['fallback' => route('m.palikas')])
+        <span class="icon-btn"></span>
 
         @if (filled($palika->cover_image))
             <img src="{{ asset('storage/' . $palika->cover_image) }}"

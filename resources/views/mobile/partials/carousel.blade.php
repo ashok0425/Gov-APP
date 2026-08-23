@@ -1,4 +1,4 @@
-{{-- CustomSlider — 16:9, square corners, dots below. Always auto-plays. --}}
+{{-- CustomSlider — 1080x400 slides, rounded corners, dots below. Always auto-plays. --}}
 @php
     $slides = collect($banners ?? [])->pluck('thumbnail')->filter()->values();
 @endphp

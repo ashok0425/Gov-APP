@@ -148,6 +148,12 @@ class BlogController extends Controller
 
         //     return redirect()->route('blogs.index')->with($notification);
         // }
+        // "Remove current image" clears it; a fresh upload still wins.
+        if ($request->boolean('remove_thumbnail')) {
+            \Storage::disk('public')->delete((string) $post->thumbnail);
+            $post->thumbnail = null;
+        }
+
         $thumbnail = $request->file('thumbnail')?->store('uploads', 'public') ?? $post->thumbnail;
         $cover = $request->file('cover')?->store('uploads', 'public') ?? $post->thumbnail;
 

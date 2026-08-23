@@ -4,7 +4,7 @@
 
 @section('appbar')
     <header class="appbar">
-        @include('mobile.partials.back-button', ['fallback' => route('m.settings')])
+        <span class="icon-btn"></span>
         <span class="appbar-title">{{ $page->name ?: $page->title }}</span>
         <span class="icon-btn"></span>
     </header>

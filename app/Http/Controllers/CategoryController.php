@@ -143,6 +143,8 @@ class CategoryController extends Controller
         $category->status = $request->status ?? 1;
         $category->show_cover = $request->boolean('show_cover');
         $this->fillContact($category, $request);
+        // A new one lands after its siblings, not in front of them.
+        $category->position = (int) Category::where('parent_id', $category->parent_id)->max('position') + 1;
         $category->save();
         $this->syncCovers($category, $request);
 
@@ -229,6 +231,43 @@ class CategoryController extends Controller
         return redirect()->back()->with([
             'alert-type' => 'success',
             'message' => 'Category Deleted',
+        ]);
+    }
+
+    /**
+     * One page with every row of a level on it, for dragging into order.
+     * Below the top level the rows are grouped by parent, since that is the
+     * only order the app ever shows them in; ?parent narrows to one group.
+     */
+    public function reorderPage(Request $request)
+    {
+        $level = max(1, min((int) $request->query('level', 1), Category::MAX_DEPTH));
+
+        if (! Auth::user()->can($level === 1 ? 'category:edit' : 'subcategory:edit')) {
+            abort(403);
+        }
+
+        $rows = Category::atLevel($level)
+            ->with('parent.parent.parent')
+            ->when($request->parent, fn ($q) => $q->where('parent_id', $request->parent))
+            ->orderBy('position')
+            ->orderBy('name')
+            ->get();
+
+        $groups = $level === 1
+            ? collect([null => $rows])
+            : $rows->groupBy('parent_id');
+
+        $parents = Category::atLevel($level - 1)
+            ->with('parent.parent')
+            ->orderBy('name')
+            ->get();
+
+        return view('category.reorder', [
+            'level' => $level,
+            'groups' => $groups,
+            'parents' => $parents,
+            'listRoute' => $this->listRoute($level),
         ]);
     }
 
@@ -412,18 +451,15 @@ class CategoryController extends Controller
     }
 
     /**
-     * The contact card the app floats behind the phone button. Only levels
-     * below the top carry one — a main category is a heading, not an office —
-     * so a record saved at the top has its contact cleared.
+     * The contact card the app floats behind the phone button. Every level
+     * may carry one, main categories included.
      */
     protected function fillContact(Category $category, Request $request)
     {
-        $isMain = $this->parentFrom($request) === null;
-
-        $category->show_contact = ! $isMain && $request->boolean('show_contact');
+        $category->show_contact = $request->boolean('show_contact');
 
         foreach (['owner_name', 'address', 'google_map_link', 'email', 'phone', 'whatsapp', 'messanger', 'facebook', 'other'] as $field) {
-            $category->{$field} = $isMain ? null : ($request->input($field) ?: null);
+            $category->{$field} = $request->input($field) ?: null;
         }
     }
 

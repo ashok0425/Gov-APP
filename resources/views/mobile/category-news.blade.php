@@ -8,7 +8,7 @@
          Without one the plain white title bar stays. --}}
     @if (filled($category->top_image))
         <header class="appbar-cover">
-            @include('mobile.partials.back-button', ['fallback' => $backRoute])
+            <span class="icon-btn"></span>
 
             <img src="{{ asset('storage/' . $category->top_image) }}"
                  alt=""
@@ -16,7 +16,7 @@
         </header>
     @else
         <header class="appbar appbar-white">
-            @include('mobile.partials.back-button', ['fallback' => $backRoute])
+            <span class="icon-btn"></span>
             <span class="appbar-title">{{ $title }}</span>
             <span class="icon-btn"></span>
         </header>

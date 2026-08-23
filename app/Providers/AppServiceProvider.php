@@ -46,11 +46,6 @@ class AppServiceProvider extends ServiceProvider
                 ->count());
         });
 
-        // Palika is behind a switch in Cms.
-        View::composer('mobile.settings', function ($view) {
-            $view->with('showPalika', (bool) optional(Cms::settings())->show_palika);
-        });
-
         // The header banner is a Cms upload, shown on every screen that opens
         // with the banner strip.
         View::composer('mobile.partials.app-banner', function ($view) {

@@ -203,9 +203,12 @@
                     if (!hasMore && sentinel) sentinel.remove();
                 })
                 .catch(function () {
-                    // Leave the spinner in place; the next scroll retries.
+                    // Say so when the network is gone; the next scroll retries.
                     page -= 1;
                     loading = false;
+                    if (sentinel && !navigator.onLine) {
+                        sentinel.innerHTML = '<p class="state-hint" style="padding:12px 0">इन्टरनेट जडान छैन — No internet connection</p>';
+                    }
                 });
         }
 

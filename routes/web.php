@@ -18,8 +18,10 @@ Route::middleware('auth')->group(function () {
 
     // Organizations and the menu tree check their own granular permissions
     // (organization:*, category:*, subcategory:*) inside the controllers.
+    Route::get('organizations/reorder', [\App\Http\Controllers\OrganizationController::class, 'reorderPage'])->name('organizations.reorder.page');
     Route::post('organizations/reorder', [\App\Http\Controllers\OrganizationController::class, 'reorder'])->name('organizations.reorder');
     Route::resource('organizations', \App\Http\Controllers\OrganizationController::class)->except(['show']);
+    Route::get('categories/reorder', [\App\Http\Controllers\CategoryController::class, 'reorderPage'])->name('categories.reorder.page');
     Route::post('categories/reorder', [\App\Http\Controllers\CategoryController::class, 'reorder'])->name('categories.reorder');
 
     Route::get('subcategories', [\App\Http\Controllers\CategoryController::class, 'subcategories'])->name('subcategories.index');
@@ -55,6 +57,14 @@ Route::get('storages', function () {
 
 Route::post('/summernote/upload', [SummernoteController::class, 'upload'])->name('summernote.upload');
 
+// CMS pages are public on every host — app stores and the admin panel's
+// "View" buttons link to them — so they sit outside the frontend-host guard.
+Route::get('/page/{slug}', [\App\Http\Controllers\MobileAppController::class, 'page'])->name('m.page');
+Route::redirect('/terms', '/page/term-condition');
+Route::redirect('/term-condition', '/page/term-condition');
+Route::redirect('/privacy-policy', '/page/privacy-policy');
+Route::redirect('/privacy', '/page/privacy-policy');
+
 // Public mobile web app — the browser version of the Nagarpalika Flutter app.
 // Registered last so it never shadows an admin route. "/palika" rather than
 // "/palikas", which the admin palika resource already owns.
@@ -70,7 +80,6 @@ Route::name('m.')->middleware('frontend.host')->group(function () {
     Route::get('/palika/{id}', [\App\Http\Controllers\MobileAppController::class, 'palika'])->name('palika');
     Route::get('/blog/{id}', [\App\Http\Controllers\MobileAppController::class, 'blog'])->name('blog');
     Route::get('/notice/{id}', [\App\Http\Controllers\MobileAppController::class, 'notice'])->name('notice');
-    Route::get('/page/{slug}', [\App\Http\Controllers\MobileAppController::class, 'page'])->name('page');
 
     // The menu belongs to the app, not to a palika. One route serves every
     // level — a category id says on its own how deep in the tree it sits.

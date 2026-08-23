@@ -19,6 +19,12 @@
                     <h5 class="card-title text-white">Category List</h5>
                 </div>
                 <div>
+                    @can('category:edit')
+                        <a href="{{ route('categories.reorder.page') }}" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-sort"></i>
+                            Reorder
+                        </a>
+                    @endcan
                     <a href="{{ route('categories.create') }}" class="btn btn-info btn-sm">
                         <o class="fas fa-plus"></o>
                         Add Category
@@ -30,21 +36,18 @@
                 <table id="myTable" class="table table-responsive-sm">
                     <thead>
                         <tr>
-                            <th></th>
                             <th>#</th>
                             <th>Name</th>
                             <th>Subcategories</th>
                             <th>Thumbnail</th>
+                            <th>Contact</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody id="sortable-body">
+                    <tbody>
                         @foreach ($categories as $category)
-                            <tr data-id="{{ $category->id }}">
-                                <td class="drag-handle" style="cursor: grab" title="drag to reorder">
-                                    <i class="fas fa-grip-vertical text-muted"></i>
-                                </td>
+                            <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $category->name }}</td>
 
@@ -64,6 +67,13 @@
                                         width="80"
                                         alt=""
                                     />
+                                </td>
+                                <td>
+                                    @if ($category->hasContact())
+                                        <span class="badge bg-success">{{ $category->phone ?: 'on' }}</span>
+                                    @else
+                                        <span class="badge bg-secondary">—</span>
+                                    @endif
                                 </td>
                                 <td>
                                     @if ($category->status == 1)
@@ -95,11 +105,4 @@
             {{$categories->links()}}
         </div>
     </div>
-
-    @push('scripts')
-        @include('partials.sortable-rows', [
-            'reorderUrl' => route('categories.reorder'),
-            'start' => ($categories->firstItem() ?? 1) - 1,
-        ])
-    @endpush
 @endsection

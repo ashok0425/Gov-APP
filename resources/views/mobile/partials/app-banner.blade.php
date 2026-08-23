@@ -1,4 +1,4 @@
-{{-- The strip across the top of home, notices and hello. Set in admin under
+{{-- The strip across the top of home, menu, settings, notices and hello. Set in admin under
      Cms → App Header Banner; the bundled gif stands in until one is uploaded,
      and again at runtime if the uploaded file has gone missing. --}}
 @php

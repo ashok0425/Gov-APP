@@ -19,6 +19,12 @@
                     <h5 class="card-title text-white">Organization List</h5>
                 </div>
                 <div>
+                    @can('organization:edit')
+                        <a href="{{ route('organizations.reorder.page') }}" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-sort"></i>
+                            Reorder
+                        </a>
+                    @endcan
                     <a href="{{ route('organizations.create') }}" class="btn btn-info btn-sm">
                         <i class="fas fa-plus"></i>
                         Add Organization
@@ -30,7 +36,6 @@
                 <table class="table table-responsive-sm">
                     <thead>
                         <tr>
-                            <th></th>
                             <th>#</th>
                             <th>Name</th>
                             <th>Categories</th>
@@ -39,12 +44,9 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody id="sortable-body">
+                    <tbody>
                         @forelse ($organizations as $organization)
-                            <tr data-id="{{ $organization->id }}">
-                                <td class="drag-handle" style="cursor: grab" title="drag to reorder">
-                                    <i class="fas fa-grip-vertical text-muted"></i>
-                                </td>
+                            <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $organization->name }}</td>
                                 <td>
@@ -72,7 +74,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center">
+                                <td colspan="6" class="text-center">
                                     No organization yet — use <b>Add Organization</b> to create one.
                                 </td>
                             </tr>
@@ -83,11 +85,4 @@
             {{ $organizations->links() }}
         </div>
     </div>
-
-    @push('scripts')
-        @include('partials.sortable-rows', [
-            'reorderUrl' => route('organizations.reorder'),
-            'start' => ($organizations->firstItem() ?? 1) - 1,
-        ])
-    @endpush
 @endsection

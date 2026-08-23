@@ -12,7 +12,7 @@
                    id="search-input"
                    name="q"
                    value="{{ $term }}"
-                   placeholder="Search news, notices, forms…"
+                   placeholder="Search organizations, categories, news…"
                    autocomplete="off"
                    autofocus
                    aria-label="Search">
@@ -27,25 +27,61 @@
 @endsection
 
 @section('content')
+    @php
+        $menuHits = ($organizations ?? collect())->count() + ($categories ?? collect())->count();
+    @endphp
+
     @if ($blogs === null)
         <div class="state">
             <p>Type at least two letters to search.</p>
-            <p class="state-hint">Search by title or description.</p>
+            <p class="state-hint">Search organizations, categories, news and notices.</p>
         </div>
-    @elseif ($blogs->isEmpty())
+    @elseif ($blogs->isEmpty() && $menuHits === 0)
         <div class="state">
             <p>No results for “{{ $term }}”.</p>
             <p class="state-hint">Try a shorter word or a different spelling.</p>
         </div>
     @else
-        <p class="search-count">
-            {{ $blogs->total() }} {{ Str::plural('result', $blogs->total()) }} for “{{ $term }}”
-        </p>
+        @if ($organizations->isNotEmpty())
+            <p class="search-count">{{ $organizations->count() }} {{ Str::plural('organization', $organizations->count()) }}</p>
+            <div class="search-menu">
+                @foreach ($organizations as $organization)
+                    @include('mobile.partials.search-menu-row', [
+                        'href' => route('m.organization', $organization->id),
+                        'thumbnail' => $organization->thumbnail,
+                        'icon' => 'apartment',
+                        'name' => $organization->name,
+                        'sub' => 'Organization',
+                    ])
+                @endforeach
+            </div>
+        @endif
 
-        @include('mobile.partials.infinite-list', [
-            'blogs' => $blogs,
-            'url' => route('m.search', ['q' => $term]),
-        ])
+        @if ($categories->isNotEmpty())
+            <p class="search-count">{{ $categories->count() }} {{ Str::plural('category', $categories->count()) }}</p>
+            <div class="search-menu">
+                @foreach ($categories as $category)
+                    @include('mobile.partials.search-menu-row', [
+                        'href' => route('m.category', $category->id),
+                        'thumbnail' => $category->thumbnail,
+                        'icon' => 'category',
+                        'name' => $category->name,
+                        'sub' => $category->parent?->pathName() ?: $category->organization?->name,
+                    ])
+                @endforeach
+            </div>
+        @endif
+
+        @if ($blogs->isNotEmpty())
+            <p class="search-count">
+                {{ $blogs->total() }} news {{ Str::plural('result', $blogs->total()) }} for “{{ $term }}”
+            </p>
+
+            @include('mobile.partials.infinite-list', [
+                'blogs' => $blogs,
+                'url' => route('m.search', ['q' => $term]),
+            ])
+        @endif
     @endif
 
 @endsection

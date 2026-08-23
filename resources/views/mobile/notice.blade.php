@@ -4,7 +4,7 @@
 
 @section('appbar')
     <header class="appbar">
-        @include('mobile.partials.back-button', ['fallback' => route('m.notifications')])
+        <span class="icon-btn"></span>
         <span class="appbar-title">सूचना</span>
         <span class="icon-btn"></span>
     </header>
