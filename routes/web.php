@@ -34,8 +34,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('attachments', \App\Http\Controllers\AttachmentController::class);
 
     Route::resource('notices', \App\Http\Controllers\NoticeController::class);
-    Route::resource('pages', \App\Http\Controllers\PageController::class)->middleware('can:do anything');
-    Route::resource('cms', \App\Http\Controllers\CmsController::class)->middleware('can:do anything');
+    // Pages and site settings check page:* and cms:edit inside the controllers.
+    Route::resource('pages', \App\Http\Controllers\PageController::class);
+    Route::resource('cms', \App\Http\Controllers\CmsController::class);
     Route::get('users/index', [\App\Http\Controllers\ManageAccessController::class,'users'])->middleware('can:do anything')->name('users');
 
 

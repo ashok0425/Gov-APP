@@ -7,10 +7,12 @@
                     <h5 class="card-title text-white">Notifications</h5>
                 </div>
                 <div>
-                    <a href="{{ route('notices.create') }}" class="btn btn-info btn-sm">
-                        <i class="fas fa-plus"></i>
-                        Add Notification
-                    </a>
+                    @can('notice:create')
+                        <a href="{{ route('notices.create') }}" class="btn btn-info btn-sm">
+                            <i class="fas fa-plus"></i>
+                            Add Notification
+                        </a>
+                    @endcan
                 </div>
             </div>
             <div class="card-body">
@@ -54,12 +56,16 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('notices.edit', ['notice' => $notice, 'back' => request()->fullUrl()]) }}" class="btn btn-primary">
-                                        <i class="far fa-edit"></i>
-                                    </a>
-                                    <a href="{{ route('notices.destroy', $notice) }}" class="btn btn-danger delete_btn">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
+                                    @can('notice:edit')
+                                        <a href="{{ route('notices.edit', ['notice' => $notice, 'back' => request()->fullUrl()]) }}" class="btn btn-primary">
+                                            <i class="far fa-edit"></i>
+                                        </a>
+                                    @endcan
+                                    @can('notice:delete')
+                                        <a href="{{ route('notices.destroy', $notice) }}" class="btn btn-danger delete_btn">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    @endcan
                                 </td>
                             </tr>
                         @empty

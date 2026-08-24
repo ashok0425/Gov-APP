@@ -25,10 +25,12 @@
                             Reorder
                         </a>
                     @endcan
-                    <a href="{{ route('organizations.create') }}" class="btn btn-info btn-sm">
-                        <i class="fas fa-plus"></i>
-                        Add Organization
-                    </a>
+                    @can('organization:create')
+                        <a href="{{ route('organizations.create') }}" class="btn btn-info btn-sm">
+                            <i class="fas fa-plus"></i>
+                            Add Organization
+                        </a>
+                    @endcan
                 </div>
             </div>
 
@@ -63,13 +65,17 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('organizations.edit', $organization) }}" class="btn btn-primary">
-                                        <i class="far fa-edit"></i>
-                                    </a>
-                                    <a href="{{ route('organizations.destroy', $organization->id) }}"
-                                       class="btn btn-danger delete_btn">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
+                                    @can('organization:edit')
+                                        <a href="{{ route('organizations.edit', $organization) }}" class="btn btn-primary">
+                                            <i class="far fa-edit"></i>
+                                        </a>
+                                    @endcan
+                                    @can('organization:delete')
+                                        <a href="{{ route('organizations.destroy', $organization->id) }}"
+                                           class="btn btn-danger delete_btn">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    @endcan
                                 </td>
                             </tr>
                         @empty

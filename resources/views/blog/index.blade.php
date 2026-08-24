@@ -34,10 +34,12 @@
                     <h5 class="card-title text-white">Post List</h5>
                 </div>
                 <div>
-                    <a href="{{ route('blogs.create') }}" class="btn btn-info btn-sm">
-                        <o class="fas fa-plus"></o>
-                        Add Post
-                    </a>
+                    @can('post:create')
+                        <a href="{{ route('blogs.create') }}" class="btn btn-info btn-sm">
+                            <o class="fas fa-plus"></o>
+                            Add Post
+                        </a>
+                    @endcan
                 </div>
             </div>
 
@@ -75,12 +77,14 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a
-                                        href="{{ route('blogs.edit', ['post' => $post, 'back' => request()->fullUrl()]) }}"
-                                        class="btn btn-primary"
-                                    >
-                                        <i class="far fa-edit"></i>
-                                    </a>
+                                    @can('post:edit')
+                                        <a
+                                            href="{{ route('blogs.edit', ['post' => $post, 'back' => request()->fullUrl()]) }}"
+                                            class="btn btn-primary"
+                                        >
+                                            <i class="far fa-edit"></i>
+                                        </a>
+                                    @endcan
                                     <a
                                     href="{{ route('blogs.show', $post) }}"
                                     class="btn btn-primary"

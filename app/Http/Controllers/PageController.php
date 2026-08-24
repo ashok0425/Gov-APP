@@ -5,11 +5,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Page;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PageController extends Controller
 {
     public function index()
     {
+        if (! Auth::user()->can('page:view')) {
+            abort(403);
+        }
+
         $pages = Page::latest()->paginate();
 
         return view('page.index', compact('pages'));
@@ -17,11 +22,19 @@ class PageController extends Controller
 
     public function create()
     {
+        if (! Auth::user()->can('page:create')) {
+            abort(403);
+        }
+
         return view('page.create');
     }
 
     public function store(Request $request)
     {
+        if (! Auth::user()->can('page:create')) {
+            abort(403);
+        }
+
         $request->validate([
             'name' => 'required',
             'slug' => 'required',
@@ -48,11 +61,19 @@ class PageController extends Controller
 
     public function edit(Page $page)
     {
+        if (! Auth::user()->can('page:edit')) {
+            abort(403);
+        }
+
         return view('page.edit', compact('page'));
     }
 
     public function update(Request $request, Page $page)
     {
+        if (! Auth::user()->can('page:edit')) {
+            abort(403);
+        }
+
         $request->validate([
             'name' => 'required',
             'slug' => 'required',
@@ -79,6 +100,10 @@ class PageController extends Controller
 
     public function destroy(Page $page)
     {
+        if (! Auth::user()->can('page:delete')) {
+            abort(403);
+        }
+
         $page->delete();
         $notification = [
             'alert-type' => 'success',

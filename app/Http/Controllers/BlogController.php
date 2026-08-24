@@ -16,6 +16,10 @@ class BlogController extends Controller
 
     public function index(Request $request)
     {
+        if (! Auth::user()->can('post:view')) {
+            abort(403);
+        }
+
         $posts = Blog::query()
               ->accessibleBy(Auth::user())
             ->when($request->status!=''||$request->status,function($query) use ($request){
@@ -64,6 +68,10 @@ class BlogController extends Controller
 
     public function create()
     {
+        if (! Auth::user()->can('post:create')) {
+            abort(403);
+        }
+
         return view('blog.create', [
             'categoryTree' => $this->categoryTree(),
             'organizations' => Organization::ordered()->get(),
@@ -73,6 +81,10 @@ class BlogController extends Controller
 
     public function store(Request $request)
     {
+        if (! Auth::user()->can('post:create')) {
+            abort(403);
+        }
+
         $request->validate([
             'title' => 'required',
             'long_description' => 'required',
@@ -111,6 +123,10 @@ class BlogController extends Controller
 
     public function edit(Blog $post)
     {
+        if (! Auth::user()->can('post:edit')) {
+            abort(403);
+        }
+
         if(!Blog::accessibleby(Auth::user())->where('id',$post->id)->first()){
             $notification = [
                 'alert-type' => 'error',
@@ -131,6 +147,17 @@ class BlogController extends Controller
 
     public function update(Request $request, Blog $post)
     {
+        if (! Auth::user()->can('post:edit')) {
+            abort(403);
+        }
+
+        if (! Blog::accessibleBy(Auth::user())->where('id', $post->id)->exists()) {
+            return redirect()->route('blogs.index')->with([
+                'alert-type' => 'error',
+                'message' => 'unauthorized Request',
+            ]);
+        }
+
         $request->validate([
             'title' => 'required',
             'long_description' => 'required',
@@ -179,6 +206,10 @@ class BlogController extends Controller
     }
 
     public function show(Blog $post) {
+        if (! Auth::user()->can('post:view')) {
+            abort(403);
+        }
+
         if(!Auth::user()->can('do:anything')){
             if($post->business_id!=Auth::user()->business_id){
                 return redirect()->back()->with('error','You are not allowed to delete this blog');
@@ -191,6 +222,10 @@ class BlogController extends Controller
 
     public function destroy(Blog $post)
     {
+        if (! Auth::user()->can('post:delete')) {
+            abort(403);
+        }
+
           if(!Blog::accessibleby(Auth::user())->where('id',$post->id)->first()){
             $notification = [
                 'alert-type' => 'error',

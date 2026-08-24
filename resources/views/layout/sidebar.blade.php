@@ -22,12 +22,14 @@
 </li>
 @endcan
 
+@can('attachment:view')
  <li class="sidebar-item">
            <a class="sidebar-link {{Request::is('attachments','attachments/*')?'text-light':' '}}" href="{{ route('attachments.index') }}">
                <i class="fas fa-copy"></i>
                <span class="align-middle">Attachment</span>
            </a>
        </li>
+@endcan
 
        @can('user:view')
        <li class="sidebar-item">
@@ -134,7 +136,7 @@
             </li>
             @endcanAny
 
-            @canAny(['notice:view', 'do:anything'])
+            @canAny(['notice:view', 'page:view', 'cms:edit'])
             <li class="sidebar-header">General</li>
 
             @can('notice:view')
@@ -146,14 +148,16 @@
             </li>
             @endcan
 
-            @can('do:anything')
+            @can('page:view')
             <li class="sidebar-item">
                 <a class="sidebar-link {{Request::is('pages','pages/*')?'text-light':' '}}" href="{{ route('pages.index') }}">
                     <i class="far fa-calendar-minus"></i>
                     <span class="align-middle">Pages</span>
                 </a>
             </li>
+            @endcan
 
+            @can('cms:edit')
             <li class="sidebar-item">
                 <a class="sidebar-link {{Request::is('cms','cms/*')?'text-light':' '}}" href="{{ route('cms.edit', 1) }}">
                     <i class="fas fa-images"></i>

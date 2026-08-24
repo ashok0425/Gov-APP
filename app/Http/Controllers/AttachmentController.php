@@ -12,6 +12,9 @@ class AttachmentController extends Controller
 {
     public function index()
     {
+        if (! Auth::user()->can('attachment:view')) {
+            abort(403);
+        }
 
         $attachments = Attachment::when( !Auth::user()->can('do:anything'),function($query){
                 if (Auth::user()->role!=1||Auth::user()->role!=2) {
@@ -25,11 +28,19 @@ class AttachmentController extends Controller
 
     public function create()
     {
+        if (! Auth::user()->can('attachment:create')) {
+            abort(403);
+        }
+
         return view('attachment.create');
     }
 
     public function store(Request $request)
     {
+        if (! Auth::user()->can('attachment:create')) {
+            abort(403);
+        }
+
         $request->validate([
             'title' => 'required|max:255',
         ]);
@@ -51,12 +62,19 @@ class AttachmentController extends Controller
 
     public function edit(Attachment $attachment)
     {
+        if (! Auth::user()->can('attachment:edit')) {
+            abort(403);
+        }
 
         return view('attachment.edit', compact('attachment'));
     }
 
     public function update(Request $request, Attachment $attachment)
     {
+        if (! Auth::user()->can('attachment:edit')) {
+            abort(403);
+        }
+
         $request->validate([
             'title' => 'required|max:255',
         ]);
@@ -79,6 +97,10 @@ class AttachmentController extends Controller
     public function show(Category $category) {}
 
     public function destroy(Attachment $attachment) {
+        if (! Auth::user()->can('attachment:delete')) {
+            abort(403);
+        }
+
         $attachment->delete();
         $notification = [
           'alert-type' => 'success',

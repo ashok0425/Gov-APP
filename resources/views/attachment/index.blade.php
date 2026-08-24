@@ -11,10 +11,12 @@
                     <h5 class="card-title text-white">Attachment List</h5>
                 </div>
                 <div>
-                    <a href="{{ route('attachments.create') }}" class="btn btn-info btn-sm">
-                        <i class="fas fa-plus"></i>
-                        Add Attachment
-                    </a>
+                    @can('attachment:create')
+                        <a href="{{ route('attachments.create') }}" class="btn btn-info btn-sm">
+                            <i class="fas fa-plus"></i>
+                            Add Attachment
+                        </a>
+                    @endcan
                 </div>
             </div>
 
@@ -41,9 +43,11 @@
                                 <td>{{ $attachment->business?->name }}</td>
 
                                 <td>
-                                    <a href="{{ route('attachments.edit', $attachment) }}" class="btn btn-primary" title="Edit">
-                                        <i class="far fa-edit"></i>
-                                    </a>
+                                    @can('attachment:edit')
+                                        <a href="{{ route('attachments.edit', $attachment) }}" class="btn btn-primary" title="Edit">
+                                            <i class="far fa-edit"></i>
+                                        </a>
+                                    @endcan
   <button
                                         class="btn btn-secondary copy-btn"
                                         data-link="{{ asset('storage/'.$attachment->attachment) }}"
@@ -51,8 +55,7 @@
                                     >
                                         <i class="far fa-copy"></i>
                                     </button>
-                                  @can('do:anything')
-
+                                  @can('attachment:delete')
                                     <a href="{{ route('attachments.destroy', $attachment->id) }}" class="btn btn-danger delete_btn" title="Delete">
                                         <i class="fas fa-trash"></i>
                                     </a>

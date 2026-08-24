@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Cms;
 use App\Models\Page;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
 class CmsController extends Controller
@@ -26,12 +27,20 @@ class CmsController extends Controller
 
     public function edit($id)
     {
+        if (! Auth::user()->can('cms:edit')) {
+            abort(403);
+        }
+
         $cms=Cms::find(1);
         return view('cms.edit', compact('cms'));
     }
 
     public function update(Request $request, Cms $cms)
     {
+        if (! Auth::user()->can('cms:edit')) {
+            abort(403);
+        }
+
         // These land in public storage, so keep them to real images. GIF is
         // spelled out because the header banner is usually animated.
         $request->validate([

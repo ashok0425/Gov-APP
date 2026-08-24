@@ -24,7 +24,8 @@ class PermissionSeeder extends Seeder
             ->delete();
 
         // One group per module, the four usual actions each. "subcategory"
-        // covers every level below the top of the menu tree.
+        // covers every level below the top of the menu tree. Reordering
+        // (organizations, the menu tree) rides on the group's "edit".
         $groups = [
             'organization',
             'category',
@@ -32,6 +33,8 @@ class PermissionSeeder extends Seeder
             'post',
             'banners',
             'notice',
+            'attachment',
+            'page',
             'user',
         ];
 
@@ -43,6 +46,9 @@ class PermissionSeeder extends Seeder
                 ]);
             }
         }
+
+        // Site settings are a single row that is only ever edited.
+        Permission::firstOrCreate(['name' => 'cms:edit', 'guard_name' => 'web']);
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
     }

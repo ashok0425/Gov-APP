@@ -7,10 +7,12 @@
                     <h5 class="card-title text-white">Pages List</h5>
                 </div>
                 <div>
-                    <a href="{{ route('pages.create') }}" class="btn btn-info btn-sm">
-                        <o class="fas fa-plus"></o>
-                        Add Page
-                    </a>
+                    @can('page:create')
+                        <a href="{{ route('pages.create') }}" class="btn btn-info btn-sm">
+                            <o class="fas fa-plus"></o>
+                            Add Page
+                        </a>
+                    @endcan
                 </div>
             </div>
             <div class="card-body">
@@ -40,20 +42,22 @@
                                     >
                                         <i class="far fa-eye"></i>
                                     </a>
-                                    <a
-                                        href="{{ route('pages.edit', $page) }}"
-                                        class="btn btn-primary"
-                                    >
-                                        <i class="far fa-edit"></i>
-                                    </a>
-                                    {{--
+                                    @can('page:edit')
                                         <a
-                                        id="delete"
-                                        href="{{ route('pages.delete', $page) }}"
-                                        class="btn btn-danger">
-                                        <i class="fas fa-times"></i>
+                                            href="{{ route('pages.edit', $page) }}"
+                                            class="btn btn-primary"
+                                        >
+                                            <i class="far fa-edit"></i>
                                         </a>
-                                    --}}
+                                    @endcan
+                                    @can('page:delete')
+                                        <a
+                                            href="{{ route('pages.destroy', $page) }}"
+                                            class="btn btn-danger delete_btn"
+                                        >
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    @endcan
                                 </td>
                             </tr>
                         @endforeach

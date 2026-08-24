@@ -274,15 +274,20 @@ class CategoryController extends Controller
     /** Drag-and-drop order from a list: positions follow the given ids. */
     public function reorder(Request $request)
     {
-        if (! Auth::user()->canAny(['category:edit', 'subcategory:edit'])) {
-            abort(403);
-        }
-
         $request->validate([
             'ids' => ['required', 'array'],
             'ids.*' => ['integer'],
             'start' => ['nullable', 'integer', 'min:0'],
         ]);
+
+        // A list only ever holds rows of one level, so the first id says
+        // which permission the drag needs: the top level is "category",
+        // everything beneath it "subcategory".
+        $first = Category::find(collect($request->ids)->first());
+
+        if (! Auth::user()->can($first && $first->level() === 1 ? 'category:edit' : 'subcategory:edit')) {
+            abort(403);
+        }
 
         $start = (int) $request->input('start', 0);
 

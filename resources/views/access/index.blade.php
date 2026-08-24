@@ -9,10 +9,12 @@
                         <h5 class="card-title text-white">User List</h5>
                     </div>
                     <div>
-                        <a href="{{ route('access.create') }}" class="btn btn-info btn-sm">
-                            <o class="fas fa-plus"></o>
-                            Add User
-                        </a>
+                        @can('user:create')
+                            <a href="{{ route('access.create') }}" class="btn btn-info btn-sm">
+                                <o class="fas fa-plus"></o>
+                                Add User
+                            </a>
+                        @endcan
                     </div>
                 </div>
                 <div class="card-body">
@@ -39,12 +41,16 @@
                                     </td>
                                     <td>
                                         <div class="actions-div">
-                                            <a href="{{ route('access.edit', ['id' => $user->id]) }}" class="btn btn-info btn-sm mx-3">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                             <a href="{{ route('access.destroy', $user->id) }}" class="btn btn-danger delete_btn" title="Delete">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
+                                            @can('user:edit')
+                                                <a href="{{ route('access.edit', ['id' => $user->id]) }}" class="btn btn-info btn-sm mx-3">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            @endcan
+                                            @can('user:delete')
+                                                <a href="{{ route('access.destroy', $user->id) }}" class="btn btn-danger delete_btn" title="Delete">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            @endcan
 
                                         </div>
                                     </td>

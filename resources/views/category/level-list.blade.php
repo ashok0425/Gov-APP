@@ -50,11 +50,13 @@
                             Reorder
                         </a>
                     @endcan
-                    <a href="{{ route('categories.create', ['level' => $level, 'parent' => request()->query('parent'), 'back' => request()->fullUrl()]) }}"
-                       class="btn btn-info btn-sm">
-                        <i class="fas fa-plus"></i>
-                        Add {{ $levelName }}
-                    </a>
+                    @can('subcategory:create')
+                        <a href="{{ route('categories.create', ['level' => $level, 'parent' => request()->query('parent'), 'back' => request()->fullUrl()]) }}"
+                           class="btn btn-info btn-sm">
+                            <i class="fas fa-plus"></i>
+                            Add {{ $levelName }}
+                        </a>
+                    @endcan
                 </div>
             </div>
 
@@ -87,9 +89,11 @@
                                            class="badge bg-secondary text-decoration-none">
                                             {{ $row->children_count }}
                                         </a>
-                                        <a href="{{ route('categories.create', ['parent' => $row->id, 'back' => request()->fullUrl()]) }}"
-                                           class="badge bg-info text-decoration-none"
-                                           title="Add a {{ Str::lower($childName) }} under {{ $row->name }}">+ add</a>
+                                        @can('subcategory:create')
+                                            <a href="{{ route('categories.create', ['parent' => $row->id, 'back' => request()->fullUrl()]) }}"
+                                               class="badge bg-info text-decoration-none"
+                                               title="Add a {{ Str::lower($childName) }} under {{ $row->name }}">+ add</a>
+                                        @endcan
                                     </td>
                                 @endif
 
@@ -111,13 +115,17 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('categories.edit', ['category' => $row, 'back' => request()->fullUrl()]) }}" class="btn btn-primary">
-                                        <i class="far fa-edit"></i>
-                                    </a>
-                                    <a href="{{ route('categories.destroy', $row->id) }}"
-                                       class="btn btn-danger delete_btn">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
+                                    @can('subcategory:edit')
+                                        <a href="{{ route('categories.edit', ['category' => $row, 'back' => request()->fullUrl()]) }}" class="btn btn-primary">
+                                            <i class="far fa-edit"></i>
+                                        </a>
+                                    @endcan
+                                    @can('subcategory:delete')
+                                        <a href="{{ route('categories.destroy', $row->id) }}"
+                                           class="btn btn-danger delete_btn">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    @endcan
                                 </td>
                             </tr>
                         @empty

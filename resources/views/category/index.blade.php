@@ -25,10 +25,12 @@
                             Reorder
                         </a>
                     @endcan
-                    <a href="{{ route('categories.create') }}" class="btn btn-info btn-sm">
-                        <o class="fas fa-plus"></o>
-                        Add Category
-                    </a>
+                    @can('category:create')
+                        <a href="{{ route('categories.create') }}" class="btn btn-info btn-sm">
+                            <o class="fas fa-plus"></o>
+                            Add Category
+                        </a>
+                    @endcan
                 </div>
             </div>
 
@@ -56,9 +58,11 @@
                                        class="badge bg-secondary text-decoration-none">
                                         {{ $category->children_count }}
                                     </a>
-                                    <a href="{{ route('categories.create', ['parent' => $category->id, 'back' => request()->fullUrl()]) }}"
-                                       class="badge bg-info text-decoration-none"
-                                       title="Add a subcategory under {{ $category->name }}">+ add</a>
+                                    @can('subcategory:create')
+                                        <a href="{{ route('categories.create', ['parent' => $category->id, 'back' => request()->fullUrl()]) }}"
+                                           class="badge bg-info text-decoration-none"
+                                           title="Add a subcategory under {{ $category->name }}">+ add</a>
+                                    @endcan
                                 </td>
 
                                 <td>
@@ -83,18 +87,22 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a
-                                        href="{{ route('categories.edit', ['category' => $category, 'back' => request()->fullUrl()]) }}"
-                                        class="btn btn-primary"
-                                    >
-                                        <i class="far fa-edit"></i>
-                                    </a>
-                                    <a
-                                    href="{{ route('categories.destroy',$category->id) }}"
-                                    class="btn btn-danger delete_btn"
-                                >
-                                    <i class="fas fa-trash"></i>
-                                </a>
+                                    @can('category:edit')
+                                        <a
+                                            href="{{ route('categories.edit', ['category' => $category, 'back' => request()->fullUrl()]) }}"
+                                            class="btn btn-primary"
+                                        >
+                                            <i class="far fa-edit"></i>
+                                        </a>
+                                    @endcan
+                                    @can('category:delete')
+                                        <a
+                                            href="{{ route('categories.destroy',$category->id) }}"
+                                            class="btn btn-danger delete_btn"
+                                        >
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    @endcan
                                 </td>
                             </tr>
 

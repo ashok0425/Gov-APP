@@ -11,10 +11,12 @@
                     <h5 class="card-title text-white">Banner List</h5>
                 </div>
                 <div>
-                    <a href="{{ route('banners.create',['type'=>request()->query('type')]) }}" class="btn btn-info btn-sm">
-                        <o class="fas fa-plus"></o>
-                        Add Banner
-                    </a>
+                    @can('banners:create')
+                        <a href="{{ route('banners.create',['type'=>request()->query('type')]) }}" class="btn btn-info btn-sm">
+                            <o class="fas fa-plus"></o>
+                            Add Banner
+                        </a>
+                    @endcan
                 </div>
             </div>
 
@@ -49,18 +51,22 @@
                             </td>
                             <td>
 
-                                <a
-                                    href="{{ route('banners.edit', $item) }}"
-                                    class="btn btn-primary"
-                                >
-                                    <i class="far fa-edit"></i>
-                                </a>
-                                <a
-                                    href="{{ route('banners.destroy',$item) }}"
-                                    class="btn btn-danger delete_btn"
-                                >
-                                    <i class="fas fa-trash"></i>
-                                </a>
+                                @can('banners:edit')
+                                    <a
+                                        href="{{ route('banners.edit', $item) }}"
+                                        class="btn btn-primary"
+                                    >
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                @endcan
+                                @can('banners:delete')
+                                    <a
+                                        href="{{ route('banners.destroy',$item) }}"
+                                        class="btn btn-danger delete_btn"
+                                    >
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                @endcan
                             </td>
                         </tr>
                     @endforeach
