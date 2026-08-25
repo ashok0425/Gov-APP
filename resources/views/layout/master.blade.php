@@ -8,11 +8,11 @@
         <meta name="author" content="Drebba" />
         <meta name="csrf-token" content="{{ csrf_token() }}" />
 
-        <meta name="keywords" content="cms('meta_keyword')" />
+        <meta name="keywords" content="{{ cms('meta_keyword') }}" />
 
-        <link rel="shortcut icon" href="{{ asset(cms('fevicon')) }}" />
+        <link rel="shortcut icon" href="{{ cms('fevicon') ? getImage(cms('fevicon')) : asset('mobile/img/app-logo.png') }}" />
 
-        <title>{{ cms()->title }}</title>
+        <title>{{ cms('meta_title') }}</title>
 
         {{-- fontawsome --}}
         <link

@@ -19,11 +19,10 @@ if (! function_exists('getCategory')) {
 if (! function_exists('cms')) {
     function cms($key = null)
     {
-        // $cms = Cache::remember('cms', 86400, function () {
-            return Cms::first();
-        // });
-        $r=$key ? $cms->$key : $cms;
-        return $r;
+        static $cms = null;
+        $cms ??= Cms::first() ?? new Cms();
+
+        return $key ? $cms->$key : $cms;
     }
 }
 

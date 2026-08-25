@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#ffffff">
     <title>@yield('title', 'बारबर्दिया नगरपालिका')</title>
-    <link rel="icon" href="{{ asset('mobile/img/app-logo.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('mobile/img/app-logo.png') }}">
+    <link rel="icon" href="{{ cms('fevicon') ? getImage(cms('fevicon')) : asset('mobile/img/app-logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ cms('fevicon') ? getImage(cms('fevicon')) : asset('mobile/img/app-logo.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet"
