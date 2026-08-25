@@ -44,4 +44,30 @@ class User extends Authenticatable implements MustVerifyEmail
     public function business(){
         return $this->belongsTo(Business::class);
     }
+
+    /** The menu nodes this employee is pinned to. */
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
+
+    /**
+     * The nodes this user is confined to — they may only see and file posts
+     * at them and below them. Empty means unrestricted: super admins, and
+     * anyone with nothing assigned.
+     */
+    public function scopedCategories()
+    {
+        if ($this->role == 1 || $this->can('do:anything')) {
+            return collect();
+        }
+
+        return $this->categories;
+    }
+
+    /** Whether this user is confined to part of the menu. */
+    public function isPinned()
+    {
+        return $this->scopedCategories()->isNotEmpty();
+    }
 }

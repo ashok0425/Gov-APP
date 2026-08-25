@@ -10,6 +10,7 @@ use App\Models\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 class BlogController extends Controller
 {
     use ReturnsToList;
@@ -59,7 +60,7 @@ class BlogController extends Controller
 
         return view('blog.index', [
             'posts' => $posts,
-            'categoryTree' => $this->categoryTree(),
+            'categoryTree' => Category::treeFor(Auth::user()),
             'selectedTrail' => $this->selectedTrail($request),
             'organizations' => Organization::ordered()->get(),
             'selectedOrganization' => $request->organization,
@@ -73,9 +74,9 @@ class BlogController extends Controller
         }
 
         return view('blog.create', [
-            'categoryTree' => $this->categoryTree(),
+            'categoryTree' => Category::treeFor(Auth::user()),
             'organizations' => Organization::ordered()->get(),
-            'selectedOrganization' => null,
+            'selectedOrganization' => $this->pinnedOrganization(),
         ]);
     }
 
@@ -93,6 +94,7 @@ class BlogController extends Controller
             'child' => 'nullable|exists:categories,id',
             'grandchild' => 'nullable|exists:categories,id',
         ]);
+        $this->guardTrail($request);
 
         $post = new Blog;
         $category=Category::find($request->category);
@@ -137,7 +139,7 @@ class BlogController extends Controller
         }
         return view('blog.edit', [
             'post' => $post,
-            'categoryTree' => $this->categoryTree(),
+            'categoryTree' => Category::treeFor(Auth::user()),
             'selectedTrail' => $post->only(\App\Models\Blog::TRAIL_COLUMNS),
             'organizations' => Organization::ordered()->get(),
             // The post's own organization: whatever its root category names.
@@ -166,6 +168,7 @@ class BlogController extends Controller
             'child' => 'nullable|exists:categories,id',
             'grandchild' => 'nullable|exists:categories,id',
         ]);
+        $this->guardTrail($request);
         // if(!Auth::user()->can('can:do-anything') && $post->business_id!=Auth::user()->business_id){
         //     $notification = [
         //         'alert-type' => 'error',
@@ -245,31 +248,32 @@ class BlogController extends Controller
     }
 
     /**
-     * The whole menu as nested arrays, which is what the cascade selects run
-     * on: one payload, every level, no round trip when a level changes.
+     * The organization a pinned employee's post form should open on — when
+     * every node they hold sits under the same one. Otherwise they choose.
      */
-    protected function categoryTree()
+    protected function pinnedOrganization()
     {
-        $categories = Category::accessibleBy(Auth::user())
-            ->ordered()
-            ->get(['id', 'name', 'parent_id', 'organization_id'])
-            ->groupBy('parent_id');
+        $organizations = Auth::user()->scopedCategories()
+            ->map(fn ($scope) => ($scope->ancestors()->first() ?? $scope)->organization_id)
+            ->unique();
 
-        $build = function ($parentId) use (&$build, $categories) {
-            // groupBy turns a null parent into an empty-string key.
-            return $categories->get($parentId ?? '', collect())
-                ->map(fn ($category) => [
-                    'id' => $category->id,
-                    'name' => $category->name,
-                    // Only roots carry one; the cascade's organization
-                    // select filters the top level by it.
-                    'organization_id' => $category->organization_id,
-                    'children' => $build($category->id),
-                ])
-                ->values();
-        };
+        return $organizations->count() === 1 ? $organizations->first() : null;
+    }
 
-        return $build(null);
+    /**
+     * The deepest node the form picked has to sit inside what this user may
+     * file under. Ancestors the cascade only passes through are not valid
+     * targets, and neither is anything outside the employee's nodes.
+     */
+    protected function guardTrail(Request $request)
+    {
+        $deepest = $this->deepestOf($request);
+
+        if ($deepest && ! Category::accessibleBy(Auth::user())->where('id', $deepest)->exists()) {
+            throw ValidationException::withMessages([
+                'category' => 'You can only file posts under your own category.',
+            ]);
+        }
     }
 
     /** The four ids the cascade holds, deepest last. */

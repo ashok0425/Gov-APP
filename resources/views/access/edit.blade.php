@@ -90,6 +90,25 @@
                         @endcan
 
 
+                        <div class="row">
+                        <div class="col-12">
+                            <h5 class="mt-2">Category access</h5>
+                            <p class="text-muted small mb-2">
+                                Pin this employee to any number of categories, subcategories, children or
+                                grandchildren — they will only see and add posts under those. Leave empty to
+                                allow the whole menu.
+                            </p>
+                            @error('category')
+                                <span class="error-msg d-block mb-2">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        @include('partials.category-access-picker', [
+                            'categoryTree' => $categoryTree,
+                            'selectedLevels' => $selectedLevels ?? [],
+                            'columns' => 3,
+                        ])
+                        </div>
+
                         <div class="form-group">
                             <label class="col-form-label">
                                 <h3>Permissions <span class="text-danger">*</span></h3>
@@ -133,3 +152,8 @@
     </div>
     </div>
 @endsection
+
+@push('scripts')
+    @include('partials.select2-assets')
+    @include('partials.category-access-picker-script')
+@endpush

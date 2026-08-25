@@ -19,6 +19,15 @@ public function scopeAccessibleBy($query, $user)
         return $query;
     }
 
+    // An employee pinned to menu nodes sees only what is filed under them.
+    if (($scopes = $user->scopedCategories())->isNotEmpty()) {
+        return $query->where(function ($q) use ($scopes) {
+            foreach ($scopes as $scope) {
+                $q->orWhere(fn ($under) => $under->inCategory($scope->id));
+            }
+        });
+    }
+
     if ($user->role == 2) {
         return $query;
     }

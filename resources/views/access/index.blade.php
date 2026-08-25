@@ -23,6 +23,7 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>Category access</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -32,6 +33,7 @@
                                 <tr>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
+                                    <td>{{ $user->categories->isEmpty() ? 'All' : $user->categories->map->pathName()->implode(', ') }}</td>
                                     <td>
                                         @if ($user->status == 1)
                                             <a class="badge bg-success">Publish</a>

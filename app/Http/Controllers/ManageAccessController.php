@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -24,7 +26,7 @@ class ManageAccessController extends Controller
             return redirect()->back()->with($notification);
         }
 
-        $users = User::whereNotIn('email', ['ashok@drebba.com', 'kartavya@drebba.com'])
+        $users = User::with('categories.parent.parent.parent')->whereNotIn('email', ['ashok@drebba.com', 'kartavya@drebba.com'])
             ->when(!Auth::user()->can('do:anything'), function ($query) {
                 $query->where('business_id', Auth::user()->business_id);
             })
@@ -59,7 +61,9 @@ class ManageAccessController extends Controller
         }
         $roles = Role::orderBy('name')->get();
 
-        return view('access.create', compact('permissions', 'roles', 'permissionMap'));
+        return view('access.create', compact('permissions', 'roles', 'permissionMap') + [
+            'categoryTree' => Category::treeFor(Auth::user()),
+        ]);
     }
 
     public function store(Request $request)
@@ -78,6 +82,14 @@ class ManageAccessController extends Controller
                 'password' => 'required',
                 'permissions' => 'nullable|array',
                 'role' => 'required|integer',
+                'category' => 'nullable|array',
+                'category.*' => 'integer|exists:categories,id',
+                'subcategory' => 'nullable|array',
+                'subcategory.*' => 'integer|exists:categories,id',
+                'child' => 'nullable|array',
+                'child.*' => 'integer|exists:categories,id',
+                'grandchild' => 'nullable|array',
+                'grandchild.*' => 'integer|exists:categories,id',
             ],
         );
 
@@ -99,6 +111,7 @@ class ManageAccessController extends Controller
         // }
 
         $user->syncPermissions($request->permissions);
+        $user->categories()->sync($this->assignedCategories($request));
 
         $notification = [
             'alert-type' => 'success',
@@ -139,7 +152,10 @@ class ManageAccessController extends Controller
         $otherPermissions = Arr::pull($permissionMap, 'others');
         $permissionMap['others'] = $otherPermissions;
 
-        return view('access.edit', compact('user', 'permissions', 'roles', 'permissionMap'));
+        return view('access.edit', compact('user', 'permissions', 'roles', 'permissionMap') + [
+            'categoryTree' => Category::treeFor(Auth::user()),
+            'selectedLevels' => $this->selectedLevels($user),
+        ]);
     }
 
     public function update(Request $request, $id)
@@ -156,6 +172,14 @@ class ManageAccessController extends Controller
                 'phone' => 'required|integer',
                 'permissions' => 'nullable|array',
                 'role' => 'required|integer',
+                'category' => 'nullable|array',
+                'category.*' => 'integer|exists:categories,id',
+                'subcategory' => 'nullable|array',
+                'subcategory.*' => 'integer|exists:categories,id',
+                'child' => 'nullable|array',
+                'child.*' => 'integer|exists:categories,id',
+                'grandchild' => 'nullable|array',
+                'grandchild.*' => 'integer|exists:categories,id',
             ],
         );
 
@@ -181,6 +205,7 @@ class ManageAccessController extends Controller
         }
 
         $user->syncPermissions($request->permissions);
+        $user->categories()->sync($this->assignedCategories($request));
 
         $notification = [
             'alert-type' => 'success',
@@ -213,6 +238,55 @@ class ManageAccessController extends Controller
     public function password($user_id)
     {
         return view('user.password', compact('user_id'));
+    }
+
+    /**
+     * The nodes the employee is pinned to. The picker sends every level's
+     * picks; a pick with another pick beneath it was only the way down, so
+     * the deepest pick on each branch is what counts. Each has to be
+     * somewhere the current admin can reach. Nothing picked leaves the
+     * employee unrestricted.
+     */
+    protected function assignedCategories(Request $request)
+    {
+        $ids = collect(['category', 'subcategory', 'child', 'grandchild'])
+            ->flatMap(fn ($field) => (array) $request->input($field, []))
+            ->filter()
+            ->map(fn ($id) => (int) $id)
+            ->unique()
+            ->values();
+
+        if ($ids->isEmpty()) {
+            return [];
+        }
+
+        $nodes = Category::with('parent.parent.parent')->whereIn('id', $ids)->get();
+        $onTheWay = $nodes->flatMap(fn ($node) => $node->ancestors()->pluck('id'))->unique();
+        $pinned = $nodes->reject(fn ($node) => $onTheWay->contains($node->id))->pluck('id');
+
+        $reachable = Category::accessibleBy(Auth::user())->whereIn('id', $pinned)->count();
+
+        if ($reachable !== $pinned->count()) {
+            throw ValidationException::withMessages([
+                'category' => 'You can only assign categories you have access to.',
+            ]);
+        }
+
+        return $pinned->all();
+    }
+
+    /** The picker's preselection: each pinned node and its path, by level. */
+    protected function selectedLevels(User $user)
+    {
+        $levels = array_fill(0, Category::MAX_DEPTH, []);
+
+        foreach ($user->categories as $category) {
+            foreach ($category->ancestors()->push($category)->values() as $depth => $node) {
+                $levels[$depth][] = $node->id;
+            }
+        }
+
+        return array_map(fn ($ids) => array_values(array_unique($ids)), $levels);
     }
 
     public function updatePassword(Request $request, $user_id)

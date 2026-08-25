@@ -16,7 +16,8 @@ class AttachmentController extends Controller
             abort(403);
         }
 
-        $attachments = Attachment::when( !Auth::user()->can('do:anything'),function($query){
+        $attachments = Attachment::accessibleBy(Auth::user())
+            ->when( !Auth::user()->can('do:anything'),function($query){
                 if (Auth::user()->role!=1||Auth::user()->role!=2) {
                  $query->where('business_id',Auth::user()->business_id);
                 }
@@ -51,6 +52,7 @@ class AttachmentController extends Controller
         $attachment->slug = Str::slug($request->title).'-'.rand(1,10000000000);
         $attachment->attachment = $thumbnail;
         $attachment->business_id = auth()->user()->business_id;
+        $attachment->user_id = auth()->id();
         $attachment->save();
         $notification = [
             'alert-type' => 'success',
@@ -66,6 +68,8 @@ class AttachmentController extends Controller
             abort(403);
         }
 
+        $this->guardOwnership($attachment);
+
         return view('attachment.edit', compact('attachment'));
     }
 
@@ -74,6 +78,8 @@ class AttachmentController extends Controller
         if (! Auth::user()->can('attachment:edit')) {
             abort(403);
         }
+
+        $this->guardOwnership($attachment);
 
         $request->validate([
             'title' => 'required|max:255',
@@ -96,10 +102,20 @@ class AttachmentController extends Controller
 
     public function show(Category $category) {}
 
+    /** A pinned employee may only touch attachments they uploaded. */
+    protected function guardOwnership(Attachment $attachment)
+    {
+        if (! Attachment::accessibleBy(Auth::user())->where('id', $attachment->id)->exists()) {
+            abort(403);
+        }
+    }
+
     public function destroy(Attachment $attachment) {
         if (! Auth::user()->can('attachment:delete')) {
             abort(403);
         }
+
+        $this->guardOwnership($attachment);
 
         $attachment->delete();
         $notification = [

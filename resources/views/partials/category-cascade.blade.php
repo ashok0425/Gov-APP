@@ -17,7 +17,8 @@
     $selectedOrganization = old('organization', $selectedOrganization ?? null);
 @endphp
 
-<div class="row category-cascade" data-tree='@json($categoryTree)'>
+<div class="row category-cascade" data-tree='@json($categoryTree)'
+     data-pinned="{{ auth()->user()?->isPinned() ? 1 : 0 }}">
     @if ($organizations)
         <div class="mb-3 col-md-{{ $columns }}">
             <label class="form-label">
