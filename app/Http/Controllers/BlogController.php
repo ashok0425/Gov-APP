@@ -6,7 +6,6 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Concerns\ReturnsToList;
 use App\Models\Blog;
 use App\Models\Category;
-use App\Models\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -33,11 +32,6 @@ class BlogController extends Controller
             ->when($this->deepestOf($request),function($query, $categoryId){
                 $query->inCategory($categoryId);
             })
-            // An organization picked with no category narrows to every post
-            // filed anywhere under that organization's menu.
-            ->when($request->organization && ! $this->deepestOf($request), function ($query) use ($request) {
-                $query->whereIn('category_id', Category::where('organization_id', $request->organization)->pluck('id'));
-            })
             ->when($request->keyword,function($query) use ($request){
                 $query->where(function($q) use ( $request){
                 $q->where('title','LIKE',"%".$request->keyword. "%")
@@ -63,8 +57,6 @@ class BlogController extends Controller
             'posts' => $posts,
             'categoryTree' => Category::treeFor(Auth::user()),
             'selectedTrail' => $this->selectedTrail($request),
-            'organizations' => Organization::ordered()->get(),
-            'selectedOrganization' => $request->organization,
         ]);
     }
 

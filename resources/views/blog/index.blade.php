@@ -10,8 +10,6 @@
                     'categoryTree' => $categoryTree,
                     'selected' => $selectedTrail,
                     'columns' => 3,
-                    'organizations' => $organizations,
-                    'selectedOrganization' => $selectedOrganization,
                 ])
                 <div class="col-md-2 mb-2">
                         <select name="status" id="status" class="form-control form-select">
