@@ -10,7 +10,16 @@
     $selected = collect($selected ?? [])->values();
     $requiredDepth = $requiredDepth ?? (($required ?? false) ? 1 : 0);
     $columns = $columns ?? 3;
-    $names = $names ?? array_slice(['category', 'subcategory', 'child', 'grandchild'], 0, \App\Models\Category::MAX_DEPTH);
+    // Unless the caller names the levels itself, only go as deep as the tree
+    // does: an employee given no child or grandchild categories should not
+    // see a child or grandchild select at all.
+    if (! isset($names)) {
+        $depthOf = function ($nodes) use (&$depthOf) {
+            return collect($nodes)->max(fn ($node) => 1 + $depthOf($node['children'] ?? [])) ?? 0;
+        };
+        $depth = max($depthOf($categoryTree), $requiredDepth, 1);
+        $names = array_slice(['category', 'subcategory', 'child', 'grandchild'], 0, min($depth, \App\Models\Category::MAX_DEPTH));
+    }
     // Pass $organizations to lead the cascade with an organization select
     // that narrows the category list to that organization's menu — the post
     // list's filter does; the post form itself goes straight to the category.
