@@ -2,11 +2,10 @@
      rides along in a data attribute, so changing a level refills the ones
      below it without a round trip.
 
-     A pinned employee's tree carries "through" nodes — ancestors of what they
-     hold, shown so the path reads right but not places to file. Beneath one
-     of those a pick is mandatory, and wherever there is exactly one way
-     forward the level is picked for them and frozen, with a hidden input
-     carrying the id since a disabled select never submits. --}}
+     A pinned employee's tree holds only the nodes they were given. When that
+     leaves a single category, the top level is picked for them and frozen,
+     with a hidden input carrying the id since a disabled select never
+     submits. --}}
 <script>
     (function () {
         document.querySelectorAll('.category-cascade').forEach(function (block) {
@@ -16,22 +15,6 @@
             var pinned = block.dataset.pinned === '1';
 
             if (!selects.length) return;
-
-            // Remember which levels the form itself marks mandatory; the
-            // through rule adds to that per pick.
-            selects.forEach(function (select) {
-                select.dataset.required = select.required ? '1' : '0';
-            });
-
-            // The node a level currently holds, if any.
-            function chosen(level) {
-                var value = selects[level].value;
-                if (!value) return null;
-
-                return optionsFor(level).filter(function (node) {
-                    return String(node.id) === String(value);
-                })[0] || null;
-            }
 
             // The options for one level, given what the level above holds.
             // An organization select in front narrows the top level to that
@@ -65,11 +48,9 @@
                 // Keep the stored pick on first paint; drop it once a level
                 // above changes underneath it.
                 var wanted = select.dataset.selected || '';
-                var parent = level > 0 ? chosen(level - 1) : null;
-                var underThrough = !!(parent && parent.through);
-                // One way forward only: pick it and freeze the level.
-                var forced = options.length === 1
-                    && (options[0].through || underThrough || (pinned && level === 0));
+                // A pinned employee with one category: pick it and freeze
+                // the level — it is required anyway.
+                var forced = pinned && level === 0 && options.length === 1;
                 if (forced) wanted = options[0].id;
                 var label = select.querySelector('option[value=""]');
                 var blank = label ? label.textContent : 'select';
@@ -90,7 +71,6 @@
                 });
 
                 select.disabled = options.length === 0 || forced;
-                select.required = select.dataset.required === '1' || (underThrough && !forced);
                 lock(select, forced ? options[0].id : null);
                 dress(select);
             }

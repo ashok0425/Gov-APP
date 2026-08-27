@@ -12,7 +12,8 @@
     $columns = $columns ?? 3;
     $names = $names ?? array_slice(['category', 'subcategory', 'child', 'grandchild'], 0, \App\Models\Category::MAX_DEPTH);
     // Pass $organizations to lead the cascade with an organization select
-    // that narrows the category list to that organization's menu.
+    // that narrows the category list to that organization's menu — the post
+    // list's filter does; the post form itself goes straight to the category.
     $organizations = $organizations ?? null;
     $selectedOrganization = old('organization', $selectedOrganization ?? null);
 @endphp

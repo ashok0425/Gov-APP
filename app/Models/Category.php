@@ -55,8 +55,9 @@ class Category extends Model
 
     /**
      * The published categories this user may work in. An employee pinned to
-     * some nodes sees those nodes and everything beneath them; everyone else
-     * sees the whole menu.
+     * some nodes gets exactly those — a ticked category without its
+     * subcategories ticked offers no subcategories; everyone else sees the
+     * whole menu.
      */
     public function scopeAccessibleBy($query, $user)
     {
@@ -65,63 +66,35 @@ class Category extends Model
         $scopes = $user->scopedCategories();
 
         if ($scopes->isNotEmpty()) {
-            $query->whereIn('id', static::subtreeIds($scopes));
+            $query->whereIn('id', $scopes->pluck('id'));
         }
 
         return $query;
-    }
-
-    /** The ids of these nodes and everything beneath them, as one set. */
-    public static function subtreeIds($nodes)
-    {
-        return collect($nodes)
-            ->flatMap(fn ($node) => collect([$node->id])->merge($node->descendantIds()))
-            ->unique()
-            ->values();
     }
 
     /**
      * The menu as nested arrays, which is what the cascade selects run on:
      * one payload, every level, no round trip when a level changes.
      *
-     * For a pinned user the ancestors of their nodes ride along marked
-     * "through": the cascade shows them so the path reads right, but they
-     * are only a way down to the nodes the user may actually file under.
+     * A pinned user's tree holds only their nodes. Since the employee form
+     * only lets a node be ticked once its parent is, they always form whole
+     * paths down from the top; anything orphaned by a later unpublish is
+     * simply unreachable.
      */
     public static function treeFor($user)
     {
         $columns = ['id', 'name', 'parent_id', 'organization_id', 'position'];
-        $categories = static::accessibleBy($user)->ordered()->get($columns);
-        $through = collect();
+        $grouped = static::accessibleBy($user)->ordered()->get($columns)->groupBy('parent_id');
 
-        if ($user->isPinned()) {
-            $reachable = $categories->pluck('id')->flip();
-            $throughIds = $user->scopedCategories()
-                ->flatMap(fn ($scope) => $scope->ancestors()->pluck('id'))
-                ->unique()
-                ->reject(fn ($id) => $reachable->has($id))
-                ->values();
-
-            if ($throughIds->isNotEmpty()) {
-                $through = $throughIds->flip();
-                $categories = $categories
-                    ->merge(static::whereIn('id', $throughIds)->get($columns))
-                    ->sortBy([['position', 'asc'], ['name', 'asc']]);
-            }
-        }
-
-        $grouped = $categories->groupBy('parent_id');
-
-        $build = function ($parentId) use (&$build, $grouped, $through) {
+        $build = function ($parentId) use (&$build, $grouped) {
             // groupBy turns a null parent into an empty-string key.
             return $grouped->get($parentId ?? '', collect())
                 ->map(fn ($category) => [
                     'id' => $category->id,
                     'name' => $category->name,
-                    // Only roots carry one; the cascade's organization
-                    // select filters the top level by it.
+                    // Only roots carry one; the list filter's organization
+                    // select narrows the top level by it.
                     'organization_id' => $category->organization_id,
-                    'through' => $through->has($category->id),
                     'children' => $build($category->id),
                 ])
                 ->values();

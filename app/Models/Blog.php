@@ -12,32 +12,64 @@ class Blog extends Model
     use HasFactory;
     use SoftDeletes;
 
-    // In your Eloquent model (e.g., Booking.php)
-public function scopeAccessibleBy($query, $user)
-{
-    if ($user->can('do:anything')) {
+    /** The posts this user may see in the admin list. */
+    public function scopeAccessibleBy($query, $user)
+    {
+        if ($user->isSuperAdmin()) {
+            return $query;
+        }
+
+        // An employee pinned to menu nodes sees only what is filed under them.
+        if (($scopes = $user->scopedCategories())->isNotEmpty()) {
+            return $query->where(function ($q) use ($scopes) {
+                foreach ($scopes as $scope) {
+                    $q->orWhere(fn ($under) => $under->inCategory($scope->id));
+                }
+            });
+        }
+
+        if ($user->role == 2) {
+            return $query;
+        }
+
+        if ($user->role == 3) {
+            return $query->where('business_id', $user->business_id);
+        }
+
+        return $query->where('user_id', $user->id);
+    }
+
+    /**
+     * The posts this user may edit or delete: their own. Only a super admin
+     * touches posts other people wrote.
+     */
+    public function scopeManageableBy($query, $user)
+    {
+        $query->accessibleBy($user);
+
+        if (! $user->isSuperAdmin()) {
+            $query->where('user_id', $user->id);
+        }
+
         return $query;
     }
 
-    // An employee pinned to menu nodes sees only what is filed under them.
-    if (($scopes = $user->scopedCategories())->isNotEmpty()) {
-        return $query->where(function ($q) use ($scopes) {
-            foreach ($scopes as $scope) {
-                $q->orWhere(fn ($under) => $under->inCategory($scope->id));
-            }
-        });
+    /** Whether this user may edit or delete this post. */
+    public function isManageableBy($user)
+    {
+        return $user->isSuperAdmin() || (int) $this->user_id === (int) $user->id;
     }
 
-    if ($user->role == 2) {
-        return $query;
+    /**
+     * Who wrote it. The column is set null when the account is deleted, so
+     * the post outlives its author and just shows up unsigned.
+     */
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'user_id')->withDefault([
+            'name' => 'Deleted user',
+        ]);
     }
-
-    if ($user->role==3) {
-        return $query->where('business_id', $user->business_id);
-    }
-
-    return $query->where('user_id', $user->id);
-}
 
 
     protected $fillable = [

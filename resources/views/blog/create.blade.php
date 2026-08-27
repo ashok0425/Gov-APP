@@ -31,8 +31,6 @@
                         'categoryTree' => $categoryTree,
                         'required' => true,
                         'columns' => 3,
-                        'organizations' => $organizations,
-                        'selectedOrganization' => $selectedOrganization,
                     ])
 
                     <div class="form-group col-md-4 mb-3">

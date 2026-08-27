@@ -1,8 +1,9 @@
 {{-- The employee form's category picker: the menu cascade again, but every
      level takes several picks. Choose some categories and the subcategory
      list fills with all of their subcategories, grouped by parent, and so on
-     down. The deepest picks on each branch are what the employee is pinned
-     to; anything picked above them is just the way down.
+     down. Every pick, on every level, is what the employee is pinned to —
+     their post form offers exactly these and nothing else, so a category
+     ticked without its subcategories gives them the category alone.
 
      $selectedLevels holds the ids to preselect, one array per level. --}}
 @php

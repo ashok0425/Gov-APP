@@ -51,14 +51,21 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Category::class);
     }
 
+    /** Super admins run the whole site: every menu node, every post. */
+    public function isSuperAdmin()
+    {
+        return $this->role == 1 || $this->can('do:anything');
+    }
+
     /**
-     * The nodes this user is confined to — they may only see and file posts
-     * at them and below them. Empty means unrestricted: super admins, and
-     * anyone with nothing assigned.
+     * The nodes this user is confined to — exactly what was ticked on the
+     * employee form, every level included. They may see posts filed under
+     * them and file posts only at them. Empty means unrestricted: super
+     * admins, and anyone with nothing assigned.
      */
     public function scopedCategories()
     {
-        if ($this->role == 1 || $this->can('do:anything')) {
+        if ($this->isSuperAdmin()) {
             return collect();
         }
 
@@ -69,5 +76,19 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isPinned()
     {
         return $this->scopedCategories()->isNotEmpty();
+    }
+
+    /**
+     * The pinned nodes as readable paths, one per branch: a node that has a
+     * pinned node beneath it is already named by that deeper path.
+     */
+    public function pinnedPaths()
+    {
+        $categories = $this->categories;
+        $onTheWay = $categories->flatMap(fn ($node) => $node->ancestors()->pluck('id'));
+
+        return $categories
+            ->reject(fn ($node) => $onTheWay->contains($node->id))
+            ->map->pathName();
     }
 }

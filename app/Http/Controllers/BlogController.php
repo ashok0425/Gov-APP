@@ -22,7 +22,8 @@ class BlogController extends Controller
         }
 
         $posts = Blog::query()
-              ->accessibleBy(Auth::user())
+            ->with('author')
+            ->accessibleBy(Auth::user())
             ->when($request->status!=''||$request->status,function($query) use ($request){
            $query->where('status',$request->status);
             })
@@ -75,8 +76,6 @@ class BlogController extends Controller
 
         return view('blog.create', [
             'categoryTree' => Category::treeFor(Auth::user()),
-            'organizations' => Organization::ordered()->get(),
-            'selectedOrganization' => $this->pinnedOrganization(),
         ]);
     }
 
@@ -129,21 +128,17 @@ class BlogController extends Controller
             abort(403);
         }
 
-        if(!Blog::accessibleby(Auth::user())->where('id',$post->id)->first()){
-            $notification = [
+        if (! $this->canManage($post)) {
+            return redirect()->route('blogs.index')->with([
                 'alert-type' => 'error',
-                'message' => 'unauthorized Request',
-
-            ];
-            return redirect()->route('blogs.index')->with($notification);
+                'message' => 'You can only edit posts you created.',
+            ]);
         }
+
         return view('blog.edit', [
             'post' => $post,
             'categoryTree' => Category::treeFor(Auth::user()),
             'selectedTrail' => $post->only(\App\Models\Blog::TRAIL_COLUMNS),
-            'organizations' => Organization::ordered()->get(),
-            // The post's own organization: whatever its root category names.
-            'selectedOrganization' => optional($post->category)->organization_id,
         ]);
     }
 
@@ -153,10 +148,10 @@ class BlogController extends Controller
             abort(403);
         }
 
-        if (! Blog::accessibleBy(Auth::user())->where('id', $post->id)->exists()) {
+        if (! $this->canManage($post)) {
             return redirect()->route('blogs.index')->with([
                 'alert-type' => 'error',
-                'message' => 'unauthorized Request',
+                'message' => 'You can only edit posts you created.',
             ]);
         }
 
@@ -229,13 +224,11 @@ class BlogController extends Controller
             abort(403);
         }
 
-          if(!Blog::accessibleby(Auth::user())->where('id',$post->id)->first()){
-            $notification = [
+        if (! $this->canManage($post)) {
+            return redirect()->route('blogs.index')->with([
                 'alert-type' => 'error',
-                'message' => 'unauthorized Request',
-
-            ];
-            return redirect()->route('blogs.index')->with($notification);
+                'message' => 'You can only delete posts you created.',
+            ]);
         }
 
         $post->delete();
@@ -248,22 +241,19 @@ class BlogController extends Controller
     }
 
     /**
-     * The organization a pinned employee's post form should open on — when
-     * every node they hold sits under the same one. Otherwise they choose.
+     * Whether the current user may edit or delete this post: it has to be
+     * within their reach, and — unless they are a super admin — their own.
      */
-    protected function pinnedOrganization()
+    protected function canManage(Blog $post)
     {
-        $organizations = Auth::user()->scopedCategories()
-            ->map(fn ($scope) => ($scope->ancestors()->first() ?? $scope)->organization_id)
-            ->unique();
-
-        return $organizations->count() === 1 ? $organizations->first() : null;
+        return Blog::manageableBy(Auth::user())->where('id', $post->id)->exists();
     }
 
     /**
-     * The deepest node the form picked has to sit inside what this user may
-     * file under. Ancestors the cascade only passes through are not valid
-     * targets, and neither is anything outside the employee's nodes.
+     * The deepest node the form picked has to be one this user may file
+     * under — a pinned employee's own nodes, or anything published for
+     * everyone else. The check runs server-side too, whatever the browser
+     * offered.
      */
     protected function guardTrail(Request $request)
     {

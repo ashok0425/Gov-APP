@@ -241,11 +241,12 @@ class ManageAccessController extends Controller
     }
 
     /**
-     * The nodes the employee is pinned to. The picker sends every level's
-     * picks; a pick with another pick beneath it was only the way down, so
-     * the deepest pick on each branch is what counts. Each has to be
-     * somewhere the current admin can reach. Nothing picked leaves the
-     * employee unrestricted.
+     * The nodes the employee is pinned to: every pick on every level, as
+     * ticked. A category ticked without its subcategories gives the employee
+     * that category alone; ticking a subcategory or child too is what puts
+     * it on their post form. A pick whose parent was not ticked has no way
+     * to be reached, so it is dropped. Each has to be somewhere the current
+     * admin can reach. Nothing picked leaves the employee unrestricted.
      */
     protected function assignedCategories(Request $request)
     {
@@ -261,8 +262,9 @@ class ManageAccessController extends Controller
         }
 
         $nodes = Category::with('parent.parent.parent')->whereIn('id', $ids)->get();
-        $onTheWay = $nodes->flatMap(fn ($node) => $node->ancestors()->pluck('id'))->unique();
-        $pinned = $nodes->reject(fn ($node) => $onTheWay->contains($node->id))->pluck('id');
+        $pinned = $nodes
+            ->filter(fn ($node) => $node->ancestors()->every(fn ($ancestor) => $ids->contains($ancestor->id)))
+            ->pluck('id');
 
         $reachable = Category::accessibleBy(Auth::user())->whereIn('id', $pinned)->count();
 

@@ -36,8 +36,6 @@
                         'selected' => $selectedTrail,
                         'required' => true,
                         'columns' => 3,
-                        'organizations' => $organizations,
-                        'selectedOrganization' => $selectedOrganization,
                     ])
 
                      <div class="mb-3 col-md-6">

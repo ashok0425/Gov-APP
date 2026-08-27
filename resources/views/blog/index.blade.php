@@ -50,6 +50,7 @@
                             <th>#</th>
                             <th>Title</th>
                             <th>Thumbnail</th>
+                            <th>Author</th>
                             <th>Created At</th>
                             <th>Status</th>
 
@@ -63,6 +64,8 @@
                                 <td>{{ $post->title }}</td>
 
                                 <td><img src="{{ getImage($post->thumbnail) }}" width="80" alt="" /></td>
+                                {{-- Stays on the post after the account is gone; it just reads "Deleted user". --}}
+                                <td>{{ $post->author->name }}</td>
                                 <td>{{ Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }}</td>
 
                                 <td>
@@ -77,29 +80,35 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @can('post:edit')
-                                        <a
-                                            href="{{ route('blogs.edit', ['post' => $post, 'back' => request()->fullUrl()]) }}"
-                                            class="btn btn-primary"
-                                        >
-                                            <i class="far fa-edit"></i>
-                                        </a>
-                                    @endcan
+                                    {{-- Only the author (or a super admin) edits and deletes; others just view. --}}
+                                    @php $mine = $post->isManageableBy(auth()->user()); @endphp
+                                    @if ($mine)
+                                        @can('post:edit')
+                                            <a
+                                                href="{{ route('blogs.edit', ['post' => $post, 'back' => request()->fullUrl()]) }}"
+                                                class="btn btn-primary"
+                                            >
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                        @endcan
+                                    @endif
                                     <a
-                                    href="{{ route('blogs.show', $post) }}"
-                                    class="btn btn-primary"
-                                    target="_blank"
-                                >
-                                    <i class="far fa-eye"></i>
-                                </a>
-                                  @can('post:delete')
-  <a
-                                    href="{{ route('blogs.destroy',$post) }}"
-                                    class="btn btn-danger delete_btn"
-                                >
-                                    <i class="fas fa-trash"></i>
-                                </a>
-                                  @endcan
+                                        href="{{ route('blogs.show', $post) }}"
+                                        class="btn btn-primary"
+                                        target="_blank"
+                                    >
+                                        <i class="far fa-eye"></i>
+                                    </a>
+                                    @if ($mine)
+                                        @can('post:delete')
+                                            <a
+                                                href="{{ route('blogs.destroy',$post) }}"
+                                                class="btn btn-danger delete_btn"
+                                            >
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        @endcan
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
