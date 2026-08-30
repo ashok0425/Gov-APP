@@ -42,14 +42,14 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <div class="actions-div">
+                                        <div class="btn-group" role="group">
                                             @can('user:edit')
-                                                <a href="{{ route('access.edit', ['id' => $user->id]) }}" class="btn btn-info btn-sm mx-3">
+                                                <a href="{{ route('access.edit', ['id' => $user->id]) }}" class="btn btn-info btn-sm">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                             @endcan
                                             @can('user:delete')
-                                                <a href="{{ route('access.destroy', $user->id) }}" class="btn btn-danger delete_btn" title="Delete">
+                                                <a href="{{ route('access.destroy', $user->id) }}" class="btn btn-danger btn-sm delete_btn" title="Delete">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
                                             @endcan

@@ -56,16 +56,18 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @can('notice:edit')
-                                        <a href="{{ route('notices.edit', ['notice' => $notice, 'back' => request()->fullUrl()]) }}" class="btn btn-primary">
-                                            <i class="far fa-edit"></i>
-                                        </a>
-                                    @endcan
-                                    @can('notice:delete')
-                                        <a href="{{ route('notices.destroy', $notice) }}" class="btn btn-danger delete_btn">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    @endcan
+                                    <div class="btn-group" role="group">
+                                        @can('notice:edit')
+                                            <a href="{{ route('notices.edit', ['notice' => $notice, 'back' => request()->fullUrl()]) }}" class="btn btn-primary">
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                        @endcan
+                                        @can('notice:delete')
+                                            <a href="{{ route('notices.destroy', $notice) }}" class="btn btn-danger delete_btn">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        @endcan
+                                    </div>
                                 </td>
                             </tr>
                         @empty

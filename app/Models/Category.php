@@ -28,6 +28,18 @@ class Category extends Model
         4 => 'Grandchild Category',
     ];
 
+    /**
+     * What the post form and post filter call the same levels. The category
+     * pages keep the descriptive names above; on a post the levels are just
+     * NC-A through NC-D.
+     */
+    public const POST_LEVEL_NAMES = [
+        1 => 'NC-A',
+        2 => 'NC-B',
+        3 => 'NC-C',
+        4 => 'NC-D',
+    ];
+
     protected $fillable = [
         'parent_id',
         'name',

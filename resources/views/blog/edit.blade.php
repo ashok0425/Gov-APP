@@ -33,6 +33,7 @@
 
                     @include('partials.category-cascade', [
                         'categoryTree' => $categoryTree,
+                        'labels' => \App\Models\Category::POST_LEVEL_NAMES,
                         'selected' => $selectedTrail,
                         'required' => true,
                         'columns' => 3,

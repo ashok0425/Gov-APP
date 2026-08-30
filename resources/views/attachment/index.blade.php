@@ -43,24 +43,25 @@
                                 <td>{{ $attachment->business?->name }}</td>
 
                                 <td>
-                                    @can('attachment:edit')
-                                        <a href="{{ route('attachments.edit', $attachment) }}" class="btn btn-primary" title="Edit">
-                                            <i class="far fa-edit"></i>
+                                    <div class="btn-group" role="group">
+                                        @can('attachment:edit')
+                                            <a href="{{ route('attachments.edit', $attachment) }}" class="btn btn-primary" title="Edit">
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                        @endcan
+      <button
+                                            class="btn btn-secondary copy-btn"
+                                            data-link="{{ asset('storage/'.$attachment->attachment) }}"
+                                            title="Copy Link"
+                                        >
+                                            <i class="far fa-copy"></i>
+                                        </button>
+                                      @can('attachment:delete')
+                                        <a href="{{ route('attachments.destroy', $attachment->id) }}" class="btn btn-danger delete_btn" title="Delete">
+                                            <i class="fas fa-trash"></i>
                                         </a>
-                                    @endcan
-  <button
-                                        class="btn btn-secondary copy-btn"
-                                        data-link="{{ asset('storage/'.$attachment->attachment) }}"
-                                        title="Copy Link"
-                                    >
-                                        <i class="far fa-copy"></i>
-                                    </button>
-                                  @can('attachment:delete')
-                                    <a href="{{ route('attachments.destroy', $attachment->id) }}" class="btn btn-danger delete_btn" title="Delete">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                  @endcan
-
+                                      @endcan
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach

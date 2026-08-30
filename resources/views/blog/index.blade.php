@@ -8,6 +8,7 @@
                 </div>
                 @include('partials.category-cascade', [
                     'categoryTree' => $categoryTree,
+                    'labels' => \App\Models\Category::POST_LEVEL_NAMES,
                     'selected' => $selectedTrail,
                     'columns' => 3,
                 ])
@@ -78,35 +79,37 @@
                                     @endif
                                 </td>
                                 <td>
-                                    {{-- Only the author (or a super admin) edits and deletes; others just view. --}}
-                                    @php $mine = $post->isManageableBy(auth()->user()); @endphp
-                                    @if ($mine)
-                                        @can('post:edit')
-                                            <a
-                                                href="{{ route('blogs.edit', ['post' => $post, 'back' => request()->fullUrl()]) }}"
-                                                class="btn btn-primary"
-                                            >
-                                                <i class="far fa-edit"></i>
-                                            </a>
-                                        @endcan
-                                    @endif
-                                    <a
-                                        href="{{ route('blogs.show', $post) }}"
-                                        class="btn btn-primary"
-                                        target="_blank"
-                                    >
-                                        <i class="far fa-eye"></i>
-                                    </a>
-                                    @if ($mine)
-                                        @can('post:delete')
-                                            <a
-                                                href="{{ route('blogs.destroy',$post) }}"
-                                                class="btn btn-danger delete_btn"
-                                            >
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        @endcan
-                                    @endif
+                                    <div class="btn-group" role="group">
+                                        {{-- Only the author (or a super admin) edits and deletes; others just view. --}}
+                                        @php $mine = $post->isManageableBy(auth()->user()); @endphp
+                                        @if ($mine)
+                                            @can('post:edit')
+                                                <a
+                                                    href="{{ route('blogs.edit', ['post' => $post, 'back' => request()->fullUrl()]) }}"
+                                                    class="btn btn-primary"
+                                                >
+                                                    <i class="far fa-edit"></i>
+                                                </a>
+                                            @endcan
+                                        @endif
+                                        <a
+                                            href="{{ route('blogs.show', $post) }}"
+                                            class="btn btn-primary"
+                                            target="_blank"
+                                        >
+                                            <i class="far fa-eye"></i>
+                                        </a>
+                                        @if ($mine)
+                                            @can('post:delete')
+                                                <a
+                                                    href="{{ route('blogs.destroy',$post) }}"
+                                                    class="btn btn-danger delete_btn"
+                                                >
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            @endcan
+                                        @endif
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach

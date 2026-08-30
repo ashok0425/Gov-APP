@@ -50,23 +50,24 @@
                                 @endif
                             </td>
                             <td>
-
-                                @can('banners:edit')
-                                    <a
-                                        href="{{ route('banners.edit', $item) }}"
-                                        class="btn btn-primary"
-                                    >
-                                        <i class="far fa-edit"></i>
-                                    </a>
-                                @endcan
-                                @can('banners:delete')
-                                    <a
-                                        href="{{ route('banners.destroy',$item) }}"
-                                        class="btn btn-danger delete_btn"
-                                    >
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                @endcan
+                                <div class="btn-group" role="group">
+                                    @can('banners:edit')
+                                        <a
+                                            href="{{ route('banners.edit', $item) }}"
+                                            class="btn btn-primary"
+                                        >
+                                            <i class="far fa-edit"></i>
+                                        </a>
+                                    @endcan
+                                    @can('banners:delete')
+                                        <a
+                                            href="{{ route('banners.destroy',$item) }}"
+                                            class="btn btn-danger delete_btn"
+                                        >
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    @endcan
+                                </div>
                             </td>
                         </tr>
                     @endforeach

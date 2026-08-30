@@ -371,3 +371,27 @@ a.text-warning {
 #toast-container > .toast-info {
     background-color: var(--brand-blue-light) !important;
 }
+
+/* -------------------------------------------------------- button groups
+   The edit / view / delete buttons in every list table, and the Reorder /
+   Add pair in a card header, sit in a Bootstrap .btn-group. The group is
+   inline-flex so it never wraps, but a narrow cell can still break the
+   group itself onto a second line under whatever came before it, and the
+   AdminKit table paints cells top-aligned; pin both. */
+.table td:has(.btn-group),
+.table td:last-child {
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.table .btn-group,
+.card-header .btn-group {
+    flex-wrap: nowrap;
+    vertical-align: middle;
+}
+
+.table .btn-group > .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}

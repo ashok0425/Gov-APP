@@ -18,7 +18,7 @@
                 <div>
                     <h5 class="card-title text-white">Category List</h5>
                 </div>
-                <div>
+                <div class="btn-group" role="group">
                     @can('category:edit')
                         <a href="{{ route('categories.reorder.page') }}" class="btn btn-secondary btn-sm">
                             <i class="fas fa-sort"></i>
@@ -87,22 +87,24 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @can('category:edit')
-                                        <a
-                                            href="{{ route('categories.edit', ['category' => $category, 'back' => request()->fullUrl()]) }}"
-                                            class="btn btn-primary"
-                                        >
-                                            <i class="far fa-edit"></i>
-                                        </a>
-                                    @endcan
-                                    @can('category:delete')
-                                        <a
-                                            href="{{ route('categories.destroy',$category->id) }}"
-                                            class="btn btn-danger delete_btn"
-                                        >
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    @endcan
+                                    <div class="btn-group" role="group">
+                                        @can('category:edit')
+                                            <a
+                                                href="{{ route('categories.edit', ['category' => $category, 'back' => request()->fullUrl()]) }}"
+                                                class="btn btn-primary"
+                                            >
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                        @endcan
+                                        @can('category:delete')
+                                            <a
+                                                href="{{ route('categories.destroy',$category->id) }}"
+                                                class="btn btn-danger delete_btn"
+                                            >
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        @endcan
+                                    </div>
                                 </td>
                             </tr>
 

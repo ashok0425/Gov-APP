@@ -42,7 +42,7 @@
                 <div>
                     <h5 class="card-title text-white">{{ $levelName }} List</h5>
                 </div>
-                <div>
+                <div class="btn-group" role="group">
                     @can('subcategory:edit')
                         <a href="{{ route('categories.reorder.page', ['level' => $level, 'parent' => request()->query('parent')]) }}"
                            class="btn btn-secondary btn-sm">
@@ -115,17 +115,19 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @can('subcategory:edit')
-                                        <a href="{{ route('categories.edit', ['category' => $row, 'back' => request()->fullUrl()]) }}" class="btn btn-primary">
-                                            <i class="far fa-edit"></i>
-                                        </a>
-                                    @endcan
-                                    @can('subcategory:delete')
-                                        <a href="{{ route('categories.destroy', $row->id) }}"
-                                           class="btn btn-danger delete_btn">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    @endcan
+                                    <div class="btn-group" role="group">
+                                        @can('subcategory:edit')
+                                            <a href="{{ route('categories.edit', ['category' => $row, 'back' => request()->fullUrl()]) }}" class="btn btn-primary">
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                        @endcan
+                                        @can('subcategory:delete')
+                                            <a href="{{ route('categories.destroy', $row->id) }}"
+                                               class="btn btn-danger delete_btn">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        @endcan
+                                    </div>
                                 </td>
                             </tr>
                         @empty

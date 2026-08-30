@@ -33,31 +33,33 @@
                                 <td>{{ $page->slug }}</td>
 
                                 <td>
-                                    <a
-                                        href="{{ route('m.page', $page->slug) }}"
-                                        class="btn btn-success"
-                                        target="_blank"
-                                        rel="noopener"
-                                        title="View public page"
-                                    >
-                                        <i class="far fa-eye"></i>
-                                    </a>
-                                    @can('page:edit')
+                                    <div class="btn-group" role="group">
                                         <a
-                                            href="{{ route('pages.edit', $page) }}"
-                                            class="btn btn-primary"
+                                            href="{{ route('m.page', $page->slug) }}"
+                                            class="btn btn-success"
+                                            target="_blank"
+                                            rel="noopener"
+                                            title="View public page"
                                         >
-                                            <i class="far fa-edit"></i>
+                                            <i class="far fa-eye"></i>
                                         </a>
-                                    @endcan
-                                    @can('page:delete')
-                                        <a
-                                            href="{{ route('pages.destroy', $page) }}"
-                                            class="btn btn-danger delete_btn"
-                                        >
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    @endcan
+                                        @can('page:edit')
+                                            <a
+                                                href="{{ route('pages.edit', $page) }}"
+                                                class="btn btn-primary"
+                                            >
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                        @endcan
+                                        @can('page:delete')
+                                            <a
+                                                href="{{ route('pages.destroy', $page) }}"
+                                                class="btn btn-danger delete_btn"
+                                            >
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        @endcan
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach

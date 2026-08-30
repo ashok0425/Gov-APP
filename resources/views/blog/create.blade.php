@@ -29,6 +29,7 @@
 
                     @include('partials.category-cascade', [
                         'categoryTree' => $categoryTree,
+                        'labels' => \App\Models\Category::POST_LEVEL_NAMES,
                         'required' => true,
                         'columns' => 3,
                     ])
