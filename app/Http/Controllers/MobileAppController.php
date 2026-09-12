@@ -240,9 +240,26 @@ class MobileAppController extends Controller
     {
         $blog = Blog::where('id', $id)->where('status', 1)->firstOrFail();
 
+        // A post records its whole filing trail, so the deepest level it was
+        // filed under is the screen it belongs to: that is the trail the
+        // breadcrumb reads, and whose top image the bar borrows.
+        $category = null;
+
+        foreach (array_reverse(Blog::TRAIL_COLUMNS) as $column) {
+            if ($blog->$column && ($category = Category::find($blog->$column))) {
+                break;
+            }
+        }
+
+        $trail = $category ? $category->ancestors()->push($category) : collect();
+
         return view('mobile.blog', [
             'blog' => $blog,
             'body' => $this->prepareHtml($blog->long_description),
+            'category' => $category,
+            // Nothing uploaded at this level? The nearest level above that has
+            // one stands in, so a post is never left with a bare bar.
+            'topImage' => optional($trail->last(fn ($node) => filled($node->top_image)))->top_image,
         ]);
     }
 
