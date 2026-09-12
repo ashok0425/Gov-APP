@@ -130,6 +130,19 @@ class MobileAppController extends Controller
         // to draw, and a category nobody has posted under has no list.
         $children = $category->children()->where('status', 1)->ordered()->get();
 
+        // Under a parent the posts are only a taste of what the children
+        // hold, so the roll-up stops at the three newest. A leaf is the
+        // actual list, and keeps its full paginated infinite scroll.
+        if ($children->isNotEmpty()) {
+            return view('mobile.category-news', [
+                'category' => $category,
+                'subcategories' => $children,
+                'title' => $category->name,
+                'listUrl' => route('m.category', $category->id),
+                'blogs' => $this->categoryBlogQuery($category->id)->limit(3)->get(),
+            ]);
+        }
+
         $blogs = $this->categoryBlogQuery($category->id)->paginate(25);
 
         return $this->newsResponse($request, $blogs, [

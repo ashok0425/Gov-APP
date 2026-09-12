@@ -10,7 +10,7 @@
         <header class="appbar-cover">
             <img src="{{ asset('storage/' . $category->top_image) }}"
                  alt=""
-                 data-fallback="{{ asset('mobile/img/placeholder.jpeg') }}">
+                 data-fallback-hide>
         </header>
     @else
         <header class="appbar appbar-white">
@@ -47,16 +47,21 @@
         </div>
     @endif
 
-    {{-- Then the posts, which for a parent means everything filed below it. --}}
+    {{-- Then the posts, which for a parent means the three newest filed
+         below it; a leaf gets the full paginated list. --}}
     @if ($blogs->isNotEmpty())
         @if (($subcategories ?? collect())->isNotEmpty())
             <h2 class="section-title">सूचना तथा समाचार</h2>
-        @endif
 
-        @include('mobile.partials.infinite-list', [
-            'blogs' => $blogs,
-            'url' => $listUrl,
-        ])
+            <div class="blog-list">
+                @include('mobile.partials.blog-rows', ['blogs' => $blogs])
+            </div>
+        @else
+            @include('mobile.partials.infinite-list', [
+                'blogs' => $blogs,
+                'url' => $listUrl,
+            ])
+        @endif
     @elseif (($subcategories ?? collect())->isEmpty())
         <div class="state"><p>कुनै विवरण भेटिएन</p></div>
     @endif
