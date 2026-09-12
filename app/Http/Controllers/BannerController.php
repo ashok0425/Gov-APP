@@ -95,8 +95,12 @@ class BannerController extends Controller
 
         )->where('id',$id)->firstOrFail();
 
-        $thumbnail = $request->file('thumbnail')?->store('uploads', 'public') ?? $banner->thumbnail;
-        $banner->thumbnail=$thumbnail;
+        if ($request->boolean('remove_thumbnail')) {
+            Storage::disk('public')->delete((string) $banner->thumbnail);
+            $banner->thumbnail = null;
+        }
+
+        $banner->thumbnail = $request->file('thumbnail')?->store('uploads', 'public') ?? $banner->thumbnail;
         $banner->title = $request->title;
         $banner->description = $request->description;
         $banner->is_homepage_banner = $request->is_homepage_banner;

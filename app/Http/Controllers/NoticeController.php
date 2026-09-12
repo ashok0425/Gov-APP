@@ -74,6 +74,11 @@ class NoticeController extends Controller
 
         $notice->fill($data);
 
+        if ($request->boolean('remove_thumbnail')) {
+            $this->forget($notice->thumbnail);
+            $notice->thumbnail = null;
+        }
+
         // Leaving the file field empty keeps the picture that is already there.
         if ($image = $request->file('thumbnail')?->store('uploads', 'public')) {
             $this->forget($notice->thumbnail);

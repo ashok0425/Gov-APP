@@ -189,6 +189,11 @@ class CategoryController extends Controller
         $category->slug = Str::slug($request->name);
         $category->status = $request->status;
 
+        if ($request->boolean('remove_thumbnail')) {
+            \Storage::disk('public')->delete((string) $category->thumbnail);
+            $category->thumbnail = null;
+        }
+
         if ($thumbnail = $request->file('thumbnail')?->store('uploads/category', 'public')) {
             $category->thumbnail = $thumbnail;
         }

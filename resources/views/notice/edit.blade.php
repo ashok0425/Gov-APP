@@ -59,6 +59,10 @@
                         </div>
                         @if ($notice->thumbnail)
                             <img src="{{ getImage($notice->thumbnail) }}" alt="" width="100" class="mt-2">
+                            <label class="d-flex align-items-center small mb-0 mt-1">
+                                <input type="checkbox" name="remove_thumbnail" value="1">
+                                <span class="mx-2 text-danger">remove</span>
+                            </label>
                         @endif
                     </div>
 

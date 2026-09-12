@@ -84,6 +84,11 @@ class OrganizationController extends Controller
         $organization->name = $request->name;
         $organization->status = $request->status;
 
+        if ($request->boolean('remove_thumbnail')) {
+            \Storage::disk('public')->delete((string) $organization->thumbnail);
+            $organization->thumbnail = null;
+        }
+
         if ($thumbnail = $request->file('thumbnail')?->store('uploads/organization', 'public')) {
             $organization->thumbnail = $thumbnail;
         }

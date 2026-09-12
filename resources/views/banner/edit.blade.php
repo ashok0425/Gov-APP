@@ -62,8 +62,15 @@
                         <div class="file-upload-wrapper" data-text="Select your file!">
                             <input name="thumbnail" type="file" class="file-upload-field" />
                         </div>
-                        <br />
-                        <img src="{{ getImage($banner->thumbnail) }}" alt="" width="100" />
+
+                        @if (filled($banner->thumbnail))
+                            <br />
+                            <img src="{{ getImage($banner->thumbnail) }}" alt="" width="100" />
+                            <label class="d-flex align-items-center small mb-0 mt-1">
+                                <input type="checkbox" name="remove_thumbnail" value="1">
+                                <span class="mx-2 text-danger">remove</span>
+                            </label>
+                        @endif
                     </div>
                 </div>
 

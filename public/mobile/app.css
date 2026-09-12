@@ -80,9 +80,9 @@ button {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    /* The shadow alone sets the column apart on a desktop. Side borders would
+       sit inside it and inset every screen — banner included — by a pixel. */
     box-shadow: 0 0 24px rgba(0, 0, 0, 0.12);
-    border-left: 1px solid var(--line);
-    border-right: 1px solid var(--line);
 }
 
 .scroll-area {
