@@ -20,7 +20,7 @@
                         <img src="{{ asset('storage/' . $palika->thumbnail) }}"
                              alt=""
                              loading="lazy"
-                             data-fallback="{{ asset('mobile/img/placeholder-thumb.jpeg') }}">
+                             data-fallback-icon="location_city">
                     @else
                         <span class="material-symbols-rounded">location_city</span>
                     @endif

@@ -99,9 +99,8 @@ button {
 /* --------------------------------------------------------------- appbars */
 
 /* Home / notifications: the animated banner strip. */
-/* The whole banner, never cropped: a 450x75 picture centered on the strip
-   with a little air above it. On screens narrower than that it shrinks
-   proportionally rather than losing its edges. */
+/* The whole banner, never cropped: it spans the full width of the strip and
+   scales its height to keep the picture's proportions. */
 .appbar-banner {
     background: var(--scaffold);
     flex: none;
@@ -110,10 +109,9 @@ button {
 
 .appbar-banner img {
     display: block;
-    width: 450px;
-    max-width: 100%;
+    width: 100%;
     height: auto;
-    margin: 10px auto 0;
+    margin: 0;
 }
 
 /* Ward / palika: the cover image, shown whole on a plain background. */
@@ -935,6 +933,12 @@ button {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+/* No picture, or one that will not load: the generic glyph holds the tile. */
+.grid-palikas .material-symbols-rounded {
+    font-size: 34px;
+    color: var(--green);
 }
 
 /* -------------------------------------------------------- contact cards

@@ -9,7 +9,7 @@
                  width="60"
                  height="60"
                  loading="lazy"
-                 data-fallback="{{ asset('mobile/img/placeholder-thumb.jpeg') }}">
+                 data-fallback-icon="category">
         @else
             <span class="material-symbols-rounded">category</span>
         @endif

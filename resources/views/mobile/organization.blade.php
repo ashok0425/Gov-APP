@@ -9,7 +9,7 @@
         <header class="appbar-cover">
             <img src="{{ asset('storage/' . $organization->top_image) }}"
                  alt=""
-                 data-fallback="{{ asset('mobile/img/placeholder.jpeg') }}">
+                 data-fallback-hide>
         </header>
     @else
         <header class="appbar appbar-white">

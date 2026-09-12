@@ -8,7 +8,7 @@
                  width="40"
                  height="40"
                  loading="lazy"
-                 data-fallback="{{ asset('mobile/img/placeholder-thumb.jpeg') }}">
+                 data-fallback-icon="{{ $icon }}">
         @else
             <span class="material-symbols-rounded">{{ $icon }}</span>
         @endif

@@ -9,7 +9,8 @@
             <img src="{{ asset('storage/' . $notice->thumbnail) }}"
                  alt=""
                  loading="lazy"
-                 data-fallback="{{ asset('mobile/img/placeholder-thumb.jpeg') }}">
+                 data-fallback-icon="campaign"
+                 data-fallback-wrap="notice-mark">
         @else
             <span class="notice-mark">
                 <span class="material-symbols-rounded">campaign</span>

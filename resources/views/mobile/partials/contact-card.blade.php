@@ -23,7 +23,7 @@
                 <img src="{{ asset('storage/' . $entity->thumbnail) }}"
                      alt=""
                      loading="lazy"
-                     data-fallback="{{ asset('mobile/img/placeholder-thumb.jpeg') }}">
+                     data-fallback-hide>
             @endif
         </span>
 

@@ -11,7 +11,7 @@
                     <img src="{{ asset('storage/' . $thumbnail) }}"
                          alt=""
                          loading="{{ $loop->first ? 'eager' : 'lazy' }}"
-                         data-fallback="{{ asset('mobile/img/placeholder.jpeg') }}">
+                         data-fallback-hide>
                 </div>
             @endforeach
         </div>

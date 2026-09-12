@@ -198,6 +198,7 @@
                 })
                 .then(function (data) {
                     list.insertAdjacentHTML('beforeend', data.html);
+                    initImageFallbacks(); // the new rows carry pictures too
                     hasMore = data.hasMore;
                     loading = false;
                     if (!hasMore && sentinel) sentinel.remove();
@@ -269,10 +270,43 @@
     /* ------------------------------------------------------- image fallback
        Stands in for CachedNetworkImage's errorWidget.                       */
     function initImageFallbacks() {
-        document.querySelectorAll('img[data-fallback]').forEach(function (img) {
+        var sel = 'img[data-fallback], img[data-fallback-icon], img[data-fallback-hide]';
+
+        document.querySelectorAll(sel).forEach(function (img) {
+            if (img.dataset.fallbackBound) return;
+            img.dataset.fallbackBound = '1';
+
             img.addEventListener('error', function handle() {
                 img.removeEventListener('error', handle);
-                img.src = img.dataset.fallback;
+
+                // A picture that will not load leaves the same mark the screen
+                // shows when none was uploaded — the glyph, or nothing at all.
+                if ('fallbackHide' in img.dataset) {
+                    img.remove();
+                    return;
+                }
+
+                var icon = img.dataset.fallbackIcon;
+                if (icon) {
+                    var glyph = document.createElement('span');
+                    glyph.className = 'material-symbols-rounded';
+                    glyph.textContent = icon;
+
+                    var wrapClass = img.dataset.fallbackWrap;
+                    if (wrapClass) {
+                        var wrap = document.createElement('span');
+                        wrap.className = wrapClass;
+                        wrap.appendChild(glyph);
+                        img.replaceWith(wrap);
+                    } else {
+                        img.replaceWith(glyph);
+                    }
+                    return;
+                }
+
+                if (img.dataset.fallback) {
+                    img.src = img.dataset.fallback;
+                }
             });
         });
     }

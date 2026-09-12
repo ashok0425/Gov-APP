@@ -7,7 +7,7 @@
         @if (filled($palika->cover_image))
             <img src="{{ asset('storage/' . $palika->cover_image) }}"
                  alt=""
-                 data-fallback="{{ asset('mobile/img/placeholder.jpeg') }}">
+                 data-fallback-hide>
         @endif
     </header>
 @endsection
