@@ -35,8 +35,12 @@
         transform: rotate(180deg);
         transition: transform 0.3s ease;
     }
-    ul ,.submenu{
-        list-style: none!important;
+    /* The menus, not every list on the page — an unscoped rule here stripped
+       the bullets out of the editor and anything else that wants a real list. */
+    .sidebar ul,
+    .navbar ul,
+    .submenu {
+        list-style: none !important;
     }
         .file-upload-wrapper {
             position: relative;
