@@ -23,11 +23,6 @@
         <link href="{{ asset('admin/css/app.css') }}" rel="stylesheet" />
         {{-- brand palette, after the theme so it wins --}}
         <link href="{{ asset('admin/css/brand.css') }}?v=7" rel="stylesheet" />
-        {{-- summernote css --}}
-        <link
-            href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css"
-            rel="stylesheet"
-        />
         {{-- toastr --}}
         <link
             rel="stylesheet"
@@ -190,105 +185,61 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+        <script src="{{ asset('ckeditor/ckeditor2.js') }}"></script>
         @stack('scripts')
 
         <script>
-      $(document).ready(function () {
-    if ($('#summernote').length) {
-        $('#summernote').summernote({
-            height: 300,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'italic', 'underline', 'clear']],
-                ['fontname', ['fontname']],
-                ['fontsize', ['fontsize']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['insert', ['link', 'picture', 'video','table']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ],
-            fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '24', '36', '48', '64', '82', '150'],
+      /* CKEditor 5 — full toolbar. Applies to any <textarea id="summernote*">. */
+      document.addEventListener('DOMContentLoaded', function () {
+          if (typeof ClassicEditor === 'undefined') {
+              return;
+          }
 
-            callbacks: {
-                onPaste: function (e) {
-    var clipboardData = (e.originalEvent || e).clipboardData || window.clipboardData;
-    var pastedData = clipboardData.getData('Text');
-    e.preventDefault();
+          var tokenTag = document.querySelector('meta[name="csrf-token"]');
+          var token = tokenTag ? tokenTag.content : '';
 
-    let embedHtml = '';
+          document.querySelectorAll('[id^="summernote"]').forEach(function (el) {
+              // A `required` textarea that CKEditor hides blocks form submission
+              // in Chrome ("invalid form control is not focusable"), so drop it.
+              var wasRequired = el.required;
+              el.required = false;
 
-    // 🔴 YouTube
-    var ytRegex = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^\s&]+)/;
-    if (ytRegex.test(pastedData)) {
-        let videoId = pastedData.match(ytRegex)[1];
-        embedHtml = `
-            <iframe width="100%" height="400"
-                src="https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&showinfo=0"
-                frameborder="0"
-                allowfullscreen>
-            </iframe>`;
-    }
+              ClassicEditor.create(el, {
+                  licenseKey: '',
+                  simpleUpload: {
+                      uploadUrl: '{{ route('summernote.upload') }}',
+                      withCredentials: true,
+                      headers: {
+                          'X-CSRF-TOKEN': token
+                      }
+                  }
+              }).then(function (editor) {
+                  editor.editing.view.change(function (writer) {
+                      writer.setStyle('min-height', '300px', editor.editing.view.document.getRoot());
+                  });
 
-    // 🔵 Facebook
-    else if (pastedData.includes('facebook.com') || pastedData.includes('fb.watch')) {
-        embedHtml = `
-            <iframe width="100%" height="400"
-                src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(pastedData)}&show_text=false"
-                frameborder="0"
-                allowfullscreen>
-            </iframe>`;
-    }
+                  // Keep the textarea in sync so server-side validation still sees content.
+                  editor.model.document.on('change:data', function () {
+                      el.value = editor.getData();
+                  });
 
-    // 🟣 Instagram
-    else if (pastedData.includes('instagram.com')) {
-        embedHtml = `
-            <iframe width="100%" height="400"
-                src="https://www.instagram.com/p/${pastedData.split('/').filter(Boolean).pop()}/embed"
-                frameborder="0"
-                scrolling="no"
-                allowfullscreen>
-            </iframe>`;
-    }
-
-    // 👉 Paste result
-    if (embedHtml) {
-        $('#summernote').summernote('pasteHTML', embedHtml);
-    } else {
-        $('#summernote').summernote('pasteHTML', pastedData);
-    }
-},
-
-
-                onImageUpload: function(files) {
-                    for(let i = 0; i < files.length; i++) {
-                        uploadImage(files[i]);
-                    }
-                }
-            }
-        });
-    }
-
-    function uploadImage(file) {
-        let data = new FormData();
-        data.append("file", file);
-        data.append("_token", $('meta[name="csrf-token"]').attr('content'));
-
-        $.ajax({
-            url: '/summernote/upload', // Laravel route
-            method: 'POST',
-            data: data,
-            contentType: false,
-            processData: false,
-            success: function(url) {
-                $('#summernote').summernote('insertImage', url);
-            },
-            error: function(err) {
-                console.error(err);
-            }
-        });
-    }
-});
+                  if (wasRequired) {
+                      var form = el.form;
+                      if (form) {
+                          form.addEventListener('submit', function (e) {
+                              el.value = editor.getData();
+                              if (!el.value.trim()) {
+                                  e.preventDefault();
+                                  alert('Please fill in the description.');
+                              }
+                          });
+                      }
+                  }
+              }).catch(function (error) {
+                  console.error('CKEditor failed to initialise', error);
+              });
+          });
+      });
 
 
 

@@ -71,7 +71,7 @@
     @if ($category->hasContact())
         @include('mobile.partials.contact-fab', [
             'entity' => $category,
-            'ownerLabel' => 'सम्पर्क व्यक्ति',
+            'ownerLabel' => '',
         ])
     @endif
 @endsection

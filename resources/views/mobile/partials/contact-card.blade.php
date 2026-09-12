@@ -31,7 +31,9 @@
     </div>
 
     <div class="contact-owner">
-        <span>{{ $ownerLabel }} :&nbsp;</span>
+        @if (!empty($ownerLabel))
+            <span>{{ $ownerLabel }} :&nbsp;</span>
+        @endif
         <span>{{ $entity->owner_name }}</span>
     </div>
 
